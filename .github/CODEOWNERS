@@ -1,0 +1,17 @@
+# Default: project lead reviews everything
+*                       @NAVEEN4516
+
+# Frontend (BK)
+src/index.html          @stacktrace-bhuvi
+src/css/                @stacktrace-bhuvi
+src/js/ui/              @stacktrace-bhuvi
+
+# Core logic & tests (RR)
+src/js/logic/           @hemanthloq
+tests/                  @hemanthloq
+package.json            @hemanthloq
+
+# Data, docs, DevOps (NM)
+src/js/data/            @NAVEEN4516
+docs/                   @NAVEEN4516
+.github/                @NAVEEN4516
