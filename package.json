@@ -1,0 +1,20 @@
+{
+  "name": "agile-burndown-chart-generator",
+  "version": "1.0.0",
+  "description": "Client-side Agile Burndown Chart Generator",
+  "type": "module",
+  "scripts": {
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "keywords": [
+    "agile",
+    "burndown-chart",
+    "jira-simulator",
+    "sprint-tracking"
+  ],
+  "author": "Team 7",
+  "license": "MIT"
+}
