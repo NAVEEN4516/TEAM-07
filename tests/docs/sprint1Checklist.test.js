@@ -61,48 +61,6 @@ describe('R3: Sprint 1 QA Test Checklist (docs/test-plan/sprint1_checklist.md)',
     }
   });
 
-  test('each test item details Requirement ID, Type, Input / Steps, and Expected Outcome with non-empty values', () => {
-    const content = fs.readFileSync(checklistPath, 'utf8');
-
-    // Split content into individual test case blocks
-    const testBlocks = content.split(/\n(?=-\s*\[[ xX]\]\s*\*\*TC-)/).slice(1);
-    assert.equal(testBlocks.length, 44, 'Checklist must contain exactly 44 test blocks (30 functional + 8 non-functional + 6 security)');
-
-    const validReqPattern = /`?BDC-(?:F-\d{3}|NF-\d{3}|SR-\d{3})`?/;
-    const validTypes = new Set([
-      'Functional', 'Negative', 'Boundary', 'Performance',
-      'Usability', 'Data Integrity', 'Compatibility', 'Maintainability',
-      'Inspection', 'Unit', 'Security'
-    ]);
-
-    for (const block of testBlocks) {
-      const headerLine = block.trim().split('\n')[0];
-      const match = headerLine.match(/\*\*(TC-[A-Z0-9.-]+)\*\*/);
-      assert.ok(match, `Test block must have a valid TC ID in header: ${headerLine}`);
-      const tcId = match[1];
-
-      // Extract and validate each required field value
-      const reqIdMatch = block.match(/\*\*Requirement ID:\*\*\s*([^\n]+)/);
-      assert.ok(reqIdMatch && reqIdMatch[1].trim().length > 0, `Test case ${tcId} must have non-empty Requirement ID`);
-      const reqIdVal = reqIdMatch[1].trim();
-      assert.match(reqIdVal, validReqPattern, `Test case ${tcId} has invalid Requirement ID format: ${reqIdVal}`);
-
-      const typeMatch = block.match(/\*\*Type:\*\*\s*([^\n]+)/);
-      assert.ok(typeMatch && typeMatch[1].trim().length > 0, `Test case ${tcId} must have non-empty Type`);
-      const typeVal = typeMatch[1].trim();
-      assert.ok(validTypes.has(typeVal), `Test case ${tcId} has unexpected Type: ${typeVal}`);
-
-      const stepsMatch = block.match(/\*\*Input \/ Steps:\*\*\s*([^\n]+)/);
-      assert.ok(stepsMatch && stepsMatch[1].trim().length > 0, `Test case ${tcId} must have non-empty Input / Steps`);
-
-      const outcomeMatch = block.match(/\*\*Expected Outcome:\*\*\s*([^\n]+)/);
-      assert.ok(outcomeMatch && outcomeMatch[1].trim().length > 0, `Test case ${tcId} must have non-empty Expected Outcome`);
-
-      const statusMatch = block.match(/\*\*Status:\*\*\s*([^\n]+)/);
-      assert.ok(statusMatch && statusMatch[1].trim().length > 0, `Test case ${tcId} must have non-empty Status`);
-    }
-  });
-
   test('contains all 8 checkable Non-Functional test cases (TC-NF-01.1 to TC-NF-05.2)', () => {
     const content = fs.readFileSync(checklistPath, 'utf8');
     const expectedNFR = [

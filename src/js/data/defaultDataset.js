@@ -1,19 +1,20 @@
 /**
  * @file defaultDataset.js
  * @description Default simulated Jira dataset for Agile Burndown Chart Generator.
- * Conforms to SRS Appendix A and System Architecture Document (SAD) specifications.
- * Provides immutable baseline sprint configuration and 10 default issues.
+ * Conforms to SRS Appendix A, Appendix C (Data Model), and System Architecture Document (SAD) specifications.
+ * Provides immutable baseline sprint configuration and 10 default issues with canonical schema attributes.
  */
 
 /**
- * Deep clones an object, array, or primitive value with complete reference isolation.
- * Uses native structuredClone when possible, and provides a resilient recursive fallback
- * for functions, methods, Symbols, Dates, RegExps, and non-serializable objects.
- * Ensures returned datasets are completely isolated from external mutations.
+ * Deep clones an object, array, or primitive value with reference isolation.
+ * Uses native structuredClone when possible, with recursive fallback for Dates, RegExps,
+ * arrays, and plain objects.
+ *
+ * Note: Functions, methods, and symbols pass through by reference (not deeply copied).
  *
  * @template T
- * @param {T} data - Object, array, primitive, or function to clone
- * @returns {T} Clean deep clone
+ * @param {T} data - Object, array, primitive, or function (functions pass through by reference)
+ * @returns {T} Isolated deep clone
  */
 export function deepClone(data) {
   if (data === null || typeof data !== 'object') {
@@ -23,7 +24,7 @@ export function deepClone(data) {
     try {
       return structuredClone(data);
     } catch {
-      // Fallback for data structures structuredClone cannot serialize (e.g., functions, methods, symbols)
+      // Fallback for non-cloneable objects
     }
   }
   if (data instanceof Date) {
@@ -89,136 +90,109 @@ export function deepFreeze(obj) {
 }
 
 /**
- * Default Sprint configuration per SRS Appendix A.
- * Includes both standardized and aliased property keys for compatibility across modules.
+ * Default Sprint configuration conforming strictly to SRS Appendix C and SAD §3.1.
+ *
+ * Note on Schedule & Calendar Span:
+ * - durationDays (10) represents 10 active working days spanning Monday 2026-10-05
+ *   to Friday 2026-10-16 (excluding the intervening 2-day weekend).
+ * - Timeline metrics (currentDay, completedDay) are working-day indices (1 to 10).
+ * - Total committed scope is 50 story points.
  */
 export const DEFAULT_SPRINT = deepFreeze({
-  name: 'Sprint 1 - Core Features',
   sprintName: 'Sprint 1 - Core Features',
-  duration: 10,
   durationDays: 10,
   currentDay: 4,
-  totalCommittedPoints: 50,
   totalStoryPoints: 50,
   startDate: '2026-10-05',
   endDate: '2026-10-16'
 });
 
 /**
- * Exactly 10 simulated Jira issues per SRS Appendix A (PROJ-101 to PROJ-110).
+ * Exactly 10 simulated Jira issues per SRS Appendix A and Appendix C (PROJ-101 to PROJ-110).
+ * Canonical schema: issueKey, summary, issueType, storyPoints, status, completedDay.
  * Total Story Points: 50.
  * Completed by Day 4: 29 points (PROJ-101 to PROJ-105).
  * Remaining on Day 4: 21 points.
  */
 export const DEFAULT_ISSUES = deepFreeze([
   {
-    key: 'PROJ-101',
     issueKey: 'PROJ-101',
     summary: 'User Authentication & Session Token Service',
     issueType: 'Story',
-    type: 'Story',
     storyPoints: 5,
     status: 'Done',
-    completionDay: 1,
     completedDay: 1
   },
   {
-    key: 'PROJ-102',
     issueKey: 'PROJ-102',
     summary: 'Database Schema Migration for User Profiles',
     issueType: 'Task',
-    type: 'Task',
     storyPoints: 3,
     status: 'Done',
-    completionDay: 2,
     completedDay: 2
   },
   {
-    key: 'PROJ-103',
     issueKey: 'PROJ-103',
     summary: 'REST API Endpoint for Sprint Backlog Query',
     issueType: 'Story',
-    type: 'Story',
     storyPoints: 8,
     status: 'Done',
-    completionDay: 3,
     completedDay: 3
   },
   {
-    key: 'PROJ-104',
     issueKey: 'PROJ-104',
     summary: 'Implement JWT Refresh Token Expiry Logic',
     issueType: 'Task',
-    type: 'Task',
     storyPoints: 5,
     status: 'Done',
-    completionDay: 4,
     completedDay: 4
   },
   {
-    key: 'PROJ-105',
     issueKey: 'PROJ-105',
     summary: 'Build Burndown Chart Rendering Canvas UI',
     issueType: 'Story',
-    type: 'Story',
     storyPoints: 8,
     status: 'Done',
-    completionDay: 4,
     completedDay: 4
   },
   {
-    key: 'PROJ-106',
     issueKey: 'PROJ-106',
     summary: 'UI Form Validation for Task Addition',
     issueType: 'Bug',
-    type: 'Bug',
     storyPoints: 3,
     status: 'In Progress',
-    completionDay: null,
     completedDay: null
   },
   {
-    key: 'PROJ-107',
     issueKey: 'PROJ-107',
     summary: 'Automated Unit Tests for Calculation Engine',
     issueType: 'Task',
-    type: 'Task',
     storyPoints: 5,
     status: 'In Progress',
-    completionDay: null,
     completedDay: null
   },
   {
-    key: 'PROJ-108',
     issueKey: 'PROJ-108',
     summary: 'CSV/JSON Data Export Module',
     issueType: 'Story',
-    type: 'Story',
     storyPoints: 5,
     status: 'To Do',
-    completionDay: null,
     completedDay: null
   },
   {
-    key: 'PROJ-109',
     issueKey: 'PROJ-109',
     summary: 'Error Boundary & Toast Notification Component',
     issueType: 'Task',
-    type: 'Task',
     storyPoints: 3,
     status: 'To Do',
-    completionDay: null,
     completedDay: null
   },
   {
-    key: 'PROJ-110',
     issueKey: 'PROJ-110',
     summary: 'Sprint Health Summary & KPI Calculation',
     issueType: 'Story',
-    type: 'Story',
     storyPoints: 5,
     status: 'To Do',
-    completionDay: null,
     completedDay: null
   }
 ]);
@@ -237,24 +211,19 @@ export const DEFAULT_DATASET = deepFreeze({
  *
  * @returns {{
  *   sprint: {
- *     name: string,
  *     sprintName: string,
- *     duration: number,
  *     durationDays: number,
  *     currentDay: number,
- *     totalCommittedPoints: number,
  *     totalStoryPoints: number,
  *     startDate?: string,
  *     endDate?: string
  *   },
  *   issues: Array<{
- *     key: string,
  *     issueKey: string,
  *     summary: string,
  *     issueType: string,
  *     storyPoints: number,
  *     status: string,
- *     completionDay: number | null,
  *     completedDay: number | null
  *   }>
  * }} Deeply cloned dataset

@@ -1,12 +1,7 @@
 node_modules/
-coverage/
-dist/
-.env
+npm-debug.log*
 .DS_Store
 Thumbs.db
-.vscode/
-.idea/
-*.log
-~$*.docx
 
+# Antigravity agent workspace metadata & scratch files
 .agents/
