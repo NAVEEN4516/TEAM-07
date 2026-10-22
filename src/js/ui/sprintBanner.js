@@ -102,6 +102,10 @@ export function renderSprintConfigFormHTML(sprint, errors = []) {
   const errorBlock =
     errors.length > 0
       ? `<div class="form-errors" role="alert" data-testid="config-errors">
+          <div class="form-errors-header">
+            <span class="error-icon" aria-hidden="true">&#9888;&#65039;</span>
+            <span class="error-title">Please review and correct the following errors:</span>
+          </div>
           <ul class="error-list">
             ${errors.map(err => `<li class="error-item">${escapeHTML(err)}</li>`).join('')}
           </ul>
@@ -110,11 +114,17 @@ export function renderSprintConfigFormHTML(sprint, errors = []) {
 
   return `
 <form class="sprint-config-form" data-testid="sprint-config-form" novalidate>
-  <h2 class="form-heading">Configure Sprint Parameters</h2>
+  <div class="form-header">
+    <div class="form-title-group">
+      <span class="form-badge">&#9881; Sprint Settings</span>
+      <h2 class="form-heading">Configure Sprint Parameters</h2>
+      <p class="form-description">Adjust sprint timeline, working duration, and boundary dates for burndown tracking.</p>
+    </div>
+  </div>
   ${errorBlock}
 
   <div class="form-group">
-    <label for="input-sprint-name">Sprint Name <span class="required">*</span></label>
+    <label for="input-sprint-name" class="form-label">Sprint Name <span class="required" aria-hidden="true">*</span></label>
     <input
       type="text"
       id="input-sprint-name"
@@ -125,10 +135,11 @@ export function renderSprintConfigFormHTML(sprint, errors = []) {
       required
       data-testid="input-sprint-name"
     />
+    <span class="form-hint">Descriptive title identifying this sprint iteration</span>
   </div>
 
   <div class="form-group">
-    <label for="input-duration-days">Duration (working days) <span class="required">*</span></label>
+    <label for="input-duration-days" class="form-label">Duration (working days) <span class="required" aria-hidden="true">*</span></label>
     <input
       type="number"
       id="input-duration-days"
@@ -141,11 +152,12 @@ export function renderSprintConfigFormHTML(sprint, errors = []) {
       required
       data-testid="input-duration-days"
     />
+    <span class="form-hint">Total number of active working days in sprint (1 to 60)</span>
   </div>
 
   <div class="form-row">
     <div class="form-group col">
-      <label for="input-start-date">Start Date</label>
+      <label for="input-start-date" class="form-label">Start Date</label>
       <input
         type="date"
         id="input-start-date"
@@ -154,10 +166,11 @@ export function renderSprintConfigFormHTML(sprint, errors = []) {
         value="${startDate}"
         data-testid="input-start-date"
       />
+      <span class="form-hint">Sprint kick-off date</span>
     </div>
 
     <div class="form-group col">
-      <label for="input-end-date">End Date</label>
+      <label for="input-end-date" class="form-label">End Date</label>
       <input
         type="date"
         id="input-end-date"
@@ -166,12 +179,13 @@ export function renderSprintConfigFormHTML(sprint, errors = []) {
         value="${endDate}"
         data-testid="input-end-date"
       />
+      <span class="form-hint">Target completion date</span>
     </div>
   </div>
 
   <div class="form-actions">
-    <button type="submit" class="btn btn-primary" data-testid="btn-save-sprint">Save Configuration</button>
     <button type="button" class="btn btn-tertiary btn-cancel" data-testid="btn-cancel-sprint">Cancel</button>
+    <button type="submit" class="btn btn-primary" data-testid="btn-save-sprint">Save Configuration</button>
   </div>
 </form>
 `.trim();

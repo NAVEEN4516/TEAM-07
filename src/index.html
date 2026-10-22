@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Burndown Chart Generator</title>
+  <!-- Early theme application to avoid FOUC (flash of wrong theme) -->
+  <script>
+    (function() {
+      try {
+        var saved = localStorage.getItem('burndown_theme_pref');
+        if (saved === 'dark' || (!saved && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        } else {
+          document.documentElement.setAttribute('data-theme', 'light');
+        }
+      } catch (e) {}
+    })();
+  </script>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="app-container">
+    <header class="app-header">
+      <div class="header-content">
+        <div class="header-brand">
+          <span class="app-logo" aria-hidden="true">&#128200;</span>
+          <h1 class="app-title">Burndown Chart Generator</h1>
+        </div>
+
+        <div class="header-actions">
+          <div class="sprint-info">
+            <span class="sprint-label">Sprint:</span>
+            <span id="sprint-name" class="sprint-badge">--</span>
+          </div>
+
+          <!-- Light / Dark Theme Toggle Control -->
+          <div class="theme-toggle-wrapper">
+            <button
+              type="button"
+              id="theme-toggle-btn"
+              class="theme-toggle-btn"
+              aria-label="Switch to dark theme"
+              title="Toggle theme (Light / Dark)"
+            >
+              <span class="theme-icon theme-icon-sun" aria-hidden="true">&#9728;&#65039;</span>
+              <span class="theme-icon theme-icon-moon" aria-hidden="true">&#127769;</span>
+              <span class="theme-toggle-label">Theme</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div id="messages" role="status" aria-live="polite"></div>
+
+    <main class="dashboard-main">
+      <!-- F-001: Sprint Configuration Placeholder -->
+      <div id="sprint-config"></div>
+
+      <!-- F-015: KPI Cards Placeholder -->
+      <div id="kpi-cards"></div>
+
+      <div class="dashboard-grid">
+        <!-- F-013, F-014: Chart Section -->
+        <section id="chart-section" class="dashboard-panel" aria-label="Burndown Chart Section">
+          <div class="panel-header">
+            <h2 class="panel-title">Burndown Chart</h2>
+            <!-- F-003: Current Day Control Placeholder -->
+            <div id="current-day-control"></div>
+          </div>
+          <div class="chart-container">
+            <canvas id="burndown-chart" aria-label="Burndown chart line graph" role="img"></canvas>
+          </div>
+        </section>
+
+        <!-- F-005: Backlog Table Section -->
+        <section id="backlog-section" class="dashboard-panel" aria-label="Sprint Backlog Section">
+          <div class="panel-header">
+            <h2 class="panel-title">Sprint Backlog</h2>
+          </div>
+          <div class="table-wrapper">
+            <table id="backlog-table"></table>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script src="vendor/chart.umd.js"></script>
+  <script type="module" src="js/ui/dashboard.js"></script>
+</body>
+</html>
