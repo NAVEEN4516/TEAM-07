@@ -5,3 +5,6 @@ Thumbs.db
 
 # Antigravity agent workspace metadata & scratch files
 .agents/
+
+# Original document backups
+docs/_backups_original/
