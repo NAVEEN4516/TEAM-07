@@ -83,7 +83,12 @@ export function initDashboard() {
     });
   }
 
-  // Dev-only helper flags: enabled only via ?dev / ?day URL query parameters
+  // Dev-only helper flags: enabled only via ?dev / ?day / ?perf URL query parameters
+  const isPerf = typeof window !== 'undefined' && Boolean(window.location && new URLSearchParams(window.location.search).has('perf'));
+  if (isPerf) {
+    window.__perfLog = window.__perfLog || [];
+  }
+
   if (typeof window !== 'undefined' && window.location) {
     const params = new URLSearchParams(window.location.search);
     const dayParam = params.get('day');
@@ -138,6 +143,20 @@ export function initDashboard() {
         sprint: updatedDm.getSprint(),
         issues: updatedDm.getIssues()
       });
+
+      if (isPerf && typeof requestAnimationFrame !== 'undefined' && typeof performance !== 'undefined') {
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            const start = (updatedDm && typeof updatedDm.lastNotifyStartedAt === 'number')
+              ? updatedDm.lastNotifyStartedAt
+              : performance.now();
+            const ms = performance.now() - start;
+            window.__lastUpdateMs = ms;
+            window.__perfLog.push({ action: 'update', ms });
+            console.info(`[perf] update: ${ms.toFixed(2)}ms`);
+          });
+        });
+      }
     });
   }
 

@@ -327,6 +327,10 @@ export class DataManager {
    * @private
    */
   _notify() {
+    const hasPerf = typeof performance !== 'undefined';
+    if (hasPerf) {
+      this.lastNotifyStartedAt = performance.now();
+    }
     for (const listener of this._listeners) {
       try {
         listener(this);
@@ -334,6 +338,9 @@ export class DataManager {
         // Prevent subscriber exception from breaking state pipeline
         console.error('Error in DataManager subscriber:', err);
       }
+    }
+    if (hasPerf) {
+      this.lastNotifyMs = performance.now() - this.lastNotifyStartedAt;
     }
   }
 }

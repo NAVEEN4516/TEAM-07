@@ -68,6 +68,11 @@ npm test
 ```
 *(Executes all 119 unit tests across 36 suites via the native `node --test` runner with 0 external dependencies)*
 
+### 🛠️ Developer Flags
+- `?perf`: Enables high-resolution render timing instrumentation, logging update durations to `console.info` and recording measurements in `window.__perfLog` and `window.__lastUpdateMs` (SRS BDC-NF-001).
+- `?day=<n>`: Sets initial current day on application load.
+- `?dev`: Exposes `window.__setDay(n)` helper in the browser console for manual state testing.
+
 ## 📋 Project Management
 
 - Backlog and sprints are tracked in the **GitHub Project "TEAM-07 Burndown Chart Generator"**.
