@@ -305,13 +305,17 @@ body {
 /* Dashboard Layout Grid */
 .dashboard-grid {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
   gap: 1.5rem;
+}
+
+.dashboard-grid > * {
+  min-width: 0;
 }
 
 @media (min-width: 1200px) {
   .dashboard-grid {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     align-items: start;
   }
 }
@@ -366,6 +370,7 @@ body {
   overflow-y: auto;
   background: var(--color-surface);
   -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
 }
 
 .table-wrapper::-webkit-scrollbar {
@@ -398,9 +403,9 @@ body {
   font-size: 0.775rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  padding: 0.85rem 1rem;
+  padding: .7rem .6rem;
   border-bottom: 1px solid var(--color-border-strong);
-  white-space: nowrap;
+  white-space: normal;
   z-index: 10;
 }
 
@@ -422,7 +427,7 @@ body {
 }
 
 #backlog-table td {
-  padding: 0.8rem 1rem;
+  padding: .65rem .6rem;
   color: var(--color-text-main);
   vertical-align: middle;
 }
@@ -433,12 +438,14 @@ body {
   font-weight: 600;
   font-size: 0.825rem;
   color: var(--color-primary);
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 .cell-summary {
   font-weight: 500;
-  min-width: 190px;
+  min-width: 0;
+  overflow-wrap: anywhere;
   color: var(--color-text-main);
 }
 
