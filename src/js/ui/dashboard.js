@@ -12,6 +12,7 @@ import { renderChart, updateChartTheme } from './chart.js';
 import { mountSprintBanner } from './sprintBanner.js';
 import { mountCurrentDayControl } from './currentDayControl.js';
 import { mountKPICards } from './kpiCards.js';
+import { mountAddIssueForm } from './addIssueForm.js';
 import { initTheme } from './themeManager.js';
 
 /**
@@ -122,6 +123,11 @@ export function initDashboard() {
     const currentDayControlEl = document.getElementById('current-day-control');
     if (currentDayControlEl && typeof mountCurrentDayControl === 'function' && dm) {
       mountCurrentDayControl(currentDayControlEl, dm);
+    }
+
+    const addIssueFormEl = document.getElementById('add-issue-form');
+    if (addIssueFormEl && typeof mountAddIssueForm === 'function' && dm) {
+      mountAddIssueForm(addIssueFormEl, dm);
     }
   }
 

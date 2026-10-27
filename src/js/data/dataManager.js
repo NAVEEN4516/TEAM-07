@@ -23,6 +23,8 @@ import {
   SCHEDULE_STATUS
 } from '../logic/burndownEngine.js';
 
+import { validateIssue } from '../logic/validationManager.js';
+
 /**
  * Validates a candidate sprint configuration object.
  * Checks for non-empty name, positive integer duration, and valid date ordering.
@@ -234,6 +236,50 @@ export class DataManager {
    */
   getIssues() {
     return deepClone(this._issues);
+  }
+
+  /**
+   * Adds a new issue to the sprint backlog (BDC-F-006).
+   * Validates parameters, rejects duplicate or invalid inputs,
+   * updates sprint commitment, and notifies subscribers.
+   *
+   * @param {object} issue - Candidate issue fields
+   * @returns {{ success: boolean, issue: object | null, errors: string[] }} Result
+   */
+  addIssue(issue) {
+    const existingKeys = this._issues.map(i => i.issueKey);
+    const context = {
+      currentDay: this._sprint.currentDay,
+      durationDays: this._sprint.durationDays
+    };
+
+    const validation = validateIssue(issue, existingKeys, context);
+    if (!validation.valid) {
+      return {
+        success: false,
+        issue: null,
+        errors: validation.errors
+      };
+    }
+
+    const normalised = {
+      issueKey: String(issue.issueKey).trim(),
+      summary: String(issue.summary).trim(),
+      issueType: issue.issueType,
+      storyPoints: Number(issue.storyPoints),
+      status: issue.status,
+      completedDay: issue.status === 'Done' ? parseInt(issue.completedDay, 10) : null
+    };
+
+    this._issues.push(normalised);
+    this._sprint.totalStoryPoints = calculateTotalPoints(this._issues);
+    this._notify();
+
+    return {
+      success: true,
+      issue: deepClone(normalised),
+      errors: []
+    };
   }
 
   /**

@@ -1147,3 +1147,42 @@ input[type="number"].form-input {
     animation: none !important;
   }
 }
+
+/* ==========================================================================
+   Add Issue Form Component (BDC-F-006)
+   ========================================================================== */
+.add-issue-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  padding: 1.25rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.add-issue-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+  align-items: start;
+}
+
+.add-issue-grid .form-group-full {
+  grid-column: 1 / -1;
+}
+
+.add-issue-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.add-issue-status-msg {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--status-done-text);
+}
