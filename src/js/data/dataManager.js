@@ -271,8 +271,19 @@ export class DataManager {
       completedDay: issue.status === 'Done' ? parseInt(issue.completedDay, 10) : null
     };
 
+    // Ensure calculated aggregate values remain finite before storing the new issue
+    const candidateIssues = [...this._issues, normalised];
+    const candidateTotal = calculateTotalPoints(candidateIssues);
+    if (!Number.isFinite(candidateTotal) || candidateTotal < 0 || candidateTotal > Number.MAX_SAFE_INTEGER) {
+      return {
+        success: false,
+        issue: null,
+        errors: ['Story points must be a non-negative number.']
+      };
+    }
+
     this._issues.push(normalised);
-    this._sprint.totalStoryPoints = calculateTotalPoints(this._issues);
+    this._sprint.totalStoryPoints = candidateTotal;
     this._notify();
 
     return {

@@ -239,11 +239,16 @@ export function mountAddIssueForm(container, dataManager) {
     if (statusSelect && completedDayGroup) {
       if (statusSelect.value === 'Done') {
         completedDayGroup.removeAttribute('hidden');
+        completedDayGroup.style.display = '';
       } else {
         completedDayGroup.setAttribute('hidden', '');
+        completedDayGroup.style.display = 'none';
       }
     }
   };
+
+  // Synchronize initial visibility on mount
+  updateCompletedDayVisibility();
 
   if (statusSelect) {
     statusSelect.addEventListener('change', updateCompletedDayVisibility);

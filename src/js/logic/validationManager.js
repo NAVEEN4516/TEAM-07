@@ -62,12 +62,12 @@ export function validateIssue(fields, existingKeys = [], context = {}) {
     const trimmedSp = sp.trim();
     if (/^\d+(\.\d+)?$/.test(trimmedSp)) {
       const n = Number(trimmedSp);
-      if (Number.isFinite(n) && n >= 0) {
+      if (Number.isFinite(n) && n >= 0 && n <= Number.MAX_SAFE_INTEGER) {
         validPoints = true;
       }
     }
   } else if (typeof sp === 'number') {
-    if (Number.isFinite(sp) && !isNaN(sp) && sp >= 0) {
+    if (Number.isFinite(sp) && !isNaN(sp) && sp >= 0 && sp <= Number.MAX_SAFE_INTEGER) {
       validPoints = true;
     }
   }

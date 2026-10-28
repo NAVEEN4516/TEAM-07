@@ -131,6 +131,68 @@ describe('UI: AddIssueForm (BDC-F-006, BDC-NF-002, BDC-SR-001)', () => {
       assert.equal(parsed.issueKey, '');
       assert.equal(parsed.issueType, 'Story');
       assert.equal(parsed.status, 'To Do');
+    });  });
+
+  describe('Regression: Completion Day group visibility (P2 bugfix)', () => {
+    it('verifies explicit CSS rule hides form-group when hidden attribute is present', async () => {
+      const fs = await import('node:fs');
+      const path = await import('node:path');
+      const cssContent = fs.readFileSync(path.resolve('src/css/styles.css'), 'utf-8');
+      assert.match(
+        cssContent,
+        /\.form-group\[hidden\]\s*\{[^}]*display:\s*none/i,
+        'Expected explicit .form-group[hidden] { display: none } rule to prevent display:flex override'
+      );
+    });
+
+    it('mountAddIssueForm sets display:none on completion day group initially and toggles on status change', async () => {
+      const listeners = {};
+      const statusSelect = {
+        value: 'To Do',
+        addEventListener: (ev, fn) => { listeners[ev] = fn; }
+      };
+      const completedDayGroup = {
+        style: { display: '' },
+        hasAttribute: (attr) => attr === 'hidden',
+        setAttribute: (attr) => {
+          if (attr === 'hidden') completedDayGroup._hidden = true;
+        },
+        removeAttribute: (attr) => {
+          if (attr === 'hidden') completedDayGroup._hidden = false;
+        },
+        _hidden: true
+      };
+
+      const form = {
+        querySelector: (sel) => {
+          if (sel.includes('status')) return statusSelect;
+          if (sel.includes('completed-day-group')) return completedDayGroup;
+          return null;
+        },
+        querySelectorAll: () => [],
+        addEventListener: () => {}
+      };
+
+      const container = {
+        innerHTML: '',
+        querySelector: () => form
+      };
+
+      const { mountAddIssueForm } = await import('../../src/js/ui/addIssueForm.js');
+      mountAddIssueForm(container, {});
+
+      assert.equal(completedDayGroup.style.display, 'none');
+      assert.equal(completedDayGroup._hidden, true);
+
+      statusSelect.value = 'Done';
+      listeners['change']();
+      assert.equal(completedDayGroup.style.display, '');
+      assert.equal(completedDayGroup._hidden, false);
+
+      statusSelect.value = 'To Do';
+      listeners['change']();
+      assert.equal(completedDayGroup.style.display, 'none');
+      assert.equal(completedDayGroup._hidden, true);
     });
   });
 });

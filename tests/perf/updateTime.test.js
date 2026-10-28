@@ -96,6 +96,45 @@ describe('Performance: Update Time (BDC-NF-001, TC-NF-01.1)', () => {
         elapsed < TARGET_MAX_MS,
         `Stress operation ${step} took ${elapsed.toFixed(2)}ms, exceeding ${TARGET_MAX_MS}ms`
       );
+    }  });
+
+  it('consecutive updates with a delayed first update report accurate distinct timings (P2 bugfix)', () => {
+    const logs = [];
+    let scheduledCallbacks = [];
+
+    const fakeRaf = (cb) => {
+      scheduledCallbacks.push(cb);
+    };
+
+    function handleUpdate(updatedDm, fakePerfNow) {
+      const start = (updatedDm && typeof updatedDm.lastNotifyStartedAt === 'number')
+        ? updatedDm.lastNotifyStartedAt
+        : fakePerfNow;
+
+      fakeRaf(() => {
+        fakeRaf(() => {
+          const ms = fakePerfNow - start;
+          logs.push({ action: 'update', ms, start });
+        });
+      });
     }
+
+    const dm1 = { lastNotifyStartedAt: 1000 };
+    handleUpdate(dm1, 1000);
+
+    const dm2 = { lastNotifyStartedAt: 3115 };
+    handleUpdate(dm2, 3115);
+
+    const firstTick = scheduledCallbacks;
+    scheduledCallbacks = [];
+    firstTick.forEach(cb => cb());
+
+    const secondTick = scheduledCallbacks;
+    scheduledCallbacks = [];
+    secondTick.forEach(cb => cb());
+
+    assert.equal(logs.length, 2);
+    assert.equal(logs[0].start, 1000);
+    assert.equal(logs[1].start, 3115);
   });
 });

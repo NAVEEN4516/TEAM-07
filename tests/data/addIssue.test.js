@@ -222,4 +222,46 @@ describe('DataManager.addIssue (BDC-F-006, BDC-F-002, BDC-SR-001, BDC-SR-002, BD
     assert.equal(dm.getSprint().totalStoryPoints, 50);
     assert.equal(dm.getCurrentDay(), 4);
   });
+
+  it('rejects story points exceeding safe range and guarantees KPIs and chart series remain finite (P2 bugfix)', () => {
+    const initialCount = dm.getIssues().length;
+    const initialPoints = dm.getSprint().totalStoryPoints;
+
+    const hugeSp = '1' + '0'.repeat(303);
+    const resHuge = dm.addIssue({
+      issueKey: 'BIG-1',
+      summary: 'Overflow attempt',
+      issueType: 'Story',
+      storyPoints: hugeSp,
+      status: 'To Do'
+    });
+    assert.equal(resHuge.success, false);
+    assert.equal(dm.getIssues().length, initialCount);
+    assert.equal(dm.getSprint().totalStoryPoints, initialPoints);
+
+    const resValid = dm.addIssue({
+      issueKey: 'FINITE-1',
+      summary: 'Finite points issue',
+      issueType: 'Story',
+      storyPoints: 13,
+      status: 'To Do'
+    });
+    assert.equal(resValid.success, true);
+
+    const kpis = dm.getKPIs();
+    assert.ok(Number.isFinite(kpis.totalPoints), 'totalPoints must be finite');
+    assert.ok(Number.isFinite(kpis.totalScope), 'totalScope must be finite');
+    assert.ok(Number.isFinite(kpis.completedPoints), 'completedPoints must be finite');
+    assert.ok(Number.isFinite(kpis.remainingPoints), 'remainingPoints must be finite');
+    assert.ok(Number.isFinite(kpis.variance), 'variance must be finite');
+
+    kpis.ideal.forEach(pt => {
+      assert.ok(Number.isFinite(pt.value), `Ideal point on day ${pt.day} must be finite`);
+    });
+    kpis.actual.forEach(pt => {
+      if (pt.value !== null) {
+        assert.ok(Number.isFinite(pt.value), `Actual point on day ${pt.day} must be finite`);
+      }
+    });
+  });
 });

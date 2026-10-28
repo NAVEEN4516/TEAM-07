@@ -145,11 +145,12 @@ export function initDashboard() {
       });
 
       if (isPerf && typeof requestAnimationFrame !== 'undefined' && typeof performance !== 'undefined') {
+        const start = (updatedDm && typeof updatedDm.lastNotifyStartedAt === 'number')
+          ? updatedDm.lastNotifyStartedAt
+          : performance.now();
+
         requestAnimationFrame(() => {
           requestAnimationFrame(() => {
-            const start = (updatedDm && typeof updatedDm.lastNotifyStartedAt === 'number')
-              ? updatedDm.lastNotifyStartedAt
-              : performance.now();
             const ms = performance.now() - start;
             window.__lastUpdateMs = ms;
             window.__perfLog.push({ action: 'update', ms });

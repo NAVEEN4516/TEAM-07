@@ -112,6 +112,21 @@ describe('validateIssue (BDC-F-006, BDC-NF-003, BDC-SR-001, BDC-SR-002)', () => 
         assert.ok(res.errors.includes('Story points must be a non-negative number.'));
       });
     });
+
+    it('rejects numbers exceeding safe numeric range like 1 followed by 303 zeros (P2 bugfix)', () => {
+      const hugeSp = '1' + '0'.repeat(303);
+      const res = validateIssue({ ...validBase, storyPoints: hugeSp }, [], validContext);
+      assert.equal(res.valid, false);
+      assert.ok(res.errors.includes('Story points must be a non-negative number.'));
+
+      const resNum = validateIssue({ ...validBase, storyPoints: 1e303 }, [], validContext);
+      assert.equal(resNum.valid, false);
+      assert.ok(resNum.errors.includes('Story points must be a non-negative number.'));
+
+      const resSafePlusOne = validateIssue({ ...validBase, storyPoints: Number.MAX_SAFE_INTEGER + 1000 }, [], validContext);
+      assert.equal(resSafePlusOne.valid, false);
+      assert.ok(resSafePlusOne.errors.includes('Story points must be a non-negative number.'));
+    });
   });
 
   describe('status validation', () => {
