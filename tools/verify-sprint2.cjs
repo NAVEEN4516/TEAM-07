@@ -61,26 +61,26 @@ const mime = { '.js': 'text/javascript', '.html': 'text/html', '.css': 'text/css
 
     await page.getByRole('button', { name: 'Edit PROJ-106', exact: true }).click();
     assert.equal(await page.evaluate(() => document.activeElement.id), 'edit-issue-status');
-    await page.getByLabel('Status', { exact: true }).selectOption('Done');
+    await page.locator('#issue-editor').getByLabel('Status', { exact: true }).selectOption('Done');
     await page.getByRole('button', { name: 'Save issue', exact: true }).click();
     assert.match(await page.locator('#issue-edit-errors').textContent(), /1 to 10/);
     await text(kpi('remaining-points'), '21');
-    await page.getByLabel('Completion day', { exact: false }).fill('11');
+    await page.locator('#issue-editor').getByLabel('Completion day', { exact: false }).fill('11');
     await page.getByRole('button', { name: 'Save issue', exact: true }).click();
     await text(kpi('remaining-points'), '21');
-    await page.getByLabel('Completion day', { exact: false }).fill('4');
+    await page.locator('#issue-editor').getByLabel('Completion day', { exact: false }).fill('4');
     await page.getByRole('button', { name: 'Save issue', exact: true }).click();
     await text(kpi('remaining-points'), '18');
     assert.equal(await page.evaluate(() => document.activeElement.getAttribute('aria-label')), 'Edit PROJ-106');
     assert.equal(await page.evaluate(async () => (await import('/js/ui/chart.js')).getChartInstance().data.datasets[1].data[4]), 18);
 
     await page.getByRole('button', { name: 'Edit PROJ-106', exact: true }).click();
-    await page.getByLabel('Status', { exact: true }).selectOption('In Progress');
+    await page.locator('#issue-editor').getByLabel('Status', { exact: true }).selectOption('In Progress');
     assert.equal(await page.locator('#edit-completed-day').isDisabled(), true);
     await page.getByRole('button', { name: 'Save issue', exact: true }).click();
     await text(kpi('remaining-points'), '21');
     await page.getByRole('button', { name: 'Edit PROJ-106', exact: true }).click();
-    await page.getByLabel('Status', { exact: true }).selectOption('Done');
+    await page.locator('#issue-editor').getByLabel('Status', { exact: true }).selectOption('Done');
     assert.equal(await page.locator('#edit-completed-day').inputValue(), '');
     await page.keyboard.press('Escape');
     assert.equal(await page.locator('#issue-editor').isHidden(), true);
@@ -98,6 +98,25 @@ const mime = { '.js': 'text/javascript', '.html': 'text/html', '.css': 'text/css
     await page.getByRole('button', { name: 'Reset Data', exact: true }).click();
     await text(kpi('total-scope'), '50');
     assert.equal(await page.locator('#backlog-table tbody tr').count(), 10);
+
+    // When run against the temporary merge with PR #38, exercise the complete
+    // teammate Add Issue -> our Edit -> Delete -> Reset flow through the UI.
+    if (await page.locator('#add-issue-key').count()) {
+      await page.locator('#add-issue-key').fill('PROJ-999');
+      await page.locator('#add-issue-summary').fill('<img src=x onerror="window.xss=9">');
+      await page.locator('#add-issue-points').fill('3');
+      await page.getByRole('button', { name: 'Add Issue', exact: true }).click();
+      await text(kpi('total-scope'), '53');
+      assert.equal(await page.locator('#backlog-table img').count(), 0);
+      await page.getByRole('button', { name: 'Edit PROJ-999', exact: true }).click();
+      await page.locator('#edit-issue-status').selectOption('Done');
+      await page.locator('#edit-completed-day').fill('4');
+      await page.getByRole('button', { name: 'Save issue', exact: true }).click();
+      await text(kpi('completed-points'), '32');
+      await page.getByRole('button', { name: 'Delete PROJ-999', exact: true }).click();
+      await text(kpi('total-scope'), '50');
+      await page.getByRole('button', { name: 'Reset Data', exact: true }).click();
+    }
 
     // Hostile fixture strings must be rendered as text in the actual DOM.
     await page.evaluate(async () => {
@@ -150,6 +169,7 @@ const mime = { '.js': 'text/javascript', '.html': 'text/html', '.css': 'text/css
     await fs.mkdir(evidence, { recursive: true });
     // Allow the canvas's normal Chart.js transition to settle for the evidence image.
     await page.waitForTimeout(1200);
+    await page.locator('.table-wrapper').evaluate(node => { node.scrollLeft = 0; });
     await page.screenshot({ path: path.join(evidence, 'naveen-sprint2-workflow.png'), fullPage: true });
     await page.getByRole('button', { name: 'Cancel', exact: true }).click();
 
