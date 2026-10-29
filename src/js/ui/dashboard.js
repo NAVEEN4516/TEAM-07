@@ -12,6 +12,7 @@ import { renderChart, updateChartTheme } from './chart.js';
 import { mountSprintBanner } from './sprintBanner.js';
 import { mountCurrentDayControl } from './currentDayControl.js';
 import { mountKPICards } from './kpiCards.js';
+import { mountAddIssueForm } from './addIssueForm.js';
 import { initTheme } from './themeManager.js';
 
 /**
@@ -82,7 +83,12 @@ export function initDashboard() {
     });
   }
 
-  // Dev-only helper flags: enabled only via ?dev / ?day URL query parameters
+  // Dev-only helper flags: enabled only via ?dev / ?day / ?perf URL query parameters
+  const isPerf = typeof window !== 'undefined' && Boolean(window.location && new URLSearchParams(window.location.search).has('perf'));
+  if (isPerf) {
+    window.__perfLog = window.__perfLog || [];
+  }
+
   if (typeof window !== 'undefined' && window.location) {
     const params = new URLSearchParams(window.location.search);
     const dayParam = params.get('day');
@@ -123,6 +129,11 @@ export function initDashboard() {
     if (currentDayControlEl && typeof mountCurrentDayControl === 'function' && dm) {
       mountCurrentDayControl(currentDayControlEl, dm);
     }
+
+    const addIssueFormEl = document.getElementById('add-issue-form');
+    if (addIssueFormEl && typeof mountAddIssueForm === 'function' && dm) {
+      mountAddIssueForm(addIssueFormEl, dm);
+    }
   }
 
   // Subscribe to DataManager changes for reactive updates across the dashboard
@@ -132,6 +143,21 @@ export function initDashboard() {
         sprint: updatedDm.getSprint(),
         issues: updatedDm.getIssues()
       });
+
+      if (isPerf && typeof requestAnimationFrame !== 'undefined' && typeof performance !== 'undefined') {
+        const start = (updatedDm && typeof updatedDm.lastNotifyStartedAt === 'number')
+          ? updatedDm.lastNotifyStartedAt
+          : performance.now();
+
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            const ms = performance.now() - start;
+            window.__lastUpdateMs = ms;
+            window.__perfLog.push({ action: 'update', ms });
+            console.info(`[perf] update: ${ms.toFixed(2)}ms`);
+          });
+        });
+      }
     });
   }
 
