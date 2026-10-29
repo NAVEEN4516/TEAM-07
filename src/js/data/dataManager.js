@@ -23,6 +23,8 @@ import {
   SCHEDULE_STATUS
 } from '../logic/burndownEngine.js';
 
+import { validateIssue } from '../logic/validationManager.js';
+
 /**
  * Validates a candidate sprint configuration object.
  * Checks for non-empty name, positive integer duration, and valid date ordering.
@@ -237,6 +239,61 @@ export class DataManager {
   }
 
   /**
+   * Adds a new issue to the sprint backlog (BDC-F-006).
+   * Validates parameters, rejects duplicate or invalid inputs,
+   * updates sprint commitment, and notifies subscribers.
+   *
+   * @param {object} issue - Candidate issue fields
+   * @returns {{ success: boolean, issue: object | null, errors: string[] }} Result
+   */
+  addIssue(issue) {
+    const existingKeys = this._issues.map(i => i.issueKey);
+    const context = {
+      currentDay: this._sprint.currentDay,
+      durationDays: this._sprint.durationDays
+    };
+
+    const validation = validateIssue(issue, existingKeys, context);
+    if (!validation.valid) {
+      return {
+        success: false,
+        issue: null,
+        errors: validation.errors
+      };
+    }
+
+    const normalised = {
+      issueKey: String(issue.issueKey).trim(),
+      summary: String(issue.summary).trim(),
+      issueType: issue.issueType,
+      storyPoints: Number(issue.storyPoints),
+      status: issue.status,
+      completedDay: issue.status === 'Done' ? parseInt(issue.completedDay, 10) : null
+    };
+
+    // Ensure calculated aggregate values remain finite before storing the new issue
+    const candidateIssues = [...this._issues, normalised];
+    const candidateTotal = calculateTotalPoints(candidateIssues);
+    if (!Number.isFinite(candidateTotal) || candidateTotal < 0 || candidateTotal > Number.MAX_SAFE_INTEGER) {
+      return {
+        success: false,
+        issue: null,
+        errors: ['Story points must be a non-negative number.']
+      };
+    }
+
+    this._issues.push(normalised);
+    this._sprint.totalStoryPoints = candidateTotal;
+    this._notify();
+
+    return {
+      success: true,
+      issue: deepClone(normalised),
+      errors: []
+    };
+  }
+
+  /**
    * Computes and returns the complete live KPI metrics per SRS BDC-F-015 and SAD Section 4.1.
    * Aggregates total scope, completed points, remaining points, timeline progress,
    * schedule variance, and status classification.
@@ -281,6 +338,10 @@ export class DataManager {
    * @private
    */
   _notify() {
+    const hasPerf = typeof performance !== 'undefined';
+    if (hasPerf) {
+      this.lastNotifyStartedAt = performance.now();
+    }
     for (const listener of this._listeners) {
       try {
         listener(this);
@@ -288,6 +349,9 @@ export class DataManager {
         // Prevent subscriber exception from breaking state pipeline
         console.error('Error in DataManager subscriber:', err);
       }
+    }
+    if (hasPerf) {
+      this.lastNotifyMs = performance.now() - this.lastNotifyStartedAt;
     }
   }
 }
