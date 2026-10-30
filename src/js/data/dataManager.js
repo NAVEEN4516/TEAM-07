@@ -25,6 +25,7 @@ import {
 
 import {
   validateIssue,
+  validateStatusUpdate,
   validateSprint,
   validateCurrentDay as checkCurrentDay,
   sanitizeStoredState,
@@ -339,15 +340,12 @@ export class DataManager {
     }
     const current = this._issues[index];
     const status = changes.status ?? current.status;
-    if (!['To Do', 'In Progress', 'Done'].includes(status)) {
-      return { success: false, errors: ['Choose To Do, In Progress or Done.'] };
-    }
     const completedDay = status === 'Done'
       ? (changes.completedDay === undefined ? current.completedDay : changes.completedDay)
       : null;
-    if (status === 'Done' && (!Number.isInteger(completedDay) || completedDay < 1 || completedDay > this._sprint.durationDays)) {
-      return { success: false, errors: [`Completion day must be an integer from 1 to ${this._sprint.durationDays}.`] };
-    }
+    const validation = validateStatusUpdate(status, completedDay,
+      this._sprint.currentDay, this._sprint.durationDays);
+    if (!validation.valid) return { success: false, errors: validation.errors };
     this._issues[index] = { ...current, status, completedDay };
     this._sprint.totalStoryPoints = calculateTotalPoints(this._issues);
     this._notify();

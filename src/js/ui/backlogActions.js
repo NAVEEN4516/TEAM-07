@@ -20,6 +20,15 @@ export function createBacklogActions(dataManager, editor, messages, table, reset
     activeKey = null;
   }
 
+  function updateCompletionBounds(day, label) {
+    const sprint = dataManager.getSprint();
+    const lastValidDay = Math.min(sprint.currentDay, sprint.durationDays);
+    day.max = String(lastValidDay);
+    label.textContent = lastValidDay > 0
+      ? `Completion day (1 to ${lastValidDay})`
+      : 'Completion day (unavailable while Current Day is 0)';
+  }
+
   function edit(key) {
     const issue = dataManager.getIssues().find(item => item.issueKey === key);
     if (!issue) return;
@@ -48,13 +57,12 @@ export function createBacklogActions(dataManager, editor, messages, table, reset
     status.value = issue.status;
     const dayLabel = document.createElement('label');
     dayLabel.htmlFor = 'edit-completed-day';
-    dayLabel.textContent = `Completion day (1 to ${dataManager.getSprint().durationDays})`;
     const day = document.createElement('input');
     day.id = dayLabel.htmlFor;
     day.className = 'form-control';
     day.type = 'number';
     day.min = '1';
-    day.max = String(dataManager.getSprint().durationDays);
+    updateCompletionBounds(day, dayLabel);
     day.step = '1';
     day.value = issue.completedDay === null ? '' : String(issue.completedDay);
     const errors = document.createElement('p');
@@ -117,14 +125,13 @@ export function createBacklogActions(dataManager, editor, messages, table, reset
     resetButton.focus();
   });
 
-  // Keep editor bounds up to date after a sprint configuration change.
+  // Keep editor bounds up to date after a timeline or sprint configuration change.
   dataManager.subscribe(() => {
     if (!activeKey) return;
     if (!dataManager.getIssues().some(issue => issue.issueKey === activeKey)) { close(); return; }
     const day = editor.querySelector('#edit-completed-day');
     if (day) {
-      day.max = String(dataManager.getSprint().durationDays);
-      editor.querySelector('label[for="edit-completed-day"]').textContent = `Completion day (1 to ${day.max})`;
+      updateCompletionBounds(day, editor.querySelector('label[for="edit-completed-day"]'));
     }
   });
 

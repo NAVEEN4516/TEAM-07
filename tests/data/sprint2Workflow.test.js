@@ -36,12 +36,41 @@ describe('BDC-F-007/008/009: Sprint 2 workflow and recovery', () => {
       assert.equal(calls, 0);
     });
   }
-  test('future completions count only when elapsed', () => {
+  test('TC-F-07.2: future completion is rejected atomically at Current Day 4', () => {
     const dm = new DataManager();
-    dm.updateIssue('PROJ-106', { status: 'Done', completedDay: 10 });
+    const before = dm.serialize();
+    let calls = 0;
+    dm.subscribe(() => calls++);
+    for (const completedDay of [5, 10]) {
+      const result = dm.updateIssue('PROJ-107', { status: 'Done', completedDay });
+      assert.equal(result.success, false);
+      assert.deepEqual(result.errors, ['Completion day must be a whole number between 1 and 4.']);
+      assert.equal(dm.serialize(), before);
+    }
+    assert.equal(calls, 0);
     assert.equal(dm.getKPIs().completedPoints, 29);
+  });
+  test('completion is valid once that day is reached and survives rewinding', () => {
+    const dm = new DataManager();
     dm.setCurrentDay(10);
+    assert.equal(dm.updateIssue('PROJ-106', { status: 'Done', completedDay: 10 }).success, true);
     assert.equal(dm.getKPIs().completedPoints, 32);
+    dm.setCurrentDay(4);
+    const restored = new DataManager();
+    assert.equal(restored.restoreFromJSON(dm.serialize()).success, true);
+    assert.equal(restored.getIssues()[5].completedDay, 10);
+    assert.equal(restored.getKPIs().completedPoints, 29);
+  });
+  test('Day 0 rejects Done but allows reopening without a completion day', () => {
+    const dm = new DataManager();
+    dm.setCurrentDay(0);
+    const before = dm.serialize();
+    const result = dm.updateIssue('PROJ-106', { status: 'Done', completedDay: 1 });
+    assert.equal(result.success, false);
+    assert.deepEqual(result.errors, ['No completion day is valid while Current Day is 0.']);
+    assert.equal(dm.serialize(), before);
+    assert.equal(dm.updateIssue('PROJ-101', { status: 'To Do' }).success, true);
+    assert.equal(dm.getIssues()[0].completedDay, null);
   });
   test('rejects unknown issues, invalid workflow and malformed changes', () => {
     const dm = new DataManager();
@@ -83,8 +112,8 @@ describe('BDC-F-007/008/009: Sprint 2 workflow and recovery', () => {
     dataset.sprint.currentDay = 0;
     dataset.issues = [{ ...dataset.issues[0], storyPoints: 0, status: 'To Do', completedDay: null }];
     const dm = new DataManager(dataset);
-    assert.equal(dm.updateIssue('PROJ-101', { status: 'Done', completedDay: 1 }).success, true);
     dm.setCurrentDay(1);
+    assert.equal(dm.updateIssue('PROJ-101', { status: 'Done', completedDay: 1 }).success, true);
     assert.equal(dm.getKPIs().remainingPoints, 0);
     assert.equal(dm.getKPIs().variance, 0);
     assert.equal(dm.setSprint({ durationDays: 0 }).success, false);

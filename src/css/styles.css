@@ -5,6 +5,15 @@
 
 /* Keyboard navigation and workflow controls (BDC-NF-002). */
 [hidden] { display: none !important; }
+.javascript-required-notice {
+  padding: 1rem;
+  margin: 1rem;
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #f87171;
+  border-radius: 8px;
+  font-weight: 600;
+}
 :focus-visible { outline: 3px solid var(--color-primary); outline-offset: 3px; }
 .skip-link { position: absolute; top: -100px; left: 1rem; z-index: 10; padding: 1rem; background: var(--color-surface); }
 .skip-link:focus { top: 1rem; }

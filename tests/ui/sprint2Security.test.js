@@ -20,3 +20,9 @@ test('BDC-SR-005: policy precedes scripts and disallows inline script/eval', () 
   assert.ok(!policy.includes('unsafe-eval'));
   assert.ok(!/<script(?![^>]*\bsrc=)[^>]*>/.test(html));
 });
+
+test('BDC-SR-005: noscript warning uses external CSS instead of a blocked inline style', () => {
+  const html = readFileSync(new URL('../../src/index.html', import.meta.url), 'utf8');
+  assert.match(html, /<noscript>\s*<div class="javascript-required-notice">/);
+  assert.doesNotMatch(html, /\sstyle\s*=/i);
+});

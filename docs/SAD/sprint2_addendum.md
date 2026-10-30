@@ -9,7 +9,12 @@ the local Chart.js bundle and no external runtime services.
 `DataManager.updateIssue(issueKey, changes)` validates workflow status and completion
 day before applying an atomic update. It returns `{ success, errors, issue }` on
 success; returned issue data is cloned. To Do and In Progress always have
-`completedDay: null`. Done requires an integer from 1 through `durationDays`.
+`completedDay: null`. The edit path delegates to `validateStatusUpdate` from
+ValidationManager (merged in PR #42). Done requires an integer from 1 through
+`min(currentDay, durationDays)`, matching SRS 5.2 and the Add Issue validator.
+At Current Day 0 no completion day is valid. The editor's label and maximum follow
+the timeline and sprint bounds. Rewinding the timeline or shortening the sprint
+preserves existing completion history; any new Done edit must satisfy today's bounds.
 Unknown keys and invalid changes return errors without publishing a state update.
 
 `DataManager.deleteIssue(issueKey)` removes one matching issue. Both mutation
@@ -25,8 +30,9 @@ invalid input visible with a useful alert. Save/cancel/delete restore focus to a
 remaining action or Reset Data. Timeline rerenders preserve keyboard focus.
 
 Reset continues to clone the immutable canonical dataset. It also clears a pending
-editor and announces restoration. No sprint-data persistence or saved-data parsing
-is introduced here. Theme storage failures are isolated from initialization.
+editor and announces restoration. PR #42 supplies validated `serialize()` and
+`restoreFromJSON()` data APIs, including safe default recovery. Automatic storage
+of sprint state remains disabled; theme storage failures are isolated from initialization.
 
 The dashboard provides empty/zero-scope guidance and a current textual chart
 description. Existing safe engine behavior remains the source of finite metrics.
@@ -46,6 +52,10 @@ inline event handlers, string evaluation, external connections, plugins, base-UR
 changes and browser-native form navigation are disallowed. Form submissions are
 handled by JavaScript with `preventDefault`. User text still requires safe DOM
 rendering; CSP is an additional boundary.
+
+The JavaScript-disabled warning uses the external `.javascript-required-notice`
+CSS class rather than a blocked inline style. Its visibility and computed warning
+styles are checked in a browser context with JavaScript disabled.
 
 This is a **meta policy, not an HTTP response header**. Python's standard static
 server is sufficient for exercising it, but this repository does not configure
