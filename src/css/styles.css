@@ -3,6 +3,29 @@
    Conforms to SRS & SAD Specifications (Light / Dark Themes & High Contrast)
    ========================================================================== */
 
+/* Keyboard navigation and workflow controls (BDC-NF-002). */
+[hidden] { display: none !important; }
+.javascript-required-notice {
+  padding: 1rem;
+  margin: 1rem;
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #f87171;
+  border-radius: 8px;
+  font-weight: 600;
+}
+:focus-visible { outline: 3px solid var(--color-primary); outline-offset: 3px; }
+.skip-link { position: absolute; top: -100px; left: 1rem; z-index: 10; padding: 1rem; background: var(--color-surface); }
+.skip-link:focus { top: 1rem; }
+.issue-actions { display: flex; gap: .5rem; }
+.dashboard-grid > * { min-width: 0; }
+.issue-edit-form { display: grid; grid-template-columns: 1fr; gap: .75rem; }
+#issue-editor, .empty-state { padding: 1rem; border-top: 1px solid var(--color-border); }
+#messages:not(:empty) { padding: .75rem 1.5rem; color: var(--color-text-main); background: var(--color-surface); }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
 /* Design Tokens & CSS Custom Properties */
 :root {
   --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;

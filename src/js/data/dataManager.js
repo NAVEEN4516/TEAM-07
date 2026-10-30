@@ -25,6 +25,7 @@ import {
 
 import {
   validateIssue,
+  validateStatusUpdate,
   validateSprint,
   validateCurrentDay as checkCurrentDay,
   sanitizeStoredState,
@@ -328,6 +329,37 @@ export class DataManager {
       totalScope: raw.totalPoints,
       scheduleStatus: raw.status
     };
+  }
+
+  /** BDC-F-007: update workflow fields atomically; reopening clears completion. */
+  updateIssue(issueKey, changes) {
+    const index = this._issues.findIndex(issue => issue.issueKey === issueKey);
+    if (index < 0) return { success: false, errors: ['Issue was not found.'] };
+    if (!changes || typeof changes !== 'object' || Array.isArray(changes)) {
+      return { success: false, errors: ['Provide status and completion day.'] };
+    }
+    const current = this._issues[index];
+    const status = changes.status ?? current.status;
+    const completedDay = status === 'Done'
+      ? (changes.completedDay === undefined ? current.completedDay : changes.completedDay)
+      : null;
+    const validation = validateStatusUpdate(status, completedDay,
+      this._sprint.currentDay, this._sprint.durationDays);
+    if (!validation.valid) return { success: false, errors: validation.errors };
+    this._issues[index] = { ...current, status, completedDay };
+    this._sprint.totalStoryPoints = calculateTotalPoints(this._issues);
+    this._notify();
+    return { success: true, errors: [], issue: deepClone(this._issues[index]) };
+  }
+
+  /** BDC-F-008: remove exactly one issue and publish the recalculated scope. */
+  deleteIssue(issueKey) {
+    const index = this._issues.findIndex(issue => issue.issueKey === issueKey);
+    if (index < 0) return { success: false, errors: ['Issue was not found.'] };
+    this._issues.splice(index, 1);
+    this._sprint.totalStoryPoints = calculateTotalPoints(this._issues);
+    this._notify();
+    return { success: true, errors: [] };
   }
 
   /**
