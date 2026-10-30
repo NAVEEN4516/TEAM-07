@@ -12,7 +12,11 @@ import { renderChart, updateChartTheme } from './chart.js';
 import { mountSprintBanner } from './sprintBanner.js';
 import { mountCurrentDayControl } from './currentDayControl.js';
 import { mountKPICards } from './kpiCards.js';
+import { mountAddIssueForm } from './addIssueForm.js';
 import { initTheme } from './themeManager.js';
+import { createBacklogActions } from './backlogActions.js';
+
+let backlogActions = null;
 
 /**
  * State reference cache.
@@ -62,7 +66,17 @@ export function refresh(state) {
   // 2. Render sprint backlog table
   const tableEl = document.getElementById('backlog-table');
   if (tableEl) {
-    renderTable(tableEl, issues);
+    renderTable(tableEl, issues, backlogActions);
+  }
+  const emptyState = document.getElementById('backlog-empty-state');
+  if (emptyState) {
+    emptyState.hidden = issues.length > 0 && metrics.totalPoints > 0;
+    emptyState.textContent = issues.length === 0
+      ? 'Your backlog is empty. All point totals are zero. Reset Data restores the sample sprint.'
+      : 'This backlog has zero story points. Point totals and burndown lines remain at zero.';
+  }
+  if (chartCanvas) {
+    chartCanvas.setAttribute('aria-label', `Burndown chart, Day ${sprint.currentDay} of ${sprint.durationDays}: ideal remaining ${metrics.ideal?.[sprint.currentDay]?.value ?? 0}, actual remaining ${metrics.remainingPoints} points. ${metrics.status}.`);
   }
 }
 
@@ -76,13 +90,25 @@ export function initDashboard() {
 
   // Initialize theme toggle controller
   if (typeof document !== 'undefined') {
+    const editor = document.getElementById('issue-editor');
+    const messages = document.getElementById('messages');
+    const table = document.getElementById('backlog-table');
+    const resetButton = document.getElementById('reset-data-btn');
+    if (dm && editor && messages && table && resetButton) {
+      backlogActions = createBacklogActions(dm, editor, messages, table, resetButton);
+    }
     const themeBtn = document.getElementById('theme-toggle-btn');
     initTheme(themeBtn, (newTheme) => {
       updateChartTheme(newTheme);
     });
   }
 
-  // Dev-only helper flags: enabled only via ?dev / ?day URL query parameters
+  // Dev-only helper flags: enabled only via ?dev / ?day / ?perf URL query parameters
+  const isPerf = typeof window !== 'undefined' && Boolean(window.location && new URLSearchParams(window.location.search).has('perf'));
+  if (isPerf) {
+    window.__perfLog = window.__perfLog || [];
+  }
+
   if (typeof window !== 'undefined' && window.location) {
     const params = new URLSearchParams(window.location.search);
     const dayParam = params.get('day');
@@ -123,6 +149,11 @@ export function initDashboard() {
     if (currentDayControlEl && typeof mountCurrentDayControl === 'function' && dm) {
       mountCurrentDayControl(currentDayControlEl, dm);
     }
+
+    const addIssueFormEl = document.getElementById('add-issue-form');
+    if (addIssueFormEl && typeof mountAddIssueForm === 'function' && dm) {
+      mountAddIssueForm(addIssueFormEl, dm);
+    }
   }
 
   // Subscribe to DataManager changes for reactive updates across the dashboard
@@ -132,6 +163,21 @@ export function initDashboard() {
         sprint: updatedDm.getSprint(),
         issues: updatedDm.getIssues()
       });
+
+      if (isPerf && typeof requestAnimationFrame !== 'undefined' && typeof performance !== 'undefined') {
+        const start = (updatedDm && typeof updatedDm.lastNotifyStartedAt === 'number')
+          ? updatedDm.lastNotifyStartedAt
+          : performance.now();
+
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            const ms = performance.now() - start;
+            window.__lastUpdateMs = ms;
+            window.__perfLog.push({ action: 'update', ms });
+            console.info(`[perf] update: ${ms.toFixed(2)}ms`);
+          });
+        });
+      }
     });
   }
 

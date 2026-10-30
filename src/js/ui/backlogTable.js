@@ -58,7 +58,7 @@ export function buildTableRows(issues = []) {
  * @param {HTMLElement} container - Table element or parent container
  * @param {Array<Object>} issues - Array of issue objects
  */
-export function renderTable(container, issues = []) {
+export function renderTable(container, issues = [], actions = null) {
   if (!container) {
     return;
   }
@@ -85,6 +85,7 @@ export function renderTable(container, issues = []) {
     { label: 'Status', className: 'col-status' },
     { label: 'Completion Day', className: 'col-day cell-number' }
   ];
+  if (actions) headers.push({ label: 'Actions', className: 'col-actions' });
 
   headers.forEach(h => {
     const th = document.createElement('th');
@@ -105,9 +106,9 @@ export function renderTable(container, issues = []) {
   if (rows.length === 0) {
     const emptyRow = document.createElement('tr');
     const emptyCell = document.createElement('td');
-    emptyCell.colSpan = 6;
+    emptyCell.colSpan = headers.length;
     emptyCell.className = 'table-empty-cell';
-    emptyCell.textContent = 'No issues in backlog';
+    emptyCell.textContent = 'No issues in backlog. Reset Data restores the sample sprint.';
     emptyRow.appendChild(emptyCell);
     tbody.appendChild(emptyRow);
   } else {
@@ -151,6 +152,23 @@ export function renderTable(container, issues = []) {
       tdDay.className = 'cell-number';
       tdDay.textContent = row.completedDay;
       tr.appendChild(tdDay);
+
+      if (actions) {
+        const cell = document.createElement('td');
+        cell.className = 'issue-actions';
+        for (const [label, handler] of [['Edit', actions.edit], ['Delete', actions.delete]]) {
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'btn btn-secondary';
+          button.textContent = label;
+          button.setAttribute('aria-label', `${label} ${row.issueKey}`);
+          button.dataset.issueKey = row.issueKey;
+          button.dataset.action = label.toLowerCase();
+          button.addEventListener('click', () => handler(row.issueKey));
+          cell.appendChild(button);
+        }
+        tr.appendChild(cell);
+      }
 
       tbody.appendChild(tr);
     });

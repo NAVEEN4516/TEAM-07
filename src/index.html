@@ -2,24 +2,15 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Burndown Chart Generator</title>
   <!-- Early theme application to avoid FOUC (flash of wrong theme) -->
-  <script>
-    (function() {
-      try {
-        var saved = localStorage.getItem('burndown_theme_pref');
-        if (saved === 'dark' || (!saved && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-          document.documentElement.setAttribute('data-theme', 'dark');
-        } else {
-          document.documentElement.setAttribute('data-theme', 'light');
-        }
-      } catch (e) {}
-    })();
-  </script>
+  <script src="js/ui/themeBootstrap.js"></script>
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
+  <a class="skip-link" href="#main-content">Skip to dashboard</a>
   <div class="app-container">
     <header class="app-header">
       <div class="header-content">
@@ -29,6 +20,7 @@
         </div>
 
         <div class="header-actions">
+          <button type="button" id="reset-data-btn" class="btn btn-secondary">Reset Data</button>
           <div class="sprint-info">
             <span class="sprint-label">Sprint:</span>
             <span id="sprint-name" class="sprint-badge">--</span>
@@ -54,7 +46,7 @@
 
     <div id="messages" role="status" aria-live="polite"></div>
 
-    <main class="dashboard-main">
+    <main id="main-content" class="dashboard-main" tabindex="-1">
       <!-- F-001: Sprint Configuration Placeholder -->
       <div id="sprint-config"></div>
 
@@ -79,15 +71,25 @@
           <div class="panel-header">
             <h2 class="panel-title">Sprint Backlog</h2>
           </div>
+          <div id="add-issue-form"></div>
           <div class="table-wrapper">
             <table id="backlog-table"></table>
           </div>
+          <p id="backlog-empty-state" class="empty-state" role="status" hidden></p>
+          <section id="issue-editor" aria-labelledby="issue-editor-title" hidden></section>
         </section>
       </div>
     </main>
   </div>
 
+  <noscript>
+    <div class="javascript-required-notice">
+      JavaScript is required to run the Agile Burndown Chart Generator. Please enable JavaScript in your browser.
+    </div>
+  </noscript>
+
   <script src="vendor/chart.umd.js"></script>
+  <script src="js/ui/fileProtocolNotice.js"></script>
   <script type="module" src="js/ui/dashboard.js"></script>
 </body>
 </html>
