@@ -12,3 +12,4 @@ The following table documents intentional deviations between the project specifi
 | Test Plan | Unit tests with Jest | Node.js built-in test runner (node --test) | No extra dependency |
 | SAD | Module list | Added chartConfig.js, backlogTable.js, backlogActions.js, addIssueForm.js, fileProtocolNotice.js; Chart.js bundled locally in src/vendor; dev flags ?dev and ?perf disabled by default | Testability, offline use |
 | Browser coverage | Chrome, Firefox, Edge | Chrome and Edge verified; Firefox pending | Firefox not yet tested |
+
