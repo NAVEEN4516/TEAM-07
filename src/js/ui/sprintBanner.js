@@ -95,7 +95,7 @@ export function renderSprintBannerHTML(sprint, options = {}) {
  */
 export function renderSprintConfigFormHTML(sprint, errors = []) {
   const name = escapeHTML(sprint?.sprintName || '');
-  const duration = sprint?.durationDays ?? 10;
+  const duration = escapeHTML(sprint?.durationDays ?? 10);
   const startDate = escapeHTML(sprint?.startDate || '');
   const endDate = escapeHTML(sprint?.endDate || '');
 
@@ -212,6 +212,7 @@ export function mountSprintBanner(container, dataManager) {
       configBtn.addEventListener('click', () => {
         container.innerHTML = renderSprintConfigFormHTML(sprint);
         bindForm();
+        container.querySelector('#input-sprint-name')?.focus();
       });
     }
   }
@@ -221,7 +222,10 @@ export function mountSprintBanner(container, dataManager) {
     const cancelBtn = container.querySelector('[data-testid="btn-cancel-sprint"]');
 
     if (cancelBtn) {
-      cancelBtn.addEventListener('click', () => update());
+      cancelBtn.addEventListener('click', () => {
+        update();
+        container.querySelector('[data-testid="btn-configure-sprint"]')?.focus();
+      });
     }
 
     if (form) {
@@ -239,8 +243,12 @@ export function mountSprintBanner(container, dataManager) {
         if (!result.success) {
           container.innerHTML = renderSprintConfigFormHTML(candidate, result.errors);
           bindForm();
+          const errors = container.querySelector('[data-testid="config-errors"]');
+          errors?.setAttribute('tabindex', '-1');
+          errors?.focus();
         } else {
           update();
+          container.querySelector('[data-testid="btn-configure-sprint"]')?.focus();
         }
       });
     }

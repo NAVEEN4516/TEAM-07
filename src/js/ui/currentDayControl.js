@@ -101,6 +101,8 @@ export function mountCurrentDayControl(container, dataManager) {
 
   function update() {
     const sprint = dataManager.getSprint();
+    const focusedTestId = container.contains(document.activeElement)
+      ? document.activeElement.getAttribute('data-testid') : null;
     container.innerHTML = renderCurrentDayControlHTML(sprint.currentDay, sprint.durationDays);
 
     const slider = container.querySelector('[data-testid="current-day-slider"]');
@@ -127,6 +129,10 @@ export function mountCurrentDayControl(container, dataManager) {
         const duration = dataManager.getSprint().durationDays;
         if (cur < duration) dataManager.setCurrentDay(cur + 1);
       });
+    }
+    if (focusedTestId) {
+      const replacement = container.querySelector(`[data-testid="${focusedTestId}"]`);
+      (replacement && !replacement.disabled ? replacement : slider)?.focus();
     }
   }
 
