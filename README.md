@@ -62,6 +62,7 @@ demo_sprint1_mvp.mp4  Archived Sprint 1 demonstration video
 
 ## Documentation and Evidence
 
+- [Team contribution evidence and commit-count explanation](docs/team-contributions.md)
 - [Software Requirements Specification](docs/SRS/Burndown_Chart_SRS.docx)
 - [Software Architecture Document](docs/SAD/Burndown_Chart_SAD.docx)
 - [Sprint 2 architecture addendum](docs/SAD/sprint2_addendum.md)
