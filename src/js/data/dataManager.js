@@ -23,63 +23,32 @@ import {
   SCHEDULE_STATUS
 } from '../logic/burndownEngine.js';
 
-import { validateIssue } from '../logic/validationManager.js';
+import {
+  validateIssue,
+  validateSprint,
+  validateCurrentDay as checkCurrentDay,
+  sanitizeStoredState,
+  parseStoredState
+} from '../logic/validationManager.js';
 
 /**
  * Validates a candidate sprint configuration object.
- * Checks for non-empty name, positive integer duration, and valid date ordering.
+ * Delegates to ValidationManager.validateSprint (SAD Section 4.3), which enforces a
+ * non-empty name, a whole-number duration of 1 to 60 working days, and real
+ * calendar dates in order. Kept as an export for existing callers.
  * Conforms to SRS BDC-F-001, BDC-NF-003, and BDC-SR-002.
  *
  * @param {object} config - Candidate configuration object
  * @returns {{ valid: boolean, errors: string[] }} Validation result
  */
 export function validateSprintConfig(config) {
-  const errors = [];
-
-  if (!config || typeof config !== 'object') {
-    return { valid: false, errors: ['Configuration must be a valid object.'] };
-  }
-
-  // 1. Validate Sprint Name
-  if (typeof config.sprintName !== 'string' || config.sprintName.trim().length === 0) {
-    errors.push('Sprint name is required and cannot be empty.');
-  }
-
-  // 2. Validate Duration (in days)
-  const duration = config.durationDays;
-  if (
-    typeof duration !== 'number' ||
-    !Number.isFinite(duration) ||
-    !Number.isInteger(duration) ||
-    duration <= 0
-  ) {
-    errors.push('Sprint duration must be a positive integer greater than 0.');
-  }
-
-  // 3. Validate Start and End Dates
-  if (config.startDate !== undefined || config.endDate !== undefined) {
-    const start = new Date(config.startDate);
-    const end = new Date(config.endDate);
-
-    if (isNaN(start.getTime())) {
-      errors.push('Sprint start date is invalid.');
-    }
-    if (isNaN(end.getTime())) {
-      errors.push('Sprint end date is invalid.');
-    }
-    if (!isNaN(start.getTime()) && !isNaN(end.getTime()) && end < start) {
-      errors.push('Sprint end date must follow or equal start date.');
-    }
-  }
-
-  return {
-    valid: errors.length === 0,
-    errors
-  };
+  return validateSprint(config);
 }
 
 /**
  * Validates candidate Current Day value against the sprint duration.
+ * Delegates to ValidationManager.validateCurrentDay and keeps this module's
+ * single-error result shape for existing callers.
  * Conforms to SRS BDC-F-003 and SAD Section 4.1.
  *
  * @param {unknown} day - Candidate day
@@ -87,19 +56,8 @@ export function validateSprintConfig(config) {
  * @returns {{ valid: boolean, error: string | null }} Validation result
  */
 export function validateCurrentDay(day, durationDays) {
-  if (typeof day !== 'number' || !Number.isFinite(day)) {
-    return { valid: false, error: 'Current Day must be a finite number.' };
-  }
-  if (!Number.isInteger(day)) {
-    return { valid: false, error: 'Current Day must be an integer.' };
-  }
-  if (day < 0) {
-    return { valid: false, error: 'Current Day cannot be negative (must be >= 0).' };
-  }
-  if (typeof durationDays === 'number' && Number.isFinite(durationDays) && day > durationDays) {
-    return { valid: false, error: `Current Day (${day}) cannot exceed sprint duration (${durationDays}).` };
-  }
-  return { valid: true, error: null };
+  const { valid, errors } = checkCurrentDay(day, durationDays);
+  return { valid, error: valid ? null : errors[0] };
 }
 
 /**
@@ -118,12 +76,32 @@ export class DataManager {
 
   /**
    * Initializes or reloads state.
+   * A supplied dataset is validated before it is stored (BDC-NF-003, BDC-SR-003).
+   * A missing sprint or issue list falls back to the default for that part; if the
+   * result is still invalid, the whole default dataset is loaded instead and the
+   * reasons are kept on `loadErrors`.
+   *
    * @param {object} [dataset] - Dataset to initialize with, defaults to DEFAULT_DATASET
    */
   init(dataset = null) {
-    const source = dataset || getDefaultDataset();
-    this._sprint = deepClone(source.sprint || DEFAULT_SPRINT);
-    this._issues = deepClone(source.issues || DEFAULT_ISSUES);
+    /** @type {string[]} */
+    this.loadErrors = [];
+    let source = getDefaultDataset();
+
+    if (dataset) {
+      const result = sanitizeStoredState({
+        sprint: dataset.sprint || DEFAULT_SPRINT,
+        issues: dataset.issues || DEFAULT_ISSUES
+      });
+      if (result.valid) {
+        source = result.state;
+      } else {
+        this.loadErrors = result.errors;
+      }
+    }
+
+    this._sprint = deepClone(source.sprint);
+    this._issues = deepClone(source.issues);
     this._notify();
   }
 
@@ -132,6 +110,37 @@ export class DataManager {
    */
   reset() {
     this.init(getDefaultDataset());
+  }
+
+  /**
+   * Serializes the current sprint and backlog, for example to save in localStorage.
+   * Every value in the store has already passed validation, so the result is
+   * accepted by restoreFromJSON.
+   *
+   * @returns {string} JSON text holding `{sprint, issues}`
+   */
+  serialize() {
+    return JSON.stringify({ sprint: this._sprint, issues: this._issues });
+  }
+
+  /**
+   * Loads a serialized sprint state, such as a localStorage payload (BDC-SR-003).
+   * Malformed JSON or a schema violation never reaches the store: the default
+   * dataset is restored instead, and the reasons are returned for display.
+   * Never throws.
+   *
+   * @param {unknown} raw - Serialized state, usually from serialize()
+   * @returns {{ success: boolean, errors: string[] }} success is false when defaults were restored
+   */
+  restoreFromJSON(raw) {
+    const result = parseStoredState(raw);
+    if (result.valid) {
+      this.init(result.state);
+      return { success: true, errors: [] };
+    }
+    this.init(null);
+    this.loadErrors = result.errors;
+    return { success: false, errors: result.errors };
   }
 
   /**
