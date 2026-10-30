@@ -71,6 +71,7 @@
           <div class="panel-header">
             <h2 class="panel-title">Sprint Backlog</h2>
           </div>
+          <div id="add-issue-form"></div>
           <div class="table-wrapper">
             <table id="backlog-table"></table>
           </div>
@@ -81,7 +82,14 @@
     </main>
   </div>
 
+  <noscript>
+    <div style="padding: 1rem; margin: 1rem; background: #fee2e2; color: #991b1b; border: 1px solid #f87171; border-radius: 8px; font-weight: 600;">
+      JavaScript is required to run the Agile Burndown Chart Generator. Please enable JavaScript in your browser.
+    </div>
+  </noscript>
+
   <script src="vendor/chart.umd.js"></script>
+  <script src="js/ui/fileProtocolNotice.js"></script>
   <script type="module" src="js/ui/dashboard.js"></script>
 </body>
 </html>

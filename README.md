@@ -56,10 +56,13 @@ A 1-minute video demonstration showcasing the working Sprint 1 MVP is available 
 ```bash
 git clone https://github.com/NAVEEN4516/TEAM-07.git
 cd TEAM-07
-# Option 1: open src/index.html directly in a browser
-# Option 2: python -m http.server 8000 --directory src
-# Option 3: npx serve src
+# Serve the application over HTTP (e.g. using npx serve or Python):
+npx serve src
+# or: python -m http.server 8000 --directory src
 ```
+
+> **Note on Browser Compatibility (`file://` protocol):**  
+> The application uses modern JavaScript ES modules (`import`/`export`). Modern browsers (Chrome, Edge, Firefox) enforce CORS restrictions that block ES module scripts when opening files directly via `file://`. The application must be served over HTTP (`npx serve src`). Direct `file://` opening is not supported in modern browsers and will display a server requirement notification.
 
 Run automated tests (Node.js 20+):
 
@@ -67,6 +70,11 @@ Run automated tests (Node.js 20+):
 npm test
 ```
 *(Executes all 119 unit tests across 36 suites via the native `node --test` runner with 0 external dependencies)*
+
+### 🛠️ Developer Flags
+- `?perf`: Enables high-resolution render timing instrumentation, logging update durations to `console.info` and recording measurements in `window.__perfLog` and `window.__lastUpdateMs` (SRS BDC-NF-001).
+- `?day=<n>`: Sets initial current day on application load.
+- `?dev`: Exposes `window.__setDay(n)` helper in the browser console for manual state testing.
 
 ## 📋 Project Management
 
