@@ -35,8 +35,9 @@ The reviewed Sprint 2 implementation is merged into `main` through
 | [#39](https://github.com/NAVEEN4516/TEAM-07/pull/39) | Edit/delete/reset workflow, accessibility, empty states, safe text rendering, and static CSP |
 
 At the release, **255 automated tests across 63 suites pass**. Chrome and Edge
-workflow checks pass. Firefox and manual screen-reader verification, the final
-two-minute team video, and submission freeze remain separate completion tasks.
+workflow checks pass. The [Sprint 2 screen recording](demo_sprint2.mp4) is
+available. Firefox and manual screen-reader verification and submission freeze
+remain separate completion tasks.
 
 ## 🧱 Tech Stack
 
@@ -57,11 +58,13 @@ tests/                Automated unit test suites (node --test)
 docs/                 SRS, SAD, Test Plan, Sprint 1/2 checklists, screenshots, and evidence
 tools/                Optional browser regression verification script
 demo_sprint1_mvp.mp4  Archived Sprint 1 demonstration video
+demo_sprint2.mp4      Sprint 2 screen recording
 .github/              PR template, CODEOWNERS, CI workflows
 ```
 
 ## Documentation and Evidence
 
+- [Sprint 2 screen recording](demo_sprint2.mp4)
 - [Team contribution evidence and commit-count explanation](docs/team-contributions.md)
 - [Software Requirements Specification](docs/SRS/Burndown_Chart_SRS.docx)
 - [Software Architecture Document](docs/SAD/Burndown_Chart_SAD.docx)
@@ -146,7 +149,7 @@ is installed outside the checkout, set `NODE_PATH` to its package directory.
 | --- | --- | --- |
 | Dry run | 12–16 Oct | Practice sprint |
 | Sprint 1 | 19–23 Oct | Working core product + 1-min demo video ([`demo_sprint1_mvp.mp4`](demo_sprint1_mvp.mp4)) |
-| Sprint 2 | 26–30 Oct | Reviewed implementation merged to `main`; final team video and submission freeze remain |
+| Sprint 2 | 26–30 Oct | Reviewed implementation merged to `main`; screen recording available; submission freeze remains |
 
 ## 🌿 Contribution Workflow
 
