@@ -1,0 +1,17 @@
+{
+  "browser": "157.0.8103.38",
+  "result": "PASS",
+  "checks": [
+    "workflow and KPIs/chart",
+    "validation without mutation",
+    "keyboard focus",
+    "delete all and reset",
+    "DOM XSS",
+    "single-day zero scope",
+    "CSP enforcement",
+    "unavailable storage",
+    "future-completion rejection and Day 0 bounds",
+    "styled noscript warning with JS disabled"
+  ],
+  "pageErrors": []
+}
