@@ -1456,6 +1456,9 @@ async function runSuite() {
     }));
 
     // 4. TC-SR-03.1: Corrupted localStorage recovery at data layer
+    // STP Table 9, TC-SR-03.1 (BDC-SR-003): Corrupted data discarded; default dataset restored; no crash
+    // Note: Sprint persistence is disabled in browser UI per architecture; verified at data layer
+    // and covered by unit tests in tests/data/storedState.test.js:128-175.
     const storageRecoveryPass = await page.evaluate(async () => {
       const dmMod = await import('/js/data/dataManager.js');
       const dm = dmMod.defaultDataManager;
@@ -1465,19 +1468,19 @@ async function runSuite() {
       // 2. Valid JSON with corrupt structure
       const resCorruptStructure = dm.restoreFromJSON(JSON.stringify({ sprint: null, issues: 'not-array' }));
 
-      // Both should return success: false, not throw, and leave store clean
-      return !resInvalidJson.success && !resCorruptStructure.success && dm.getIssues().length === 11;
+      // Both should return success: false, not throw, and restore baseline default dataset (10 issues)
+      return !resInvalidJson.success && !resCorruptStructure.success && dm.getIssues().length === 10;
     });
 
     results.push(makeRecord({
       tcId: 'TC-SR-03.1',
       reqId: 'BDC-SR-003',
       group: 'SECURITY',
-      inputs: 'Call restoreFromJSON with malformed JSON and corrupted schema',
-      expected: 'Corrupted data discarded safely without crash or stack trace',
-      actual: `Data layer handles corrupt state safely: ${storageRecoveryPass}`,
+      inputs: 'Call restoreFromJSON with malformed JSON and corrupted schema (data-layer verification, tests/data/storedState.test.js)',
+      expected: 'Corrupted data discarded safely without crash; default dataset restored (STP TC-SR-03.1)',
+      actual: `Data layer handles corrupt state safely: ${storageRecoveryPass} (default 10 issues restored)`,
       status: storageRecoveryPass ? 'PASS' : 'FAIL',
-      browserName: launchRes.channel,
+      browserName: channel,
       browserVersion
     }));
 
