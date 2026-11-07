@@ -958,6 +958,7 @@ async function runSuite() {
     const loc = getLocators(page);
 
     // TC-F-09.1: Reset restores defaults after mutations
+    // STP Table 9, TC-F-09.1 (BDC-F-009): Original 10 issues, Sprint 1 config, Current Day=4, Total=50
     // 1. Add an issue
     await loc.addIssueKey.fill('MUT-1');
     await loc.addIssueSummary.fill('Temp mutation');
@@ -981,15 +982,17 @@ async function runSuite() {
     const resetTotal = (await loc.kpi('total-scope').textContent()).trim();
     const resetComp = (await loc.kpi('completed-points').textContent()).trim();
     const resetRem = (await loc.kpi('remaining-points').textContent()).trim();
-    const resetDay = (await loc.currentDayValue.textContent()).trim();
+    const resetDayBadge = (await loc.currentDayBadge.textContent()).trim();
+    const resetDayNum = (await loc.currentDayValue.textContent()).trim();
     const resetRows = await loc.tableRows.count();
-    const ssReset = `docs/reports/evidence/sv-g7-reset-${launchRes.channel}.png`;
+    const ssReset = `docs/reports/evidence/sv-g7-reset-${channel}.png`;
     await page.screenshot({ path: ssReset, fullPage: true });
 
     const resetPass = resetTotal === '50' &&
       resetComp === '29' &&
       resetRem === '21' &&
-      resetDay.includes('Day 4 of 10') &&
+      resetDayNum === '4' &&
+      resetDayBadge.includes('Day 4 of 10') &&
       resetRows === 10;
 
     results.push(makeRecord({
@@ -998,9 +1001,9 @@ async function runSuite() {
       group: 'G7',
       inputs: 'Perform Add, Day move to 7, Duration to 15; Click "Reset Data"',
       expected: 'Exact baseline defaults restored: 10 issues, 50 pts, Day 4 of 10',
-      actual: `Rows=${resetRows}, Total=${resetTotal}, Completed=${resetComp}, Remaining=${resetRem}, Day="${resetDay}"`,
+      actual: `Rows=${resetRows}, Total=${resetTotal}, Completed=${resetComp}, Remaining=${resetRem}, DayBadge="${resetDayBadge}"`,
       status: resetPass ? 'PASS' : 'FAIL',
-      browserName: launchRes.channel,
+      browserName: channel,
       browserVersion,
       evidencePath: ssReset
     }));
