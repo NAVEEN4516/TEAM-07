@@ -64,6 +64,9 @@ demo_sprint2.mp4      Sprint 2 screen recording
 
 ## Documentation and Evidence
 
+- [Testing phase start and current QA responsibilities](docs/reports/qa-phase-start.md)
+- [Test execution addendum](docs/test-plan/testing-phase-addendum.md)
+
 - [Sprint 2 screen recording](demo_sprint2.mp4)
 - [Team contribution evidence and commit-count explanation](docs/team-contributions.md)
 - [Software Requirements Specification](docs/SRS/Burndown_Chart_SRS.docx)

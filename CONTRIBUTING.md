@@ -35,10 +35,12 @@
    npm test
    ```
 4. Push your branch and open a **Pull Request into `develop`** (not directly into `main`). Fill in the PR template.
-5. Get **1 approval**, resolve all review comments, verify CI checks pass, then **Squash and merge**.
+5. Get **1 approval**, resolve all review comments, verify CI checks pass, then use **Create a merge commit**. Squash and rebase merging are disabled to preserve individual commits.
 6. The branch is deleted automatically after merge.
 
 ## Rules
+
+For the current testing cycle, use the [QA start pack](docs/reports/qa-phase-start.md) for the application baseline, team responsibilities and evidence format. The QA Lead coordinates shared test-document revisions. Reports must identify their tested commit and execution method.
 - Never push directly to `main` or `develop`; both are protected branches.
 - Keep commits focused and modular; run `npm test` before opening a PR.
 - Don't commit `node_modules/`, `.env`, temporary IDE folders, or Office temp files (`~$*.docx`).
