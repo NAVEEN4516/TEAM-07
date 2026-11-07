@@ -43,9 +43,9 @@ Programmatic DOM ARIA attributes and keyboard focus order passed 100% in automat
 2. Advance Current Day or add an issue.
    - **Expected Speech**: Because KPI cards carry `aria-live="polite"`, the screen reader announces updated metrics when idle:
      - "Total Scope: 50 story points"
-     - "Completed: 22 points"
-     - "Remaining: 28 points"
-     - "Schedule Status: Behind, 8 points behind ideal"
+     - "Completed: 29 points"
+     - "Remaining: 21 points"
+     - "Schedule Status: Ahead of Schedule, 9 points ahead of ideal"
 
 ### Scenario 3: Sprint Timeline Slider Control
 1. Tab to the Current Day slider (`input[type="range"]`).
@@ -63,16 +63,16 @@ Programmatic DOM ARIA attributes and keyboard focus order passed 100% in automat
    - **Expected Speech**: Reads column header first, then cell content:
      - "Key, column 1: PROJ-101"
      - "Summary, column 2: Set up repository and build pipeline"
-     - "Points, column 4: 8"
+     - "Points, column 4: 5"
      - "Status, column 5: Done"
-     - "Completion Day, column 6: 4"
+     - "Completion Day, column 6: 1"
      - "Actions, column 7: Edit PROJ-101 button, Delete PROJ-101 button"
 
 ### Scenario 5: Add Issue Form & Error Announcements
 1. Tab into Add Issue Form (`#add-issue-form`).
 2. Trigger submit on empty fields (`Enter` or click "Add Issue").
    - **Expected Speech**: Screen reader immediately reads the error container due to `role="alert"`:
-     - "Alert: 4 errors found. Please correct the following issues."
+     - "Alert: Please correct the following errors."
      - Form controls announce validation hints via `aria-describedby`.
 3. Select Status="Done":
    - **Expected Speech**: Completion Day field becomes available and accessible; `hidden` state removed.
@@ -81,7 +81,7 @@ Programmatic DOM ARIA attributes and keyboard focus order passed 100% in automat
 
 ### Scenario 6: Inline Issue Editor Focus Restoration
 1. Focus on "Edit PROJ-101" button in backlog table and press `Enter`.
-   - **Expected Speech**: "Edit PROJ-101, Status select, To Do, 1 of 3".
+   - **Expected Speech**: "Edit PROJ-101, Status select, Done, 1 of 3".
    - Focus is automatically placed into `#edit-issue-status`.
 2. Press `Escape` key without saving.
    - **Expected Speech**: Editor closes; focus is programmatically restored back to "Edit PROJ-101" button in table.
@@ -98,8 +98,8 @@ Programmatic DOM ARIA attributes and keyboard focus order passed 100% in automat
 | Assistive Tool | OS / Browser | Tester Name | Date | Status |
 | :--- | :--- | :--- | :--- | :--- |
 | **NVDA 2024+** | Windows 11 / Chrome 156 | [Pending] | YYYY-MM-DD | [ ] PASS  [ ] FAIL |
-| **JAWS 2024+** | Windows 11 / Edge 156 | [Pending] | YYYY-MM-DD | [ ] PASS  [ ] FAIL |
-| **Narrator** | Windows 11 / Edge 156 | [Pending] | YYYY-MM-DD | [ ] PASS  [ ] FAIL |
+| **JAWS 2024+** | Windows 11 / Edge 157 | [Pending] | YYYY-MM-DD | [ ] PASS  [ ] FAIL |
+| **Narrator** | Windows 11 / Edge 157 | [Pending] | YYYY-MM-DD | [ ] PASS  [ ] FAIL |
 | **VoiceOver** | macOS Sequoia / Safari | [Pending] | YYYY-MM-DD | [ ] PASS  [ ] FAIL |
 
 ---
