@@ -187,7 +187,9 @@ async function runSuite() {
       kpi: id => page.locator(`[data-testid="kpi-${id}"] .kpi-value`),
       kpiVariance: page.locator('[data-testid="kpi-variance"] strong'),
       kpiStatusBadge: page.locator('[data-testid="kpi-schedule-status"] [data-testid="status-badge"] .status-text'),
+      currentDayBadge: page.locator('[data-testid="current-day-value"]'),
       currentDayValue: page.locator('[data-testid="current-day-value"] strong'),
+      sprintDurationPill: page.locator('[data-testid="sprint-duration"]'),
       slider: page.locator('#current-day-slider'),
       prevBtn: page.locator('[data-testid="btn-prev-day"]'),
       nextBtn: page.locator('[data-testid="btn-next-day"]'),
@@ -413,6 +415,7 @@ async function runSuite() {
     const loc = getLocators(page);
 
     // TC-F-01.1: Configure a valid sprint (Name="Sprint 2", Duration=5, Start=2026-10-26, End=2026-10-30)
+    // STP Table 9, TC-F-01.1 (BDC-F-001): Configuration saved; chart re-renders with Total Days = 5
     await loc.configBtn.click();
     await loc.inputSprintName.fill('Sprint 2');
     await loc.inputDurationDays.fill('5');
@@ -421,9 +424,18 @@ async function runSuite() {
     await loc.saveSprintBtn.click();
 
     const bannerName = (await loc.sprintNameHeader.textContent()).trim();
-    const dayValText = (await loc.currentDayValue.textContent()).trim();
-    const ssConfigValid = `docs/reports/evidence/sv-g2-config-valid-${launchRes.channel}.png`;
+    const durationPillText = (await loc.sprintDurationPill.textContent()).trim();
+    const dayBadgeText = (await loc.currentDayBadge.textContent()).trim();
+    const currentDayNum = (await loc.currentDayValue.textContent()).trim();
+    const sliderMax = await loc.slider.getAttribute('max');
+    const ssConfigValid = `docs/reports/evidence/sv-g2-config-valid-${channel}.png`;
     await page.screenshot({ path: ssConfigValid, fullPage: true });
+
+    const configPass = bannerName === 'Sprint 2' &&
+      durationPillText.includes('5') &&
+      dayBadgeText.includes('5') &&
+      sliderMax === '5' &&
+      Number(currentDayNum) <= 5;
 
     results.push(makeRecord({
       tcId: 'TC-F-01.1',
@@ -431,9 +443,9 @@ async function runSuite() {
       group: 'G2',
       inputs: 'Configure Name="Sprint 2", Duration=5, Start=2026-10-26, End=2026-10-30; Save',
       expected: 'Configuration saved; header badge="Sprint 2"; duration=5; Current Day clamped to <= 5',
-      actual: `Header badge="${bannerName}", Current Day="${dayValText}"`,
-      status: (bannerName === 'Sprint 2' && dayValText.includes('5')) ? 'PASS' : 'FAIL',
-      browserName: launchRes.channel,
+      actual: `Header="${bannerName}", Duration="${durationPillText}", DayBadge="${dayBadgeText}", SliderMax=${sliderMax}`,
+      status: configPass ? 'PASS' : 'FAIL',
+      browserName: channel,
       browserVersion,
       evidencePath: ssConfigValid
     }));
