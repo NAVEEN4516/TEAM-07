@@ -5,6 +5,9 @@
 - **Tested Commit (Baseline SHA):** `222089658f26badaf5c9f6d3c60e75986ebd6320`
 - **Execution Date:** 2026-11-07
 - **QA Tester:** Bhuvi (`@stacktrace-bhuvi`)
+- **Data Source Files:**
+  - Google Chrome: `docs/reports/evidence/sv-results-chrome-2026-11-07.json` (version 156.0.8078.80)
+  - Microsoft Edge: `docs/reports/evidence/sv-results-msedge-2026-11-07.json` (version 157.0.4341.42)
 
 ---
 
@@ -24,7 +27,7 @@
      window.__lastUpdateMs = ms;
      window.__perfLog.push({ action: 'update', ms });
      ```
-4. 10 consecutive iterations are executed for each core user interaction to obtain minimum, median, and maximum latency figures.
+4. 10 consecutive iterations are executed for each core user interaction to obtain minimum, median, and maximum latency figures directly from automated browser samples.
 
 ---
 
@@ -32,16 +35,17 @@
 
 - **Requirement:** Update time < 2000 ms
 - **Environment:** Windows 11, Node.js v22.19.0, Playwright automated suite
+- **Traceable Run Files:** `docs/reports/evidence/sv-run-chrome-2026-11-07.log`, `docs/reports/evidence/sv-run-msedge-2026-11-07.log`
 
-| User Action | Requirement | Google Chrome (v156.0.8078.80) | Microsoft Edge (v156.0.4314.58) | Mozilla Firefox | Status |
+| User Action | Requirement | Google Chrome (v156.0.8078.80) | Microsoft Edge (v157.0.4341.42) | Mozilla Firefox | Status |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Add Issue** (BDC-F-006) | < 2000 ms | Min: 17.30 ms<br>**Med: 33.40 ms**<br>Max: 41.80 ms | Min: 32.60 ms<br>**Med: 37.30 ms**<br>Max: 55.10 ms | TO BE MEASURED (See manual sheet) | **PASS** |
-| **Change Current Day** (BDC-F-003) | < 2000 ms | Min: 19.30 ms<br>**Med: 34.20 ms**<br>Max: 41.90 ms | Min: 25.00 ms<br>**Med: 33.30 ms**<br>Max: 41.90 ms | TO BE MEASURED (See manual sheet) | **PASS** |
-| **Edit Issue to Done** (BDC-F-007) | < 2000 ms | Min: 19.70 ms<br>**Med: 32.10 ms**<br>Max: 40.20 ms | Min: 19.80 ms<br>**Med: 30.00 ms**<br>Max: 39.50 ms | TO BE MEASURED (See manual sheet) | **PASS** |
-| **Delete Issue** (BDC-F-008) | < 2000 ms | Min: 23.90 ms<br>**Med: 33.00 ms**<br>Max: 37.80 ms | Min: 20.70 ms<br>**Med: 29.90 ms**<br>Max: 40.10 ms | TO BE MEASURED (See manual sheet) | **PASS** |
-| **Reset Data** (BDC-F-009) | < 2000 ms | Min: 23.40 ms<br>**Med: 26.90 ms**<br>Max: 31.70 ms | Min: 25.90 ms<br>**Med: 32.40 ms**<br>Max: 39.10 ms | TO BE MEASURED (See manual sheet) | **PASS** |
+| **Add Issue** (BDC-F-006) | < 2000 ms | Min: 22.70 ms<br>**Med: 26.50 ms**<br>Max: 37.30 ms | Min: 22.20 ms<br>**Med: 27.30 ms**<br>Max: 40.20 ms | TO BE MEASURED (See manual sheet) | **PASS** |
+| **Change Current Day** (BDC-F-003) | < 2000 ms | Min: 21.40 ms<br>**Med: 24.50 ms**<br>Max: 37.30 ms | Min: 20.90 ms<br>**Med: 27.50 ms**<br>Max: 39.10 ms | TO BE MEASURED (See manual sheet) | **PASS** |
+| **Edit Issue to Done** (BDC-F-007) | < 2000 ms | Min: 21.10 ms<br>**Med: 24.40 ms**<br>Max: 31.40 ms | Min: 19.50 ms<br>**Med: 24.90 ms**<br>Max: 34.40 ms | TO BE MEASURED (See manual sheet) | **PASS** |
+| **Delete Issue** (BDC-F-008) | < 2000 ms | Min: 20.20 ms<br>**Med: 24.60 ms**<br>Max: 29.00 ms | Min: 20.60 ms<br>**Med: 24.40 ms**<br>Max: 34.20 ms | TO BE MEASURED (See manual sheet) | **PASS** |
+| **Reset Data** (BDC-F-009) | < 2000 ms | Min: 20.10 ms<br>**Med: 23.70 ms**<br>Max: 29.60 ms | Min: 19.10 ms<br>**Med: 24.10 ms**<br>Max: 31.00 ms | TO BE MEASURED (See manual sheet) | **PASS** |
 
-*Note: Mozilla Firefox was not installed on the automated test host and is marked `TO BE MEASURED`. All verified Chromium browsers executed the full cycle of state update, DOM rendering, and Chart.js animation update in under 56 ms (median ~33 ms), comfortably outperforming the 2000 ms requirement by a factor of 60.*
+*Note: Mozilla Firefox was not installed on the automated test host and is marked `TO BE MEASURED`. All verified Chromium browsers executed the full cycle of state update, DOM rendering, and Chart.js animation update in under 41 ms (median ~25 ms), comfortably outperforming the 2000 ms requirement by a factor of 75.*
 
 ---
 

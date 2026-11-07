@@ -24,7 +24,7 @@
 - **Test Server**: Local Node HTTP loopback server serving `src/`.
 - **Browsers Tested**:
   - **Google Chrome**: Version `156.0.8078.80` (Official Build, 64-bit on Windows 11). Automated Playwright validation runner.
-  - **Microsoft Edge**: Version `156.0.4314.58` (Official Build, 64-bit on Windows 11). Automated Playwright validation runner.
+  - **Microsoft Edge**: Version `157.0.4341.42` (Official Build, 64-bit on Windows 11). Automated Playwright validation runner.
   - **Mozilla Firefox**: Not installed on host test workstation. Status: **NOT EXECUTED**. Detailed manual run sheet provided in `docs/reports/evidence/sv-firefox-manual-sheet.md`.
 - **Evidence Files**: High-resolution screenshots captured in `docs/reports/evidence/`:
   - `sv-responsive-1024px-light-chrome.png` / `sv-responsive-1024px-dark-chrome.png`
@@ -50,7 +50,7 @@
 | **1920 x 900** | Light | PASS (0 errors) | PASS (0px overflow) | PASS (Fits container) | PASS | PASS | **PASS** |
 | **1920 x 900** | Dark | PASS (0 errors) | PASS (0px overflow) | PASS (Fits container) | PASS | PASS | **PASS** |
 
-### Microsoft Edge (v156.0.4314.58)
+### Microsoft Edge (v157.0.4341.42)
 
 | Viewport | Theme | Loads Without Errors | Page Horizontal Scroll (`scrollWidth === clientWidth`) | Table Container Legibility | Chart Scaling | Add-Issue Form Usable | Overall Status |
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
