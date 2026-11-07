@@ -1,0 +1,48 @@
+{
+  "testedCommit": "222089658f26badaf5c9f6d3c60e75986ebd6320",
+  "testedCommitDate": "2026-11-06",
+  "executionDate": "2026-11-07",
+  "tester": {
+    "name": "Bhuvi Sudheendra Katti",
+    "gitUsername": "stacktrace-bhuvi",
+    "gitEmail": "bhuvikatti696@gmail.com",
+    "role": "Testing Phase - Functional, Compatibility, Accessibility, Security & Performance"
+  },
+  "runtime": {
+    "nodeVersion": "v22.19.0",
+    "os": "Windows 11 Home Single Language (Microsoft Windows NT 10.0.26200.0, 64-bit)",
+    "playwrightVersion": "1.65.0"
+  },
+  "browsers": {
+    "chrome": {
+      "channel": "chrome",
+      "version": "156.0.8078.80",
+      "executablePath": "C:\\Users\\Bhuvi\\AppData\\Local\\Google\\Chrome\\Application\\chrome.exe",
+      "status": "AVAILABLE"
+    },
+    "msedge": {
+      "channel": "msedge",
+      "version": "156.0.4314.58",
+      "executablePath": "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
+      "status": "AVAILABLE"
+    },
+    "firefox": {
+      "channel": "firefox",
+      "version": null,
+      "executablePath": null,
+      "status": "NOT EXECUTED",
+      "reason": "Mozilla Firefox is not installed on the test host environment. Manual run sheet generated in docs/reports/evidence/sv-firefox-manual-sheet.md."
+    }
+  },
+  "baselineUnitSuite": {
+    "command": "npm test",
+    "tests": 255,
+    "suites": 63,
+    "passed": 255,
+    "failed": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0,
+    "rawLog": "docs/reports/evidence/sv-unit.log"
+  }
+}
