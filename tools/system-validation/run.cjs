@@ -715,11 +715,17 @@ async function runSuite() {
     }));
 
     // TC-F-06.3: Empty required fields
+    // STP Table 9, TC-F-06.3 (BDC-F-006): Validation message for each; issue not added
     await loc.addIssueKey.fill('');
     await loc.addIssueSummary.fill('');
     await loc.addIssuePoints.fill('');
     await loc.btnAddIssue.click();
     const emptyErrors = (await loc.addIssueErrors.textContent()).trim();
+
+    // Use case-insensitive matching per SRS 4.2 ("Issue key is required", "Summary is required")
+    const emptyErrorsPass = /issue key/i.test(emptyErrors) &&
+      /summary/i.test(emptyErrors) &&
+      /story points|points/i.test(emptyErrors);
 
     results.push(makeRecord({
       tcId: 'TC-F-06.3',
@@ -728,8 +734,8 @@ async function runSuite() {
       inputs: 'Submit empty form (blank key, blank summary, blank points)',
       expected: 'Validation errors for Key, Summary, and Points displayed; no issue created',
       actual: `Errors: "${emptyErrors}"`,
-      status: (emptyErrors.includes('Key') && emptyErrors.includes('Summary') && emptyErrors.includes('points')) ? 'PASS' : 'FAIL',
-      browserName: launchRes.channel,
+      status: emptyErrorsPass ? 'PASS' : 'FAIL',
+      browserName: channel,
       browserVersion
     }));
 
