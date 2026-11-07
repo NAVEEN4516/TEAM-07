@@ -111,7 +111,7 @@ function makeRecord({
 
 // Main execution suite
 async function runSuite() {
-  const browserTypeStr = (process.env.BROWSER || 'chrome').toLowerCase();
+  const browserTypeStr = (process.argv[2] || process.env.BROWSER || 'chrome').toLowerCase();
   console.log(`[SV-RUNNER] Starting System Validation on browser: ${browserTypeStr}`);
 
   const server = createServer();
@@ -199,7 +199,7 @@ async function runSuite() {
       inputDurationDays: page.locator('#input-duration-days'),
       inputStartDate: page.locator('#input-start-date'),
       inputEndDate: page.locator('#input-end-date'),
-      sprintConfigErrors: page.locator('[data-testid="sprint-config-errors"]'),
+      sprintConfigErrors: page.locator('[data-testid="config-errors"], .sprint-config-form .form-errors'),
       addIssueKey: page.locator('#add-issue-key'),
       addIssueSummary: page.locator('#add-issue-summary'),
       addIssueType: page.locator('#add-issue-type'),
@@ -1149,16 +1149,17 @@ async function runSuite() {
     // 3. TC-F-10.2: Zero duration handled safely (Unit/inspection check)
     const zeroDurationSafe = await page.evaluate(async () => {
       const engine = await import('/js/logic/burndownEngine.js');
-      const ideal = engine.calculateIdealBurnDown(50, 0);
-      return Array.isArray(ideal) && ideal.length === 1 && ideal[0].value === 50;
+      const ideal = engine.calculateIdealSeries(50, 0);
+      const computed = engine.computeAll({ durationDays: 0, currentDay: 0 }, []);
+      return Array.isArray(ideal) && ideal.length === 0 && !isNaN(computed.variance) && isFinite(computed.variance);
     });
     results.push(makeRecord({
       tcId: 'TC-F-10.2',
       reqId: 'BDC-F-010',
       group: 'G9',
-      inputs: 'Call calculateIdealBurnDown(50, 0) directly (zero duration)',
-      expected: 'Returns safe fallback series without throwing or producing NaN/Infinity',
-      actual: `calculateIdealBurnDown returns safe array: ${zeroDurationSafe}`,
+      inputs: 'Call calculateIdealSeries(50, 0) and computeAll with duration=0 directly',
+      expected: 'Returns safe fallback empty series and finite variance without throwing or producing NaN/Infinity',
+      actual: `calculateIdealSeries and computeAll return safe output: ${zeroDurationSafe}`,
       status: zeroDurationSafe ? 'PASS' : 'FAIL',
       browserName: launchRes.channel,
       browserVersion
@@ -1482,8 +1483,13 @@ async function runSuite() {
 
     // Helper to get last update duration
     async function getLastUpdateMs() {
-      await page.waitForTimeout(100);
-      return page.evaluate(() => window.__lastUpdateMs || 0);
+      await page.waitForTimeout(150);
+      return page.evaluate(() => {
+        if (typeof window.__lastUpdateMs === 'number') return window.__lastUpdateMs;
+        const log = window.__perfLog;
+        if (Array.isArray(log) && log.length > 0) return log[log.length - 1].ms;
+        return 0;
+      });
     }
 
     // Run 10 iterations of each action
@@ -1606,3 +1612,4 @@ runSuite().catch(err => {
   console.error('[FATAL ERROR IN SV-RUNNER]', err);
   process.exit(1);
 });
+
