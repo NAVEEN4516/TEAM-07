@@ -9,7 +9,7 @@
 ---
 
 ## 1. Executive Summary
-During System Validation testing of the baseline commit `222089658f26badaf5c9f6d3c60e75986ebd6320`, zero blocking software defects, data integrity failures, or security vulnerabilities were identified in the codebase. All 255 automated unit tests pass, and all 53 automated browser system validation test cases passed across Chromium engines (Google Chrome `156.0.8078.80` and Microsoft Edge `156.0.4314.58`).
+During System Validation testing of the baseline commit `222089658f26badaf5c9f6d3c60e75986ebd6320`, zero blocking software defects, data integrity failures, or security vulnerabilities were identified in the codebase. All 255 automated unit tests pass, and 52 of 53 automated browser system validation test records passed across Chromium engines (Google Chrome `156.0.8078.80` and Microsoft Edge `157.0.4341.42`), with 1 test case (TC-F-13.2) marked BLOCKED pending team alignment on the table-scroll criterion.
 
 Three specification ambiguities and behavioral observations were identified and documented below for coordination with Naveen and the team.
 
