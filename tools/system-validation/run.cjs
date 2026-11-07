@@ -114,52 +114,53 @@ async function runSuite() {
   const browserTypeStr = (process.argv[2] || process.env.BROWSER || 'chrome').toLowerCase();
   console.log(`[SV-RUNNER] Starting System Validation on browser: ${browserTypeStr}`);
 
-  const server = createServer();
-  await new Promise(res => server.listen(0, '127.0.0.1', res));
-  const port = server.address().port;
-  const baseUrl = `http://127.0.0.1:${port}`;
-  console.log(`[SV-RUNNER] Loopback HTTP server running at ${baseUrl}`);
-
+  let server = null;
+  let browser = null;
+  let channel = browserTypeStr;
+  let hasException = false;
+  const results = [];
   const logLines = [];
+
   function log(msg) {
     console.log(msg);
     logLines.push(`[${new Date().toISOString()}] ${msg}`);
   }
 
-  log(`Target Tested Commit: ${TESTED_SHA}`);
-  log(`Tester: ${TESTER}`);
+  try {
+    server = createServer();
+    await new Promise(res => server.listen(0, '127.0.0.1', res));
+    const port = server.address().port;
+    const baseUrl = `http://127.0.0.1:${port}`;
+    console.log(`[SV-RUNNER] Loopback HTTP server running at ${baseUrl}`);
 
-  const launchRes = await launchBrowser(browserTypeStr);
-  const results = [];
+    log(`Target Tested Commit: ${TESTED_SHA}`);
+    log(`Tester: ${TESTER}`);
 
-  if (!launchRes.browser) {
-    log(`[ERROR] Could not launch browser ${browserTypeStr}: ${launchRes.error}`);
-    // Record NOT EXECUTED for this browser
-    const record = makeRecord({
-      tcId: 'ALL',
-      reqId: 'ALL',
-      group: 'ALL',
-      inputs: `Launch browser ${browserTypeStr}`,
-      expected: 'Browser opens successfully',
-      actual: `Launch failed: ${launchRes.error}`,
-      status: 'NOT EXECUTED',
-      browserName: browserTypeStr,
-      browserVersion: null,
-      error: launchRes.error
-    });
-    results.push(record);
+    const launchRes = await launchBrowser(browserTypeStr);
+    channel = launchRes.channel || browserTypeStr;
 
-    const outJsonPath = path.join(evidenceDir, `sv-results-${browserTypeStr}-${TODAY}.json`);
-    await fs.writeFile(outJsonPath, JSON.stringify(results, null, 2), 'utf8');
-    const outLogPath = path.join(evidenceDir, `sv-run-${browserTypeStr}-${TODAY}.log`);
-    await fs.writeFile(outLogPath, logLines.join('\n'), 'utf8');
-    server.close();
-    return;
-  }
+    if (!launchRes.browser) {
+      log(`[ERROR] Could not launch browser ${browserTypeStr}: ${launchRes.error}`);
+      // Record NOT EXECUTED for this browser
+      const record = makeRecord({
+        tcId: 'ALL',
+        reqId: 'ALL',
+        group: 'ALL',
+        inputs: `Launch browser ${browserTypeStr}`,
+        expected: 'Browser opens successfully',
+        actual: `Launch failed: ${launchRes.error}`,
+        status: 'NOT EXECUTED',
+        browserName: browserTypeStr,
+        browserVersion: null,
+        error: launchRes.error
+      });
+      results.push(record);
+      return;
+    }
 
-  const browser = launchRes.browser;
-  const browserVersion = launchRes.version;
-  log(`Browser launched successfully: ${launchRes.channel} version ${browserVersion}`);
+    browser = launchRes.browser;
+    const browserVersion = launchRes.version;
+    log(`Browser launched successfully: ${channel} version ${browserVersion}`);
 
   // Create isolated context with CSP tracking
   async function createCleanContext(options = {}) {
@@ -1589,27 +1590,58 @@ async function runSuite() {
       expected: 'Calculation and validation modules execute and pass independently without DOM dependency',
       actual: 'Automated unit test run by stacktrace-bhuvi on 2026-11-07: 255/255 tests passing in ~640ms. Note: STP references Jest; repo uses node --test.',
       status: 'PASS',
-      browserName: launchRes.channel,
+      browserName: channel,
       browserVersion
     }));
   }
+  } catch (err) {
+    hasException = true;
+    log(`[FATAL ERROR IN SV-RUNNER] ${err.stack || err.message}`);
+  } finally {
+    // Save JSON results and log
+    if (channel) {
+      const outJsonPath = path.join(evidenceDir, `sv-results-${channel}-${TODAY}.json`);
+      await fs.writeFile(outJsonPath, JSON.stringify(results, null, 2), 'utf8');
+      log(`[SV-RUNNER] Results saved to ${outJsonPath} (${results.length} records)`);
 
-  // Save JSON results and log
-  const outJsonPath = path.join(evidenceDir, `sv-results-${launchRes.channel}-${TODAY}.json`);
-  await fs.writeFile(outJsonPath, JSON.stringify(results, null, 2), 'utf8');
-  log(`[SV-RUNNER] Results saved to ${outJsonPath} (${results.length} records)`);
+      const outLogPath = path.join(evidenceDir, `sv-run-${channel}-${TODAY}.log`);
+      await fs.writeFile(outLogPath, logLines.join('\n'), 'utf8');
+      log(`[SV-RUNNER] Execution log saved to ${outLogPath}`);
+    }
 
-  const outLogPath = path.join(evidenceDir, `sv-run-${launchRes.channel}-${TODAY}.log`);
-  await fs.writeFile(outLogPath, logLines.join('\n'), 'utf8');
-  log(`[SV-RUNNER] Execution log saved to ${outLogPath}`);
+    if (browser) {
+      try {
+        await browser.close();
+      } catch (err) {
+        log(`[WARN] Error closing browser: ${err.message}`);
+      }
+    }
+    if (server) {
+      try {
+        server.close();
+      } catch (err) {
+        log(`[WARN] Error closing server: ${err.message}`);
+      }
+    }
 
-  await browser.close();
-  server.close();
-  console.log(`[SV-RUNNER] Completed System Validation on ${launchRes.channel}`);
+    const passCount = results.filter(r => r.status === 'PASS').length;
+    const failCount = results.filter(r => r.status === 'FAIL').length;
+    const blockedCount = results.filter(r => r.status === 'BLOCKED').length;
+    const notExecCount = results.filter(r => r.status === 'NOT EXECUTED').length;
+
+    console.log(`[SV-RUNNER] SUMMARY pass=${passCount} fail=${failCount} blocked=${blockedCount} not_executed=${notExecCount}`);
+    console.log(`[SV-RUNNER] Completed System Validation on ${channel}`);
+
+    if (failCount > 0 || hasException) {
+      process.exitCode = 1;
+    } else {
+      process.exitCode = 0;
+    }
+  }
 }
 
 runSuite().catch(err => {
-  console.error('[FATAL ERROR IN SV-RUNNER]', err);
+  console.error('[UNHANDLED FATAL ERROR IN SV-RUNNER]', err);
   process.exit(1);
 });
 
