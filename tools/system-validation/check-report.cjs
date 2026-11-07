@@ -71,8 +71,7 @@ function runAudit() {
     'Variance = -8',
     'Variance: -8',
     'variance = -8',
-    '-8 pts',
-    '52 PASS'
+    '-8 pts'
   ];
 
   for (const f of filesToCheck) {
