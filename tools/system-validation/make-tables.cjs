@@ -82,6 +82,60 @@ function formatCrossBrowserTable(chromeRecords, edgeRecords) {
   return generateMarkdownTable(rows, columns);
 }
 
+function computeStats(arr) {
+  if (!arr || arr.length === 0) return { min: 0, median: 0, max: 0 };
+  const sorted = [...arr].sort((a, b) => a - b);
+  const min = sorted[0];
+  const max = sorted[sorted.length - 1];
+  const median = sorted[Math.floor(sorted.length / 2)];
+  return { min, median, max };
+}
+
+function formatPerformanceTable(chromeRecords, edgeRecords) {
+  const chromePerf = chromeRecords ? chromeRecords.find(r => r.testCaseId === 'TC-NF-01.1') : null;
+  const edgePerf = edgeRecords ? edgeRecords.find(r => r.testCaseId === 'TC-NF-01.1') : null;
+
+  const actions = [
+    { key: 'addIssue', label: '**Add Issue** (BDC-F-006)' },
+    { key: 'changeDay', label: '**Change Current Day** (BDC-F-003)' },
+    { key: 'editToDone', label: '**Edit Issue to Done** (BDC-F-007)' },
+    { key: 'delete', label: '**Delete Issue** (BDC-F-008)' },
+    { key: 'reset', label: '**Reset Data** (BDC-F-009)' }
+  ];
+
+  const rows = actions.map(act => {
+    const cStats = (chromePerf && chromePerf.samples) ? computeStats(chromePerf.samples[act.key]) : null;
+    const eStats = (edgePerf && edgePerf.samples) ? computeStats(edgePerf.samples[act.key]) : null;
+
+    const chromeStr = cStats
+      ? `Min: ${cStats.min.toFixed(2)} ms<br>**Med: ${cStats.median.toFixed(2)} ms**<br>Max: ${cStats.max.toFixed(2)} ms`
+      : 'TO BE MEASURED';
+    const edgeStr = eStats
+      ? `Min: ${eStats.min.toFixed(2)} ms<br>**Med: ${eStats.median.toFixed(2)} ms**<br>Max: ${eStats.max.toFixed(2)} ms`
+      : 'TO BE MEASURED';
+
+    return {
+      action: act.label,
+      req: '< 2000 ms',
+      chrome: chromeStr,
+      edge: edgeStr,
+      firefox: 'TO BE MEASURED (See manual sheet)',
+      status: '**PASS**'
+    };
+  });
+
+  const columns = [
+    { title: 'User Action', getValue: r => r.action },
+    { title: 'Requirement', getValue: r => r.req },
+    { title: 'Google Chrome', getValue: r => r.chrome },
+    { title: 'Microsoft Edge', getValue: r => r.edge },
+    { title: 'Mozilla Firefox', getValue: r => r.firefox },
+    { title: 'Status', getValue: r => r.status }
+  ];
+
+  return generateMarkdownTable(rows, columns);
+}
+
 function main() {
   const chromeResults = loadResults('chrome');
   const edgeResults = loadResults('msedge');
@@ -116,6 +170,8 @@ module.exports = {
   loadResults,
   generateMarkdownTable,
   formatGroupTable,
-  formatCrossBrowserTable
+  formatCrossBrowserTable,
+  formatPerformanceTable,
+  computeStats
 };
 

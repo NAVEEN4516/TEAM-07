@@ -87,9 +87,10 @@ function makeRecord({
   viewport = '1440x900',
   theme = 'light',
   evidencePath = null,
-  error = null
+  error = null,
+  samples = null
 }) {
-  return {
+  const rec = {
     testCaseId: tcId,
     requirementId: reqId,
     group: group,
@@ -107,6 +108,10 @@ function makeRecord({
     evidencePath: evidencePath,
     error: error ? String(error) : null
   };
+  if (samples) {
+    rec.samples = samples;
+  }
+  return rec;
 }
 
 // Main execution suite
@@ -1580,8 +1585,9 @@ async function runSuite() {
       expected: 'All UI state transition and re-render updates execute in < 2000 ms',
       actual: `Add: med=${addStats.median.toFixed(1)}ms (max ${addStats.max.toFixed(1)}ms); Day: med=${dayStats.median.toFixed(1)}ms; Edit: med=${editStats.median.toFixed(1)}ms; Delete: med=${delStats.median.toFixed(1)}ms; Reset: med=${resetStats.median.toFixed(1)}ms`,
       status: allUnder2000 ? 'PASS' : 'FAIL',
-      browserName: launchRes.channel,
-      browserVersion
+      browserName: channel,
+      browserVersion,
+      samples: measurements
     }));
 
     await context.close();
