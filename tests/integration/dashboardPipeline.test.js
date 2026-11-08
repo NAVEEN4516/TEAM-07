@@ -63,6 +63,29 @@ describe('Dashboard pipeline: DataManager -> calculations -> chart / table / tim
     });
   });
 
+  describe('Sprint configuration (TC-F-01.1)', () => {
+    test('TC-F-01.1 - configuring "Sprint 2" for 5 days re-renders every layer for Total Days = 5', () => {
+      const dm = new DataManager();
+      const result = dm.setSprint({ sprintName: 'Sprint 2', durationDays: 5, startDate: '2026-10-26', endDate: '2026-10-30' });
+      assert.equal(result.success, true);
+      const snap = snapshot(dm);
+
+      assert.match(snap.bannerHtml, />Sprint 2</);
+      assert.match(snap.bannerHtml, /5 working days/);
+      assert.match(snap.bannerHtml, /2026-10-26 &mdash; 2026-10-30/);
+      assert.equal(snap.sprint.currentDay, 4, 'Day 4 is still inside a 5-day sprint, so it is kept');
+      assert.deepEqual(snap.chart.labels, [0, 1, 2, 3, 4, 5]);
+      assert.deepEqual(snap.chart.ideal, [50, 40, 30, 20, 10, 0]);
+      assert.deepEqual(snap.chart.actual, [50, 45, 42, 34, 21, null]);
+      assert.equal(snap.timeline.duration, '5');
+      // Ideal(4) is now 10 against 21 remaining, so the sprint reads as behind.
+      assert.equal(snap.kpiCards.daysLeft, '1');
+      assert.equal(snap.kpiCards.variance, '-11');
+      assert.equal(snap.kpiCards.statusText, 'Behind Schedule');
+      assertLayersConsistent(snap, 'configured 5-day sprint');
+    });
+  });
+
   describe('Adding an issue (TC-F-02.2, TC-F-06.1)', () => {
     test('adding PROJ-111 (5 points) updates scope, ideal line, actual line, table and KPIs together', () => {
       const dm = new DataManager();
@@ -107,7 +130,7 @@ describe('Dashboard pipeline: DataManager -> calculations -> chart / table / tim
       assert.deepEqual(snapshot(dm), before);
     });
 
-    test('a zero-point issue appears in the table but changes no total, line or KPI', () => {
+    test('TC-F-06.4 - a zero-point issue appears in the table but changes no total, line or KPI', () => {
       const dm = new DataManager();
       const before = snapshot(dm);
 

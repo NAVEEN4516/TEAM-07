@@ -82,7 +82,7 @@ describe('ValidationManager guards (BDC-NF-003, BDC-SR-002)', () => {
     }
   });
 
-  test('TC-F-06.3 - duplicate detection ignores junk entries and understands issue objects', () => {
+  test('TC-F-06.2 - duplicate detection ignores junk entries and understands issue objects', () => {
     const junk = [null, undefined, 5, 'OTHER-1', {}, { issueKey: 7 }];
 
     assert.equal(validateIssue(validIssue, junk).valid, true, 'unrelated or malformed entries are not duplicates');

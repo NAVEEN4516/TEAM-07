@@ -48,7 +48,7 @@ describe('DataManager validation & saved state (BDC-NF-003, BDC-SR-002, BDC-SR-0
       });
     }
 
-    test('zero story points are allowed, as SRS Section 5.2 requires', () => {
+    test('TC-F-06.4 - zero story points are allowed, as SRS Section 5.2 requires', () => {
       const dm = new DataManager();
       assert.equal(dm.addIssue({ ...validIssue, storyPoints: 0 }).success, true);
     });
