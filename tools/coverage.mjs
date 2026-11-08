@@ -9,6 +9,7 @@
  *
  *   npm run test:coverage                  run the whole suite, then summarize
  *   node tools/coverage.mjs --from <lcov>  summarize an existing lcov file
+ *   --browser <json>                       also merge a browser run from tools/browser-coverage.cjs
  *   --json <file>                          also write the summary as JSON
  *   --details                              list every uncovered line range and branch
  *
@@ -17,13 +18,19 @@
  *                   lines. "Code-line" coverage drops comment-only and blank lines
  *                   from both sides and is the more conservative figure.
  *   Branch coverage Node reports V8 block ranges (function bodies, if/else arms,
- *                   short-circuit and ternary arms). This is not the same count as
- *                   Istanbul's per-operand branches, so compare it only with itself.
+ *                   short-circuit and ternary arms). V8 lists the inner blocks of a
+ *                   function only after it has run once, so a function that never
+ *                   ran adds one uncovered block, not its real branches. Read branch
+ *                   figures together with the function and line figures. This is not
+ *                   the same count as Istanbul's per-operand branches.
  */
 import { spawnSync } from 'node:child_process';
 import { mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
+import { createRequire } from 'node:module';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+
+const { analyzeCode } = createRequire(import.meta.url)('./lib/code-lines.cjs');
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const APP_DIR = 'src/js';
@@ -31,10 +38,12 @@ const LCOV_PATH = 'coverage/lcov.info';
 
 /** Parses the command line into a small options object. */
 function parseArgs(argv) {
-  const options = { from: null, json: null, details: false };
+  const options = { from: null, browser: null, json: null, details: false };
   for (let i = 0; i < argv.length; i += 1) {
     if (argv[i] === '--from') {
       options.from = argv[++i];
+    } else if (argv[i] === '--browser') {
+      options.browser = argv[++i];
     } else if (argv[i] === '--json') {
       options.json = argv[++i];
     } else if (argv[i] === '--details') {
@@ -100,57 +109,6 @@ function parseLcov(text) {
   return records;
 }
 
-/**
- * Finds the lines that hold code, so comment-only and blank lines can be left out.
- * A small lexer tracks block comments, line comments and string literals.
- */
-function findCodeLines(source) {
-  const codeLines = new Set();
-  const text = source.replace(/\r\n/g, '\n');
-  let state = 'code';
-  let quote = '';
-  let line = 1;
-  for (let i = 0; i < text.length; i += 1) {
-    const ch = text[i];
-    const next = text[i + 1];
-    if (ch === '\n') {
-      line += 1;
-      if (state === 'line-comment') {
-        state = 'code';
-      }
-      continue;
-    }
-    if (state === 'block-comment') {
-      if (ch === '*' && next === '/') {
-        state = 'code';
-        i += 1;
-      }
-    } else if (state === 'line-comment') {
-      continue;
-    } else if (state === 'string') {
-      codeLines.add(line);
-      if (ch === '\\') {
-        i += 1;
-      } else if (ch === quote) {
-        state = 'code';
-      }
-    } else if (ch === '/' && next === '*') {
-      state = 'block-comment';
-      i += 1;
-    } else if (ch === '/' && next === '/') {
-      state = 'line-comment';
-      i += 1;
-    } else if (!/\s/.test(ch)) {
-      codeLines.add(line);
-      if (ch === '"' || ch === "'" || ch === '`') {
-        state = 'string';
-        quote = ch;
-      }
-    }
-  }
-  return codeLines;
-}
-
 /** Collapses sorted line numbers into "12-14 20 31-32" style ranges. */
 function toRanges(numbers) {
   const ranges = [];
@@ -170,11 +128,17 @@ function figure(hit, found) {
   return { hit, found, pct: found === 0 ? 100 : Math.round((hit / found) * 10000) / 100 };
 }
 
+/** Counts physical lines the way wc -l and the lcov reporter do (a trailing newline adds none). */
+function countLines(text) {
+  const lines = text.split(/\r?\n/);
+  return lines[lines.length - 1] === '' ? lines.length - 1 : lines.length;
+}
+
 /** Computes every metric for one lcov record. */
 function measure(record) {
   const source = readFileSync(path.join(ROOT, record.file), 'utf8');
   const sourceLines = source.split(/\r?\n/);
-  const codeLines = findCodeLines(source);
+  const { codeLines } = analyzeCode(source);
 
   const lineEntries = [...record.lines.entries()];
   const codeEntries = lineEntries.filter(([line]) => codeLines.has(line));
@@ -193,7 +157,8 @@ function measure(record) {
     uncoveredBranches,
     uncoveredFunctions: [...record.functions.entries()]
       .filter(([, fn]) => fn.count === 0)
-      .map(([name, fn]) => ({ name, line: fn.line }))
+      .map(([name, fn]) => ({ name, line: fn.line })),
+    executedCodeLines: codeEntries.filter(([, count]) => count > 0).map(([line]) => line)
   };
 }
 
@@ -205,14 +170,38 @@ function total(files, metric) {
   );
 }
 
-/** Counts physical lines the way wc -l and the lcov reporter do (a trailing newline adds none). */
-function countLines(text) {
-  const lines = text.split(/\r?\n/);
-  return lines[lines.length - 1] === '' ? lines.length - 1 : lines.length;
+/**
+ * Merges unit and browser runs over every application file, using one definition of
+ * "code line" for all of them, so files no unit test loads still have a real denominator.
+ */
+function combine(unitFiles, browser) {
+  const unitByFile = new Map(unitFiles.map(file => [file.file, file]));
+  const browserByFile = new Map(browser.files.map(file => [file.file, file]));
+  const rows = listSourceFiles(APP_DIR).map(file => {
+    const { codeLines } = analyzeCode(readFileSync(path.join(ROOT, file), 'utf8'));
+    const unit = new Set(unitByFile.get(file)?.executedCodeLines ?? []);
+    const inBrowser = new Set((browserByFile.get(file)?.executedLines ?? []).filter(line => codeLines.has(line)));
+    const either = new Set([...unit, ...inBrowser]);
+    return {
+      file,
+      codeLines: codeLines.size,
+      unit: figure(unit.size, codeLines.size),
+      browser: figure(inBrowser.size, codeLines.size),
+      either: figure(either.size, codeLines.size),
+      browserOnly: toRanges([...inBrowser].filter(line => !unit.has(line)).sort((a, b) => a - b)),
+      neither: toRanges([...codeLines].filter(line => !either.has(line)).sort((a, b) => a - b))
+    };
+  });
+  const sum = key => figure(rows.reduce((n, row) => n + row[key].hit, 0), rows.reduce((n, row) => n + row.codeLines, 0));
+  return {
+    browser: { name: browser.browser, helper: browser.helper, source: browser.source },
+    files: rows,
+    totals: { codeLines: rows.reduce((n, row) => n + row.codeLines, 0), unit: sum('unit'), browser: sum('browser'), either: sum('either') }
+  };
 }
 
 /** Reads the lcov file and builds the whole summary. */
-function summarize(lcovFile) {
+function summarize(lcovFile, browserFile) {
   const records = parseLcov(readFileSync(path.resolve(ROOT, lcovFile), 'utf8'));
   const appRecords = records.filter(record => record.file.startsWith(`${APP_DIR}/`));
   const files = appRecords.map(measure).sort((a, b) => a.file.localeCompare(b.file));
@@ -221,7 +210,7 @@ function summarize(lcovFile) {
     .filter(file => !measured.has(file))
     .map(file => ({ file, physicalLines: countLines(readFileSync(path.join(ROOT, file), 'utf8')) }));
 
-  return {
+  const summary = {
     node: process.version,
     source: lcovFile,
     files,
@@ -234,6 +223,12 @@ function summarize(lcovFile) {
     unmeasured,
     excludedFromTable: records.filter(record => !record.file.startsWith(`${APP_DIR}/`)).map(record => record.file)
   };
+  if (browserFile) {
+    const browser = JSON.parse(readFileSync(path.resolve(ROOT, browserFile), 'utf8'));
+    summary.browser = browser;
+    summary.combined = combine(files, browser);
+  }
+  return summary;
 }
 
 /** Formats "hit/found pct%" for a table cell. */
@@ -264,8 +259,22 @@ function print(summary, details) {
     console.log(`\nLeft out of the table because they are not application code: ${summary.excludedFromTable.join(', ')}`);
   }
 
+  if (summary.combined) {
+    const c = summary.combined;
+    const w = Math.max(...c.files.map(file => file.file.length), 10);
+    const head = `${'file'.padEnd(w)} | ${'code lines'.padStart(10)} | ${'unit tests'.padStart(17)} | ${'browser run'.padStart(17)} | ${'either'.padStart(17)}`;
+    console.log(`\nAll ${c.files.length} application files, code lines executed (browser: ${c.browser.name}, ${c.browser.helper})\n`);
+    console.log(head);
+    console.log('-'.repeat(head.length));
+    for (const row of c.files) {
+      console.log(`${row.file.padEnd(w)} | ${String(row.codeLines).padStart(10)} | ${cell(row.unit)} | ${cell(row.browser)} | ${cell(row.either)}`);
+    }
+    console.log('-'.repeat(head.length));
+    console.log(`${'all application files'.padEnd(w)} | ${String(c.totals.codeLines).padStart(10)} | ${cell(c.totals.unit)} | ${cell(c.totals.browser)} | ${cell(c.totals.either)}`);
+  }
+
   if (details) {
-    console.log('\nUncovered code lines, functions and branches (count 0):');
+    console.log('\nUncovered code lines, functions and branches by unit tests (count 0):');
     for (const file of summary.files) {
       if (file.uncoveredLines.length + file.uncoveredBranches.length + file.uncoveredFunctions.length === 0) {
         continue;
@@ -279,6 +288,14 @@ function print(summary, details) {
       }
       for (const branch of file.uncoveredBranches) {
         console.log(`  branch:    line ${branch.line}  ${branch.text.slice(0, 110)}`);
+      }
+    }
+    if (summary.combined) {
+      console.log('\nCode lines executed by neither the unit tests nor the browser run:');
+      for (const row of summary.combined.files) {
+        if (row.neither.length > 0) {
+          console.log(`  ${row.file}: ${row.neither.join(' ')}`);
+        }
       }
     }
   }
@@ -304,7 +321,7 @@ if (!lcovFile) {
   lcovFile = LCOV_PATH;
 }
 
-const summary = summarize(lcovFile);
+const summary = summarize(lcovFile, options.browser);
 print(summary, options.details);
 if (options.json) {
   writeFileSync(path.resolve(ROOT, options.json), `${JSON.stringify(summary, null, 2)}\n`);
