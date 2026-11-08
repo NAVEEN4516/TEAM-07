@@ -1,0 +1,138 @@
+{
+  "recorded_utc": "2026-11-08T12:53:12.864Z",
+  "recorded_ist": "2026-11-08T18:23:12+05:30",
+  "executed_by": "Automated commands run through Claude Code on Hemanth Reddy's workstation. Every figure comes from a command whose raw output is in this folder; no manual or human-observed testing is claimed.",
+  "branch": "feature/BDC-NF-005-testing-hemanth",
+  "baseline_commit": "222089658f26badaf5c9f6d3c60e75986ebd6320",
+  "tested_commit_for_evidence": "98b198f7bca22ee0cb14ef08d1218f11aaafaa91",
+  "note_on_tested_commit": "Later commits on this branch change documents only; application, test and tool code is identical to this commit.",
+  "baseline_source_tree": "0de8ce93a297760cfe1804f78b876d78fe0e94af",
+  "tested_source_tree": "a056d5a221a58ad0d5dc49d4e89f56c56755c4b6",
+  "source_tree_difference": "One file, src/js/data/dataManager.js: the DEF-01 fix (commit e1b41e8).",
+  "os": "D:\\pesu\\Subjects\\SE\\TEAM-07>",
+  "node_primary": "v24.11.1",
+  "node_ci_major_tested": "v20.20.2",
+  "npm": "11.6.2",
+  "browser": "Chromium 156.0.8078.80",
+  "playwright": "1.65.0",
+  "results": {
+    "baseline_npm_test": {
+      "tests": 255,
+      "suites": 63,
+      "pass": 255,
+      "fail": 0
+    },
+    "final_node24": {
+      "tests": 410,
+      "suites": 91,
+      "pass": 410,
+      "fail": 0
+    },
+    "final_node20": {
+      "tests": 410,
+      "suites": 91,
+      "pass": 410,
+      "fail": 0
+    },
+    "coverage_unit_baseline_node24": {
+      "lines": {
+        "hit": 2514,
+        "found": 2916,
+        "pct": 86.21
+      },
+      "codeLines": {
+        "hit": 1550,
+        "found": 1893,
+        "pct": 81.88
+      },
+      "branches": {
+        "hit": 436,
+        "found": 493,
+        "pct": 88.44
+      },
+      "functions": {
+        "hit": 89,
+        "found": 98,
+        "pct": 90.82
+      },
+      "notLoadedFiles": 5
+    },
+    "coverage_unit_final_node24": {
+      "lines": {
+        "hit": 2566,
+        "found": 2928,
+        "pct": 87.64
+      },
+      "codeLines": {
+        "hit": 1590,
+        "found": 1896,
+        "pct": 83.86
+      },
+      "branches": {
+        "hit": 563,
+        "found": 565,
+        "pct": 99.65
+      },
+      "functions": {
+        "hit": 92,
+        "found": 99,
+        "pct": 92.93
+      },
+      "notLoadedFiles": 5
+    },
+    "coverage_unit_final_node20": {
+      "lines": {
+        "hit": 2566,
+        "found": 2928,
+        "pct": 87.64
+      },
+      "codeLines": {
+        "hit": 1590,
+        "found": 1896,
+        "pct": 83.86
+      },
+      "branches": {
+        "hit": 563,
+        "found": 565,
+        "pct": 99.65
+      },
+      "functions": {
+        "hit": 92,
+        "found": 99,
+        "pct": 92.93
+      },
+      "notLoadedFiles": 5
+    },
+    "coverage_all_16_files_code_lines": {
+      "codeLines": 2328,
+      "unit": {
+        "hit": 1590,
+        "found": 2328,
+        "pct": 68.3
+      },
+      "browser": {
+        "hit": 1913,
+        "found": 2328,
+        "pct": 82.17
+      },
+      "either": {
+        "hit": 2162,
+        "found": 2328,
+        "pct": 92.87
+      }
+    }
+  },
+  "commands": [
+    "npm ci && npm test",
+    "npm run test:coverage -- --details --json <file>",
+    "node tools/coverage.mjs --details --json <file>   (Node 20.20.2)",
+    "NODE_PATH=<folder with playwright> node tools/browser-coverage.cjs --json <file>",
+    "node tools/coverage.mjs --from <lcov> --browser <json> --details --json <file>",
+    "python docs/reports/evidence/mut-driver.py <scratch> <results.json>"
+  ],
+  "limitations": [
+    "Browser coverage measures only what tools/verify-sprint2.cjs exercises in Chrome; Firefox and Edge are not part of it.",
+    "Branch figures are V8 block ranges, and V8 does not enumerate the inner branches of functions that never ran.",
+    "No team approval or human Test Lead sign-off is recorded."
+  ]
+}
