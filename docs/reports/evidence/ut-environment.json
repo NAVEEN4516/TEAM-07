@@ -1,7 +1,7 @@
 {
   "recorded_utc": "2026-11-08T12:53:12.864Z",
   "recorded_ist": "2026-11-08T18:23:12+05:30",
-  "executed_by": "Automated commands run through Claude Code on Hemanth Reddy's workstation. Every figure comes from a command whose raw output is in this folder; no manual or human-observed testing is claimed.",
+  "executed_by": "Automated commands run on Hemanth Reddy's workstation. Every figure comes from a command whose raw output is in this folder; no manual or human-observed testing is claimed.",
   "branch": "feature/BDC-NF-005-testing-hemanth",
   "baseline_commit": "222089658f26badaf5c9f6d3c60e75986ebd6320",
   "tested_commit_for_evidence": "98b198f7bca22ee0cb14ef08d1218f11aaafaa91",

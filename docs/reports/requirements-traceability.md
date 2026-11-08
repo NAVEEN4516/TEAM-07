@@ -8,7 +8,7 @@ Maps all 25 SRS requirements to the 44 Test Plan cases and to the evidence each 
 | **Baseline** | `222089658f26badaf5c9f6d3c60e75986ebd6320`, per [`qa-phase-start.md`](qa-phase-start.md). The branch adds tests, tooling and one data-layer defect fix (DEF-01); no other application code changed. |
 | **System-validation evidence** | Bhuvi's branch `test/bhuvi-system-validation` at [`df80b16`](https://github.com/NAVEEN4516/TEAM-07/commit/df80b162129e4cb37b8b1057f2398461df6d37f2), [PR #48](https://github.com/NAVEEN4516/TEAM-07/pull/48), tested at the baseline commit in Chrome 156.0.8078.80 and Edge 157.0.4341.42. It is not merged and I have not re-run it. |
 | **Environment of my runs** | Windows 11 (10.0.26300), Node 24.11.1 and 20.20.2, Chrome 156.0.8078.80, Playwright 1.65.0. See [`ut-environment.json`](evidence/ut-environment.json). |
-| **Executed by** | Automated commands run through Claude Code on Hemanth Reddy's machine. No manual or human-observed testing is claimed. |
+| **Executed by** | Automated commands run on Hemanth Reddy's machine. No manual or human-observed testing is claimed. |
 
 ## Result
 

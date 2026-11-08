@@ -7,7 +7,7 @@ Unit, integration and regression testing of the Burndown Chart Generator, testin
 | **Evidence commit** | `98b198f7bca22ee0cb14ef08d1218f11aaafaa91` on `feature/BDC-NF-005-testing-hemanth`. Later commits on the branch change documents only. |
 | **Baseline** | `222089658f26badaf5c9f6d3c60e75986ebd6320`, the version named in [`qa-phase-start.md`](qa-phase-start.md). Application and test trees were verified identical to that pack's recorded tree hashes. |
 | **Environment** | Windows 11 (10.0.26300). Node 24.11.1 (primary) and 20.20.2 (the CI major). npm 11.6.2. Chrome 156.0.8078.80 with Playwright 1.65.0 for the browser run. Full record: [`ut-environment.json`](evidence/ut-environment.json). |
-| **Executed by** | Automated commands run through Claude Code on Hemanth Reddy's machine. Every figure comes from a command whose raw output is in [`evidence/`](evidence/). No manual or human-observed testing is claimed. |
+| **Executed by** | Automated commands run on Hemanth Reddy's machine. Every figure comes from a command whose raw output is in [`evidence/`](evidence/). No manual or human-observed testing is claimed. |
 
 ## Summary
 
