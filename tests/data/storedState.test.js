@@ -175,6 +175,64 @@ describe('DataManager validation & saved state (BDC-NF-003, BDC-SR-002, BDC-SR-0
     });
   });
 
+  describe('DEF-01 - subscribers can read why defaults were restored (BDC-SR-003)', () => {
+    /** Subscribes and records the load errors a listener can read at notification time. */
+    function observeLoadErrors(dm) {
+      const seen = [];
+      dm.subscribe(manager => {
+        seen.push([...manager.loadErrors]);
+      });
+      return seen;
+    }
+
+    test('a failed restore publishes the reasons together with the restored defaults', () => {
+      const dm = new DataManager();
+      const seen = observeLoadErrors(dm);
+
+      const result = dm.restoreFromJSON('{"sprint": {');
+
+      assert.equal(seen.length, 1, 'one restore must publish one update');
+      assert.deepEqual(seen[0], ['Saved data is not valid JSON.'], 'the listener must be able to read the reasons');
+      assert.deepEqual(seen[0], result.errors);
+      assert.deepEqual(dm.loadErrors, result.errors);
+    });
+
+    test('schema violations are also visible to the listener at notification time', () => {
+      const tampered = getDefaultDataset();
+      tampered.issues[0].storyPoints = -50;
+      const dm = new DataManager();
+      const seen = observeLoadErrors(dm);
+
+      const result = dm.restoreFromJSON(JSON.stringify(tampered));
+
+      assert.ok(result.errors.length > 0);
+      assert.deepEqual(seen[0], result.errors);
+    });
+
+    test('a later successful restore clears the reasons before it publishes', () => {
+      const dm = new DataManager();
+      dm.restoreFromJSON('not json');
+      assert.ok(dm.loadErrors.length > 0);
+      const seen = observeLoadErrors(dm);
+
+      assert.equal(dm.restoreFromJSON(JSON.stringify(getDefaultDataset())).success, true);
+
+      assert.deepEqual(seen, [[]]);
+      assert.deepEqual(dm.loadErrors, []);
+    });
+
+    test('init() with an invalid dataset also publishes the reasons', () => {
+      const dm = new DataManager();
+      const seen = observeLoadErrors(dm);
+
+      dm.init({ sprint: { durationDays: -5 }, issues: [] });
+
+      assert.equal(seen.length, 1);
+      assert.ok(seen[0].length > 0, 'the listener must be able to read why defaults were loaded');
+      assert.deepEqual(seen[0], dm.loadErrors);
+    });
+  });
+
   describe('serialize() round-trips every state the app can reach', () => {
     test('a realistic session survives save and reload unchanged', () => {
       const dm = new DataManager();

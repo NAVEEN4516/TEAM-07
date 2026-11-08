@@ -85,9 +85,8 @@ export class DataManager {
    * @param {object} [dataset] - Dataset to initialize with, defaults to DEFAULT_DATASET
    */
   init(dataset = null) {
-    /** @type {string[]} */
-    this.loadErrors = [];
     let source = getDefaultDataset();
+    let loadErrors = [];
 
     if (dataset) {
       const result = sanitizeStoredState({
@@ -97,10 +96,24 @@ export class DataManager {
       if (result.valid) {
         source = result.state;
       } else {
-        this.loadErrors = result.errors;
+        loadErrors = result.errors;
       }
     }
 
+    this._load(source, loadErrors);
+  }
+
+  /**
+   * Replaces the stored state and publishes it once. The load errors are set before
+   * subscribers are notified, so a listener can always read why defaults were loaded.
+   *
+   * @param {{sprint: object, issues: object[]}} source - Validated state to store
+   * @param {string[]} loadErrors - Reasons defaults were loaded, empty for a clean load
+   * @private
+   */
+  _load(source, loadErrors) {
+    /** @type {string[]} */
+    this.loadErrors = loadErrors;
     this._sprint = deepClone(source.sprint);
     this._issues = deepClone(source.issues);
     this._notify();
@@ -136,11 +149,10 @@ export class DataManager {
   restoreFromJSON(raw) {
     const result = parseStoredState(raw);
     if (result.valid) {
-      this.init(result.state);
+      this._load(result.state, []);
       return { success: true, errors: [] };
     }
-    this.init(null);
-    this.loadErrors = result.errors;
+    this._load(getDefaultDataset(), result.errors);
     return { success: false, errors: result.errors };
   }
 
