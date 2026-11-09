@@ -170,6 +170,10 @@ The CSP record inspects policy metadata; it is not a complete enforcement test. 
 
 ## 6. Performance Verification (BDC-NF-001 / TC-NF-01.1)
 
+| Record ID | Requirement | Executed steps | Expected | Chrome actual / status | Edge actual / status |
+| --- | --- | --- | --- | --- | --- |
+| TC-NF-01.1 | BDC-NF-001 | 10 iterations of Add, Change Day, Edit Done, Delete, Reset under ?perf profiling | All UI state transition and re-render updates execute in &lt; 2000 ms | Add: med=26.5ms (max 37.3ms); Day: med=24.5ms; Edit: med=24.4ms; Delete: med=24.6ms; Reset: med=23.7ms / PASS | Add: med=27.3ms (max 40.2ms); Day: med=27.5ms; Edit: med=24.9ms; Delete: med=24.4ms; Reset: med=24.1ms / PASS |
+
 ### Methodology: Method A (`?perf` Profiling)
 Timing was captured across 10 consecutive iterations per action under `?perf` URL profiling on Chrome and Edge.
 
