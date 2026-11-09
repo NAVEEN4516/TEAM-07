@@ -1,0 +1,567 @@
+[
+  {
+    "id": "M01",
+    "requirement": "BDC-F-010",
+    "mutant": "Ideal line divides by duration+1",
+    "file": "src/js/logic/burndownEngine.js",
+    "base": {
+      "exit": 1,
+      "tests": 255,
+      "fail": 9,
+      "first_failures": [
+        "TC-F-15.1 - default dataset at Day 4 produces exact SRS Appendix A & B KPI values",
+        "TC-F-15.2 - moving Current Day updates all KPIs live and deterministically",
+        "TC-F-10.1 - Ideal(0)=50, Ideal(4)=30, Ideal(10)=0 for the default dataset"
+      ]
+    },
+    "full": {
+      "exit": 1,
+      "tests": 410,
+      "fail": 62,
+      "first_failures": [
+        "TC-F-15.1 - default dataset at Day 4 produces exact SRS Appendix A & B KPI values",
+        "TC-F-15.2 - moving Current Day updates all KPIs live and deterministically",
+        "a fresh load shows the 10 original issues with every field and the exact SRS Appendix B results"
+      ]
+    },
+    "killed_by_baseline": true,
+    "killed_by_full": true
+  },
+  {
+    "id": "M02",
+    "requirement": "BDC-F-012",
+    "mutant": "+1 variance classed as Ahead (tolerance boundary off by one)",
+    "file": "src/js/logic/burndownEngine.js",
+    "base": {
+      "exit": 1,
+      "tests": 255,
+      "fail": 2,
+      "first_failures": [
+        "TC-F-15.2 - moving Current Day updates all KPIs live and deterministically",
+        "TC-F-12.2 - variance 0, +1 and -1 all classify as On Track"
+      ]
+    },
+    "full": {
+      "exit": 1,
+      "tests": 410,
+      "fail": 5,
+      "first_failures": [
+        "TC-F-15.2 - moving Current Day updates all KPIs live and deterministically",
+        "moving a Done issue out of Done and back keeps the history consistent",
+        "Day 3: marker, actual endpoint, KPIs, status and timeline control all agree"
+      ]
+    },
+    "killed_by_baseline": true,
+    "killed_by_full": true
+  },
+  {
+    "id": "M03",
+    "requirement": "BDC-F-011",
+    "mutant": "Work completed ON the Current Day is not counted",
+    "file": "src/js/logic/burndownEngine.js",
+    "base": {
+      "exit": 1,
+      "tests": 255,
+      "fail": 20,
+      "first_failures": [
+        "TC-F-15.1 - default dataset at Day 4 produces exact SRS Appendix A & B KPI values",
+        "TC-F-15.2 - moving Current Day updates all KPIs live and deterministically",
+        "default dataset on Day 4 reports 29 completed and 21 remaining"
+      ]
+    },
+    "full": {
+      "exit": 1,
+      "tests": 410,
+      "fail": 40,
+      "first_failures": [
+        "TC-F-15.1 - default dataset at Day 4 produces exact SRS Appendix A & B KPI values",
+        "TC-F-15.2 - moving Current Day updates all KPIs live and deterministically",
+        "a fresh load shows the 10 original issues with every field and the exact SRS Appendix B results"
+      ]
+    },
+    "killed_by_baseline": true,
+    "killed_by_full": true
+  },
+  {
+    "id": "M04",
+    "requirement": "BDC-F-010",
+    "mutant": "Ideal line is not clamped at the final day",
+    "file": "src/js/logic/burndownEngine.js",
+    "base": {
+      "exit": 1,
+      "tests": 255,
+      "fail": 1,
+      "first_failures": [
+        "day is clamped so ideal never goes negative"
+      ]
+    },
+    "full": {
+      "exit": 1,
+      "tests": 410,
+      "fail": 1,
+      "first_failures": [
+        "day is clamped so ideal never goes negative"
+      ]
+    },
+    "killed_by_baseline": true,
+    "killed_by_full": true
+  },
+  {
+    "id": "M05",
+    "requirement": "BDC-F-008",
+    "mutant": "Deleting an issue leaves the stored sprint total stale",
+    "file": "src/js/data/dataManager.js",
+    "base": {
+      "exit": 1,
+      "tests": 255,
+      "fail": 1,
+      "first_failures": []
+    },
+    "full": {
+      "exit": 1,
+      "tests": 410,
+      "fail": 8,
+      "first_failures": [
+        "deleting the added issue returns every layer to the default snapshot",
+        "deleting PROJ-110 only gives total 45, completed 29, remaining 16, Ideal(4) 27, variance +11",
+        "deleting a completed issue removes its burn-down from the actual line"
+      ]
+    },
+    "killed_by_baseline": true,
+    "killed_by_full": true
+  },
+  {
+    "id": "M06",
+    "requirement": "BDC-F-007",
+    "mutant": "Reopening a Done issue keeps its completion day",
+    "file": "src/js/data/dataManager.js",
+    "base": {
+      "exit": 1,
+      "tests": 255,
+      "fail": 3,
+      "first_failures": []
+    },
+    "full": {
+      "exit": 1,
+      "tests": 410,
+      "fail": 8,
+      "first_failures": [
+        "reopening Done work to In Progress clears the completion day in every layer",
+        "reopening Done work to To Do clears the completion day in every layer",
+        "reopening to In Progress returns the exact default snapshot"
+      ]
+    },
+    "killed_by_baseline": true,
+    "killed_by_full": true
+  },
+  {
+    "id": "M07",
+    "requirement": "BDC-NF-003",
+    "mutant": "A rejected sprint change still applies the new name (partial update)",
+    "file": "src/js/data/dataManager.js",
+    "base": {
+      "exit": 1,
+      "tests": 255,
+      "fail": 1,
+      "first_failures": [
+        "rejects empty or whitespace-only sprint name"
+      ]
+    },
+    "full": {
+      "exit": 1,
+      "tests": 410,
+      "fail": 5,
+      "first_failures": [
+        "rejects empty or whitespace-only sprint name",
+        "sprint: empty name is rejected with a message and no layer changes",
+        "sprint: valid name with invalid duration is rejected with a message and no layer changes"
+      ]
+    },
+    "killed_by_baseline": true,
+    "killed_by_full": true
+  },
+  {
+    "id": "M08",
+    "requirement": "BDC-SR-003",
+    "mutant": "DEF-01 reintroduced: subscribers notified before load errors are set",
+    "file": "src/js/data/dataManager.js",
+    "base": {
+      "exit": 0,
+      "tests": 255,
+      "fail": 0,
+      "first_failures": []
+    },
+    "full": {
+      "exit": 1,
+      "tests": 410,
+      "fail": 4,
+      "first_failures": [
+        "a failed restore publishes the reasons together with the restored defaults",
+        "schema violations are also visible to the listener at notification time",
+        "a later successful restore clears the reasons before it publishes"
+      ]
+    },
+    "killed_by_baseline": false,
+    "killed_by_full": true
+  },
+  {
+    "id": "M09",
+    "requirement": "BDC-SR-003",
+    "mutant": "Sprint data starts reading browser storage",
+    "file": "src/js/data/dataManager.js",
+    "base": {
+      "exit": 0,
+      "tests": 255,
+      "fail": 0,
+      "first_failures": []
+    },
+    "full": {
+      "exit": 1,
+      "tests": 410,
+      "fail": 2,
+      "first_failures": []
+    },
+    "killed_by_baseline": false,
+    "killed_by_full": true
+  },
+  {
+    "id": "M10",
+    "requirement": "BDC-SR-002",
+    "mutant": "Maximum sprint length raised from 60 to 61 days",
+    "file": "src/js/logic/validationManager.js",
+    "base": {
+      "exit": 1,
+      "tests": 255,
+      "fail": 5,
+      "first_failures": [
+        "rejects duration beyond 60 days with a visible message and leaves state unchanged",
+        "validateSprintConfig keeps its export and enforces the 60-day ceiling",
+        "enforces the 1 to 60 working-day range the configuration form advertises"
+      ]
+    },
+    "full": {
+      "exit": 1,
+      "tests": 410,
+      "fail": 8,
+      "first_failures": [
+        "rejects duration beyond 60 days with a visible message and leaves state unchanged",
+        "validateSprintConfig keeps its export and enforces the 60-day ceiling",
+        "sprint: duration beyond 60 is rejected with a message and no layer changes"
+      ]
+    },
+    "killed_by_baseline": true,
+    "killed_by_full": true
+  },
+  {
+    "id": "M11",
+    "requirement": "BDC-F-006",
+    "mutant": "Duplicate issue keys compared case-sensitively",
+    "file": "src/js/logic/validationManager.js",
+    "base": {
+      "exit": 1,
+      "tests": 255,
+      "fail": 3,
+      "first_failures": [
+        "rejects case-insensitive duplicate keys",
+        "rejects duplicate issue keys, ignoring case"
+      ]
+    },
+    "full": {
+      "exit": 1,
+      "tests": 410,
+      "fail": 6,
+      "first_failures": [
+        "add: duplicate key in other case with spaces is rejected with a message and no layer changes",
+        "after the whole rejected sequence the state is still valid and consistent",
+        "rejects case-insensitive duplicate keys"
+      ]
+    },
+    "killed_by_baseline": true,
+    "killed_by_full": true
+  },
+  {
+    "id": "M12",
+    "requirement": "BDC-F-007",
+    "mutant": "A completion day after the Current Day is accepted",
+    "file": "src/js/logic/validationManager.js",
+    "base": {
+      "exit": 1,
+      "tests": 255,
+      "fail": 4,
+      "first_failures": [
+        "TC-F-07.2 - rejects a completion day after the Current Day",
+        "rejects any completion while the Current Day is 0"
+      ]
+    },
+    "full": {
+      "exit": 1,
+      "tests": 410,
+      "fail": 8,
+      "first_failures": [
+        "update: Done after the Current Day is rejected with a message and no layer changes",
+        "after the whole rejected sequence the state is still valid and consistent",
+        "a rejected change after a successful one keeps the successful change only"
+      ]
+    },
+    "killed_by_baseline": true,
+    "killed_by_full": true
+  },
+  {
+    "id": "M13",
+    "requirement": "BDC-SR-003",
+    "mutant": "Saved state's stored total is trusted instead of recomputed",
+    "file": "src/js/logic/validationManager.js",
+    "base": {
+      "exit": 1,
+      "tests": 255,
+      "fail": 2,
+      "first_failures": [
+        "a valid dataset is loaded as given",
+        "the clean copy holds only SRS Appendix C fields and recomputes the total"
+      ]
+    },
+    "full": {
+      "exit": 1,
+      "tests": 410,
+      "fail": 4,
+      "first_failures": [
+        "a valid dataset is loaded as given",
+        "a backlog made only of zero-point work stays finite in every layer",
+        "saved state with extra or hostile fields is cleaned before it is used"
+      ]
+    },
+    "killed_by_baseline": true,
+    "killed_by_full": true
+  },
+  {
+    "id": "M14",
+    "requirement": "BDC-F-014",
+    "mutant": "Actual line plots one day past the Current Day",
+    "file": "src/js/ui/chartConfig.js",
+    "base": {
+      "exit": 1,
+      "tests": 255,
+      "fail": 1,
+      "first_failures": []
+    },
+    "full": {
+      "exit": 1,
+      "tests": 410,
+      "fail": 1,
+      "first_failures": []
+    },
+    "killed_by_baseline": true,
+    "killed_by_full": true
+  },
+  {
+    "id": "M15",
+    "requirement": "BDC-F-015",
+    "mutant": "Variance shown without its + sign",
+    "file": "src/js/ui/kpiCards.js",
+    "base": {
+      "exit": 1,
+      "tests": 255,
+      "fail": 2,
+      "first_failures": [
+        "formats positive variance with leading plus sign",
+        "TC-F-15.1 - renders all 6 live KPI cards with default dataset Day 4 values"
+      ]
+    },
+    "full": {
+      "exit": 1,
+      "tests": 410,
+      "fail": 14,
+      "first_failures": [
+        "a fresh load shows the 10 original issues with every field and the exact SRS Appendix B results",
+        "adding PROJ-111",
+        "a Done issue added at the Current Day burns down immediately"
+      ]
+    },
+    "killed_by_baseline": true,
+    "killed_by_full": true
+  },
+  {
+    "id": "M16",
+    "requirement": "BDC-SR-001",
+    "mutant": "escapeHTML stops escaping '<'",
+    "file": "src/js/ui/sprintBanner.js",
+    "base": {
+      "exit": 1,
+      "tests": 255,
+      "fail": 4,
+      "first_failures": [
+        "escapes user-supplied values containing XSS payloads in HTML attributes",
+        "escapes error text safely in the error list",
+        "TC-SR-01.1 - safely escapes markup, script tags, and attribute injections"
+      ]
+    },
+    "full": {
+      "exit": 1,
+      "tests": 410,
+      "fail": 8,
+      "first_failures": [
+        "a hostile sprint name is escaped in the banner and cannot break out of any attribute",
+        "hostile text survives a save and reload as inert data",
+        "rejected hostile input is echoed back escaped when the Add Issue form re-renders"
+      ]
+    },
+    "killed_by_baseline": true,
+    "killed_by_full": true
+  },
+  {
+    "id": "M17",
+    "requirement": "BDC-NF-004",
+    "mutant": "The OS dark-mode preference is ignored on first visit",
+    "file": "src/js/ui/themeManager.js",
+    "base": {
+      "exit": 0,
+      "tests": 255,
+      "fail": 0,
+      "first_failures": []
+    },
+    "full": {
+      "exit": 1,
+      "tests": 410,
+      "fail": 3,
+      "first_failures": []
+    },
+    "killed_by_baseline": false,
+    "killed_by_full": true
+  },
+  {
+    "id": "M18",
+    "requirement": "BDC-F-005",
+    "mutant": "A missing completion day shows blank instead of '--'",
+    "file": "src/js/ui/backlogTable.js",
+    "base": {
+      "exit": 1,
+      "tests": 255,
+      "fail": 3,
+      "first_failures": []
+    },
+    "full": {
+      "exit": 1,
+      "tests": 410,
+      "fail": 57,
+      "first_failures": [
+        "a fresh load shows the 10 original issues with every field and the exact SRS Appendix B results",
+        "TC-F-01.1 - configuring \"Sprint 2\" for 5 days re-renders every layer for Total Days = 5",
+        "adding PROJ-111"
+      ]
+    },
+    "killed_by_baseline": true,
+    "killed_by_full": true
+  },
+  {
+    "id": "M19",
+    "requirement": "BDC-NF-005",
+    "mutant": "The calculation layer imports from the data layer",
+    "file": "src/js/logic/burndownEngine.js",
+    "base": {
+      "exit": 1,
+      "tests": 255,
+      "fail": 1,
+      "first_failures": [
+        "TC-NF-05.1 - module declares no imports, so it cannot form a cycle"
+      ]
+    },
+    "full": {
+      "exit": 1,
+      "tests": 410,
+      "fail": 3,
+      "first_failures": [
+        "TC-NF-05.1 - module declares no imports, so it cannot form a cycle"
+      ]
+    },
+    "killed_by_baseline": true,
+    "killed_by_full": true
+  },
+  {
+    "id": "M20",
+    "requirement": "BDC-NF-005",
+    "mutant": "A circular import between two modules",
+    "file": "src/js/data/defaultDataset.js",
+    "base": {
+      "exit": 1,
+      "tests": 149,
+      "fail": 5,
+      "first_failures": []
+    },
+    "full": {
+      "exit": 1,
+      "tests": 296,
+      "fail": 7,
+      "first_failures": []
+    },
+    "killed_by_baseline": true,
+    "killed_by_full": true
+  },
+  {
+    "id": "M21",
+    "requirement": "BDC-SR-005",
+    "mutant": "eval() appears in application code",
+    "file": "src/js/logic/validationManager.js",
+    "base": {
+      "exit": 0,
+      "tests": 255,
+      "fail": 0,
+      "first_failures": []
+    },
+    "full": {
+      "exit": 1,
+      "tests": 410,
+      "fail": 1,
+      "first_failures": []
+    },
+    "killed_by_baseline": false,
+    "killed_by_full": true
+  },
+  {
+    "id": "M22",
+    "requirement": "BDC-NF-005",
+    "mutant": "A data module reads the DOM",
+    "file": "src/js/data/dataManager.js",
+    "base": {
+      "exit": 1,
+      "tests": 255,
+      "fail": 27,
+      "first_failures": [
+        "rejects negative story points with a visible message and leaves state unchanged",
+        "rejects non-numeric story points with a visible message and leaves state unchanged",
+        "rejects infinite story points with a visible message and leaves state unchanged"
+      ]
+    },
+    "full": {
+      "exit": 1,
+      "tests": 410,
+      "fail": 130,
+      "first_failures": [
+        "rejects negative story points with a visible message and leaves state unchanged",
+        "rejects non-numeric story points with a visible message and leaves state unchanged",
+        "rejects infinite story points with a visible message and leaves state unchanged"
+      ]
+    },
+    "killed_by_baseline": true,
+    "killed_by_full": true
+  },
+  {
+    "id": "M23",
+    "requirement": "BDC-SR-005",
+    "mutant": "The page loads a script from another origin",
+    "file": "src/index.html",
+    "base": {
+      "exit": 0,
+      "tests": 255,
+      "fail": 0,
+      "first_failures": []
+    },
+    "full": {
+      "exit": 1,
+      "tests": 410,
+      "fail": 2,
+      "first_failures": []
+    },
+    "killed_by_baseline": false,
+    "killed_by_full": true
+  }
+]

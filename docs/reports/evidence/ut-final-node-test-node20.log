@@ -1,0 +1,2705 @@
+# Raw output: node --test, final, Node 20 (the CI major)
+# Executed: 2026-11-08T12:52:41Z (UTC) / 2026-11-08T18:22:41+0530 (IST)
+# Commit:   98b198f7bca22ee0cb14ef08d1218f11aaafaa91 (feature/BDC-NF-005-testing-hemanth)
+# Node:     v20.20.2
+# OS:       Microsoft Windows [Version 10.0.26300.9818]
+# Command:  node --test
+# ------------------------------------------------------------------
+TAP version 13
+# Subtest: Module architecture (BDC-NF-005, TC-NF-05.1)
+    # Subtest: the three layers exist, so the rules below are not vacuous
+    ok 1 - the three layers exist, so the rules below are not vacuous
+      ---
+      duration_ms: 2.3574
+      ...
+    # Subtest: every import is a relative path to a real .js module, as native browser modules require
+    ok 2 - every import is a relative path to a real .js module, as native browser modules require
+      ---
+      duration_ms: 15.5809
+      ...
+    # Subtest: the import graph has no circular dependencies
+    ok 3 - the import graph has no circular dependencies
+      ---
+      duration_ms: 6.3771
+      ...
+    # Subtest: layers depend only downwards: logic on logic, data on data and logic, ui on any
+    ok 4 - layers depend only downwards: logic on logic, data on data and logic, ui on any
+      ---
+      duration_ms: 4.6598
+      ...
+    # Subtest: calculation and data modules never touch the DOM or browser storage
+    ok 5 - calculation and data modules never touch the DOM or browser storage
+      ---
+      duration_ms: 1.9446
+      ...
+    # Subtest: the calculation layer imports nothing outside itself, so it runs headless
+    ok 6 - the calculation layer imports nothing outside itself, so it runs headless
+      ---
+      duration_ms: 1.1413
+      ...
+    1..6
+ok 1 - Module architecture (BDC-NF-005, TC-NF-05.1)
+  ---
+  duration_ms: 34.459
+  type: 'suite'
+  ...
+# Subtest: Dependency safety (BDC-SR-005, TC-SR-05.1)
+    # Subtest: no module uses eval, the Function constructor, string timers or document.write
+    ok 1 - no module uses eval, the Function constructor, string timers or document.write
+      ---
+      duration_ms: 5.8629
+      ...
+    # Subtest: index.html loads only local scripts and stylesheets
+    ok 2 - index.html loads only local scripts and stylesheets
+      ---
+      duration_ms: 1.877
+      ...
+    # Subtest: the only third-party script is the vendored charting library
+    ok 3 - the only third-party script is the vendored charting library
+      ---
+      duration_ms: 0.686
+      ...
+    1..3
+ok 2 - Dependency safety (BDC-SR-005, TC-SR-05.1)
+  ---
+  duration_ms: 8.9519
+  type: 'suite'
+  ...
+# Subtest: DataManager.addIssue (BDC-F-006, BDC-F-002, BDC-SR-001, BDC-SR-002, BDC-NF-003)
+    # Subtest: TC-F-06.1: successfully adds valid issue and updates series, KPIs, and subscribers
+    ok 1 - TC-F-06.1: successfully adds valid issue and updates series, KPIs, and subscribers
+      ---
+      duration_ms: 4.531
+      ...
+    # Subtest: TC-F-06.2: duplicate PROJ-101 (and variants) rejected with unchanged state and listener count
+    ok 2 - TC-F-06.2: duplicate PROJ-101 (and variants) rejected with unchanged state and listener count
+      ---
+      duration_ms: 1.946
+      ...
+    # Subtest: TC-F-06.3: empty key, empty summary, both reject with errors and nothing added
+    ok 3 - TC-F-06.3: empty key, empty summary, both reject with errors and nothing added
+      ---
+      duration_ms: 0.8139
+      ...
+    # Subtest: TC-F-06.4: story points 0 accepted, total stays 50, and getKPIs() has no NaN/Infinity/undefined
+    ok 4 - TC-F-06.4: story points 0 accepted, total stays 50, and getKPIs() has no NaN/Infinity/undefined
+      ---
+      duration_ms: 1.5469
+      ...
+    # Subtest: TC-F-02.2 (add half): total committed story points increases from 50 to 55
+    ok 5 - TC-F-02.2 (add half): total committed story points increases from 50 to 55
+      ---
+      duration_ms: 0.6976
+      ...
+    # Subtest: TC-SR-01.1: stores XSS injection strings byte-for-byte unchanged
+    ok 6 - TC-SR-01.1: stores XSS injection strings byte-for-byte unchanged
+      ---
+      duration_ms: 0.6737
+      ...
+    # Subtest: TC-SR-02.1 / TC-NF-03.1: points -3, "abc", Infinity rejected with no state change
+    ok 7 - TC-SR-02.1 / TC-NF-03.1: points -3, "abc", Infinity rejected with no state change
+      ---
+      duration_ms: 0.8338
+      ...
+    # Subtest: Done status with valid day increases completedPoints; non-Done status stores completedDay null
+    ok 8 - Done status with valid day increases completedPoints; non-Done status stores completedDay null
+      ---
+      duration_ms: 0.8313
+      ...
+    # Subtest: dm.reset() after adding issues restores baseline dataset (10 issues, 50 points, currentDay 4)
+    ok 9 - dm.reset() after adding issues restores baseline dataset (10 issues, 50 points, currentDay 4)
+      ---
+      duration_ms: 2.3349
+      ...
+    # Subtest: rejects story points exceeding safe range and guarantees KPIs and chart series remain finite (P2 bugfix)
+    ok 10 - rejects story points exceeding safe range and guarantees KPIs and chart series remain finite (P2 bugfix)
+      ---
+      duration_ms: 1.2372
+      ...
+    1..10
+ok 3 - DataManager.addIssue (BDC-F-006, BDC-F-002, BDC-SR-001, BDC-SR-002, BDC-NF-003)
+  ---
+  duration_ms: 18.3951
+  type: 'suite'
+  ...
+# Subtest: DataManager (BDC-F-001, BDC-F-003, BDC-F-015)
+    # Subtest: Module Contracts & Defaults
+        # Subtest: instantiates with deep-cloned default sprint and issues
+        ok 1 - instantiates with deep-cloned default sprint and issues
+          ---
+          duration_ms: 3.8951
+          ...
+        # Subtest: defaultDataManager singleton instance is exported and functional
+        ok 2 - defaultDataManager singleton instance is exported and functional
+          ---
+          duration_ms: 0.7777
+          ...
+        # Subtest: reset() restores baseline state
+        ok 3 - reset() restores baseline state
+          ---
+          duration_ms: 3.2102
+          ...
+        1..3
+    ok 1 - Module Contracts & Defaults
+      ---
+      duration_ms: 9.7538
+      type: 'suite'
+      ...
+    # Subtest: TC-F-01 - Sprint Configuration (BDC-F-001)
+        # Subtest: TC-F-01.1 - accepts and saves a valid sprint configuration
+        ok 1 - TC-F-01.1 - accepts and saves a valid sprint configuration
+          ---
+          duration_ms: 1.4736
+          ...
+        # Subtest: TC-F-01.1 - adjusts Current Day if new duration is shorter than current day
+        ok 2 - TC-F-01.1 - adjusts Current Day if new duration is shorter than current day
+          ---
+          duration_ms: 1.3005
+          ...
+        # Subtest: TC-F-01.2 - rejects invalid duration (0, negative, non-numeric) and retains previous valid config
+        ok 3 - TC-F-01.2 - rejects invalid duration (0, negative, non-numeric) and retains previous valid config
+          ---
+          duration_ms: 1.8952
+          ...
+        # Subtest: TC-F-01.3 - rejects end date preceding start date and retains previous valid config
+        ok 4 - TC-F-01.3 - rejects end date preceding start date and retains previous valid config
+          ---
+          duration_ms: 1.4573
+          ...
+        # Subtest: rejects empty or whitespace-only sprint name
+        ok 5 - rejects empty or whitespace-only sprint name
+          ---
+          duration_ms: 0.8453
+          ...
+        1..5
+    ok 2 - TC-F-01 - Sprint Configuration (BDC-F-001)
+      ---
+      duration_ms: 8.0062
+      type: 'suite'
+      ...
+    # Subtest: TC-F-03 - Current Day Timeline Control (BDC-F-003)
+        # Subtest: TC-F-03.1 - moving control to valid day updates Current Day and notifies subscribers
+        ok 1 - TC-F-03.1 - moving control to valid day updates Current Day and notifies subscribers
+          ---
+          duration_ms: 1.9258
+          ...
+        # Subtest: TC-F-03.1 - supports boundary days 0 and durationDays
+        ok 2 - TC-F-03.1 - supports boundary days 0 and durationDays
+          ---
+          duration_ms: 0.5674
+          ...
+        # Subtest: TC-F-03.2 - out-of-range values (< 0 or > durationDays) are rejected safely without state mutation
+        ok 3 - TC-F-03.2 - out-of-range values (< 0 or > durationDays) are rejected safely without state mutation
+          ---
+          duration_ms: 0.5335
+          ...
+        1..3
+    ok 3 - TC-F-03 - Current Day Timeline Control (BDC-F-003)
+      ---
+      duration_ms: 3.365
+      type: 'suite'
+      ...
+    # Subtest: TC-F-15 - Live Sprint KPI Dashboard (BDC-F-015)
+        # Subtest: TC-F-15.1 - default dataset at Day 4 produces exact SRS Appendix A & B KPI values
+        ok 1 - TC-F-15.1 - default dataset at Day 4 produces exact SRS Appendix A & B KPI values
+          ---
+          duration_ms: 1.7856
+          ...
+        # Subtest: TC-F-15.2 - moving Current Day updates all KPIs live and deterministically
+        ok 2 - TC-F-15.2 - moving Current Day updates all KPIs live and deterministically
+          ---
+          duration_ms: 1.9449
+          ...
+        # Subtest: subscribers are notified when sprint configuration or current day changes
+        ok 3 - subscribers are notified when sprint configuration or current day changes
+          ---
+          duration_ms: 0.6288
+          ...
+        1..3
+    ok 4 - TC-F-15 - Live Sprint KPI Dashboard (BDC-F-015)
+      ---
+      duration_ms: 4.6162
+      type: 'suite'
+      ...
+    # Subtest: Validation Helpers
+        # Subtest: validateSprintConfig handles valid and invalid payloads
+        ok 1 - validateSprintConfig handles valid and invalid payloads
+          ---
+          duration_ms: 0.5855
+          ...
+        # Subtest: validateCurrentDay validates boundaries correctly
+        ok 2 - validateCurrentDay validates boundaries correctly
+          ---
+          duration_ms: 0.3822
+          ...
+        1..2
+    ok 5 - Validation Helpers
+      ---
+      duration_ms: 1.2512
+      type: 'suite'
+      ...
+    1..5
+ok 4 - DataManager (BDC-F-001, BDC-F-003, BDC-F-015)
+  ---
+  duration_ms: 28.742
+  type: 'suite'
+  ...
+# Subtest: R1: Default Simulated Jira Dataset (defaultDataset.js)
+    # Subtest: Import Styles & Exports
+        # Subtest: supports default export and named export interchangeably
+        ok 1 - supports default export and named export interchangeably
+          ---
+          duration_ms: 3.3235
+          ...
+        # Subtest: exports DEFAULT_DATASET, DEFAULT_SPRINT, and DEFAULT_ISSUES constants
+        ok 2 - exports DEFAULT_DATASET, DEFAULT_SPRINT, and DEFAULT_ISSUES constants
+          ---
+          duration_ms: 0.386
+          ...
+        # Subtest: exports deepClone and deepFreeze helper utilities
+        ok 3 - exports deepClone and deepFreeze helper utilities
+          ---
+          duration_ms: 0.2438
+          ...
+        1..3
+    ok 1 - Import Styles & Exports
+      ---
+      duration_ms: 5.3507
+      type: 'suite'
+      ...
+    # Subtest: Sprint Metadata (SRS Appendix C & SAD §3.1)
+        # Subtest: contains canonical sprint properties per SRS Appendix C and SAD
+        ok 1 - contains canonical sprint properties per SRS Appendix C and SAD
+          ---
+          duration_ms: 0.5985
+          ...
+        1..1
+    ok 2 - Sprint Metadata (SRS Appendix C & SAD §3.1)
+      ---
+      duration_ms: 0.8197
+      type: 'suite'
+      ...
+    # Subtest: Issue Collection & Canonical Schema
+        # Subtest: contains exactly 10 issues with keys PROJ-101 through PROJ-110
+        ok 1 - contains exactly 10 issues with keys PROJ-101 through PROJ-110
+          ---
+          duration_ms: 1.59
+          ...
+        # Subtest: each issue has all canonical fields with valid types and no redundant aliases
+        ok 2 - each issue has all canonical fields with valid types and no redundant aliases
+          ---
+          duration_ms: 0.6547
+          ...
+        # Subtest: individual issue values match SRS Appendix A Table 11 exactly
+        ok 3 - individual issue values match SRS Appendix A Table 11 exactly
+          ---
+          duration_ms: 0.4976
+          ...
+        1..3
+    ok 3 - Issue Collection & Canonical Schema
+      ---
+      duration_ms: 3.2265
+      type: 'suite'
+      ...
+    # Subtest: Mathematical Integrity
+        # Subtest: sum of storyPoints across all 10 issues equals 50
+        ok 1 - sum of storyPoints across all 10 issues equals 50
+          ---
+          duration_ms: 0.3873
+          ...
+        # Subtest: issues completed by Day 4 total exactly 29 points
+        ok 2 - issues completed by Day 4 total exactly 29 points
+          ---
+          duration_ms: 0.4394
+          ...
+        # Subtest: remaining story points on Day 4 total exactly 21 points
+        ok 3 - remaining story points on Day 4 total exactly 21 points
+          ---
+          duration_ms: 0.4758
+          ...
+        # Subtest: completed issues match SRS Appendix A specifications
+        ok 4 - completed issues match SRS Appendix A specifications
+          ---
+          duration_ms: 0.4649
+          ...
+        1..4
+    ok 4 - Mathematical Integrity
+      ---
+      duration_ms: 2.1402
+      type: 'suite'
+      ...
+    # Subtest: Isolation & Immutability (Deep Cloning)
+        # Subtest: mutating returned dataset does not pollute subsequent calls
+        ok 1 - mutating returned dataset does not pollute subsequent calls
+          ---
+          duration_ms: 0.6181
+          ...
+        # Subtest: getDefaultSprint() and getDefaultIssues() return isolated copies
+        ok 2 - getDefaultSprint() and getDefaultIssues() return isolated copies
+          ---
+          duration_ms: 0.3524
+          ...
+        # Subtest: internal constants and all nested objects are deeply frozen against mutation
+        ok 3 - internal constants and all nested objects are deeply frozen against mutation
+          ---
+          duration_ms: 0.3727
+          ...
+        # Subtest: deepFreeze helper recursively seals objects and arrays
+        ok 4 - deepFreeze helper recursively seals objects and arrays
+          ---
+          duration_ms: 0.2594
+          ...
+        # Subtest: deepFreeze recursively seals Symbol-keyed properties and functions
+        ok 5 - deepFreeze recursively seals Symbol-keyed properties and functions
+          ---
+          duration_ms: 0.2264
+          ...
+        # Subtest: deepFreeze safely handles ArrayBuffer views and TypedArrays without throwing
+        ok 6 - deepFreeze safely handles ArrayBuffer views and TypedArrays without throwing
+          ---
+          duration_ms: 0.3949
+          ...
+        # Subtest: deepFreeze inspects property descriptors and freezes accessors without executing throwing getters
+        ok 7 - deepFreeze inspects property descriptors and freezes accessors without executing throwing getters
+          ---
+          duration_ms: 0.4321
+          ...
+        # Subtest: deepClone creates completely isolated deep clones for objects and arrays
+        ok 8 - deepClone creates completely isolated deep clones for objects and arrays
+          ---
+          duration_ms: 0.4599
+          ...
+        # Subtest: deepClone safely handles functions, methods, Dates, RegExps, and Symbol keys without crashing
+        ok 9 - deepClone safely handles functions, methods, Dates, RegExps, and Symbol keys without crashing
+          ---
+          duration_ms: 0.396
+          ...
+        # Subtest: consecutive calls to getDefaultDataset return distinct object references
+        ok 10 - consecutive calls to getDefaultDataset return distinct object references
+          ---
+          duration_ms: 0.2924
+          ...
+        1..10
+    ok 5 - Isolation & Immutability (Deep Cloning)
+      ---
+      duration_ms: 4.3665
+      type: 'suite'
+      ...
+    1..5
+ok 5 - R1: Default Simulated Jira Dataset (defaultDataset.js)
+  ---
+  duration_ms: 17.9909
+  type: 'suite'
+  ...
+# Subtest: Aggregate story-point limit (BDC-SR-002, TC-SR-02.1)
+    # Subtest: a single issue whose points push the total past the safe-integer range is rejected
+    ok 1 - a single issue whose points push the total past the safe-integer range is rejected
+      ---
+      duration_ms: 6.8858
+      ...
+    # Subtest: the largest total that still fits is accepted and every layer stays finite; one more point is rejected
+    ok 2 - the largest total that still fits is accepted and every layer stays finite; one more point is rejected
+      ---
+      duration_ms: 3.5291
+      ...
+    1..2
+ok 6 - Aggregate story-point limit (BDC-SR-002, TC-SR-02.1)
+  ---
+  duration_ms: 12.4727
+  type: 'suite'
+  ...
+# Subtest: Cloning without structuredClone (BDC-F-009, BDC-NF-004)
+    # Subtest: every DataManager operation still works and isolates its copies when structuredClone is unavailable
+    ok 1 - every DataManager operation still works and isolates its copies when structuredClone is unavailable
+      ---
+      duration_ms: 6.9443
+      ...
+    # Subtest: the fallback clones the default dataset exactly and independently
+    ok 2 - the fallback clones the default dataset exactly and independently
+      ---
+      duration_ms: 0.8256
+      ...
+    # Subtest: a function inside the data forces the fallback even when structuredClone exists
+    ok 3 - a function inside the data forces the fallback even when structuredClone exists
+      ---
+      duration_ms: 0.8749
+      ...
+    # Subtest: without structuredClone the fallback copies dates, patterns, arrays and symbol keys itself
+    ok 4 - without structuredClone the fallback copies dates, patterns, arrays and symbol keys itself
+      ---
+      duration_ms: 0.5743
+      ...
+    1..4
+ok 7 - Cloning without structuredClone (BDC-F-009, BDC-NF-004)
+  ---
+  duration_ms: 9.7607
+  type: 'suite'
+  ...
+# Subtest: deepFreeze edge cases (BDC-F-004)
+    # Subtest: primitives and null are returned unchanged
+    ok 1 - primitives and null are returned unchanged
+      ---
+      duration_ms: 0.3533
+      ...
+    # Subtest: both halves of an accessor property are frozen without being invoked
+    ok 2 - both halves of an accessor property are frozen without being invoked
+      ---
+      duration_ms: 1.0732
+      ...
+    1..2
+ok 8 - deepFreeze edge cases (BDC-F-004)
+  ---
+  duration_ms: 1.8241
+  type: 'suite'
+  ...
+# Subtest: BDC-F-007/008/009: Sprint 2 workflow and recovery
+    # Subtest: Done updates publish once, refresh KPIs and return isolated copies
+    ok 1 - Done updates publish once, refresh KPIs and return isolated copies
+      ---
+      duration_ms: 5.0362
+      ...
+    # Subtest: reopening to To Do clears completion history
+    ok 2 - reopening to To Do clears completion history
+      ---
+      duration_ms: 0.5692
+      ...
+    # Subtest: reopening to In Progress clears completion history
+    ok 3 - reopening to In Progress clears completion history
+      ---
+      duration_ms: 0.3989
+      ...
+    # Subtest: rejects completion day null without publishing or mutating
+    ok 4 - rejects completion day null without publishing or mutating
+      ---
+      duration_ms: 1.7921
+      ...
+    # Subtest: rejects completion day  without publishing or mutating
+    ok 5 - rejects completion day  without publishing or mutating
+      ---
+      duration_ms: 0.6105
+      ...
+    # Subtest: rejects completion day 4 without publishing or mutating
+    ok 6 - rejects completion day 4 without publishing or mutating
+      ---
+      duration_ms: 0.5064
+      ...
+    # Subtest: rejects completion day 0 without publishing or mutating
+    ok 7 - rejects completion day 0 without publishing or mutating
+      ---
+      duration_ms: 0.3796
+      ...
+    # Subtest: rejects completion day -1 without publishing or mutating
+    ok 8 - rejects completion day -1 without publishing or mutating
+      ---
+      duration_ms: 0.632
+      ...
+    # Subtest: rejects completion day 11 without publishing or mutating
+    ok 9 - rejects completion day 11 without publishing or mutating
+      ---
+      duration_ms: 0.6565
+      ...
+    # Subtest: rejects completion day 1.5 without publishing or mutating
+    ok 10 - rejects completion day 1.5 without publishing or mutating
+      ---
+      duration_ms: 0.5229
+      ...
+    # Subtest: rejects completion day NaN without publishing or mutating
+    ok 11 - rejects completion day NaN without publishing or mutating
+      ---
+      duration_ms: 0.4359
+      ...
+    # Subtest: rejects completion day Infinity without publishing or mutating
+    ok 12 - rejects completion day Infinity without publishing or mutating
+      ---
+      duration_ms: 0.346
+      ...
+    # Subtest: TC-F-07.2: future completion is rejected atomically at Current Day 4
+    ok 13 - TC-F-07.2: future completion is rejected atomically at Current Day 4
+      ---
+      duration_ms: 0.7242
+      ...
+    # Subtest: completion is valid once that day is reached and survives rewinding
+    ok 14 - completion is valid once that day is reached and survives rewinding
+      ---
+      duration_ms: 2.2221
+      ...
+    # Subtest: Day 0 rejects Done but allows reopening without a completion day
+    ok 15 - Day 0 rejects Done but allows reopening without a completion day
+      ---
+      duration_ms: 0.6698
+      ...
+    # Subtest: rejects unknown issues, invalid workflow and malformed changes
+    ok 16 - rejects unknown issues, invalid workflow and malformed changes
+      ---
+      duration_ms: 0.621
+      ...
+    # Subtest: deleting completed and incomplete issues recalculates scope and notifies once each
+    ok 17 - deleting completed and incomplete issues recalculates scope and notifies once each
+      ---
+      duration_ms: 0.6494
+      ...
+    # Subtest: empty backlog is finite and reset restores exact canonical dataset
+    ok 18 - empty backlog is finite and reset restores exact canonical dataset
+      ---
+      duration_ms: 2.2638
+      ...
+    # Subtest: single-day zero-point sprint supports boundary days and rejects zero duration
+    ok 19 - single-day zero-point sprint supports boundary days and rejects zero duration
+      ---
+      duration_ms: 0.6472
+      ...
+    1..19
+ok 9 - BDC-F-007/008/009: Sprint 2 workflow and recovery
+  ---
+  duration_ms: 22.7492
+  type: 'suite'
+  ...
+# Subtest: Sprint data does not depend on browser storage
+    # Subtest: startup, every edit, Reset, and save/restore work with storage blocked and never touch it
+    ok 1 - startup, every edit, Reset, and save/restore work with storage blocked and never touch it
+      ---
+      duration_ms: 7.6304
+      ...
+    1..1
+ok 10 - Sprint data does not depend on browser storage
+  ---
+  duration_ms: 9.6635
+  type: 'suite'
+  ...
+# Subtest: DataManager validation & saved state (BDC-NF-003, BDC-SR-002, BDC-SR-003)
+    # Subtest: TC-NF-03.1 - every SRS Section 5.2 invalid case is rejected and nothing is stored
+        # Subtest: rejects negative story points with a visible message and leaves state unchanged
+        ok 1 - rejects negative story points with a visible message and leaves state unchanged
+          ---
+          duration_ms: 2.72
+          ...
+        # Subtest: rejects non-numeric story points with a visible message and leaves state unchanged
+        ok 2 - rejects non-numeric story points with a visible message and leaves state unchanged
+          ---
+          duration_ms: 0.5075
+          ...
+        # Subtest: rejects infinite story points with a visible message and leaves state unchanged
+        ok 3 - rejects infinite story points with a visible message and leaves state unchanged
+          ---
+          duration_ms: 0.4007
+          ...
+        # Subtest: rejects completion day after the Current Day with a visible message and leaves state unchanged
+        ok 4 - rejects completion day after the Current Day with a visible message and leaves state unchanged
+          ---
+          duration_ms: 0.4039
+          ...
+        # Subtest: rejects completion day after the duration with a visible message and leaves state unchanged
+        ok 5 - rejects completion day after the duration with a visible message and leaves state unchanged
+          ---
+          duration_ms: 0.4087
+          ...
+        # Subtest: rejects empty issue key with a visible message and leaves state unchanged
+        ok 6 - rejects empty issue key with a visible message and leaves state unchanged
+          ---
+          duration_ms: 0.3741
+          ...
+        # Subtest: rejects duplicate issue key with a visible message and leaves state unchanged
+        ok 7 - rejects duplicate issue key with a visible message and leaves state unchanged
+          ---
+          duration_ms: 0.4962
+          ...
+        # Subtest: rejects empty summary with a visible message and leaves state unchanged
+        ok 8 - rejects empty summary with a visible message and leaves state unchanged
+          ---
+          duration_ms: 0.4814
+          ...
+        # Subtest: rejects zero duration with a visible message and leaves state unchanged
+        ok 9 - rejects zero duration with a visible message and leaves state unchanged
+          ---
+          duration_ms: 0.9519
+          ...
+        # Subtest: rejects negative duration with a visible message and leaves state unchanged
+        ok 10 - rejects negative duration with a visible message and leaves state unchanged
+          ---
+          duration_ms: 0.485
+          ...
+        # Subtest: rejects non-numeric duration with a visible message and leaves state unchanged
+        ok 11 - rejects non-numeric duration with a visible message and leaves state unchanged
+          ---
+          duration_ms: 0.4444
+          ...
+        # Subtest: rejects duration beyond 60 days with a visible message and leaves state unchanged
+        ok 12 - rejects duration beyond 60 days with a visible message and leaves state unchanged
+          ---
+          duration_ms: 0.5328
+          ...
+        # Subtest: rejects impossible calendar date with a visible message and leaves state unchanged
+        ok 13 - rejects impossible calendar date with a visible message and leaves state unchanged
+          ---
+          duration_ms: 0.5066
+          ...
+        # Subtest: rejects Current Day beyond the duration with a visible message and leaves state unchanged
+        ok 14 - rejects Current Day beyond the duration with a visible message and leaves state unchanged
+          ---
+          duration_ms: 1.4549
+          ...
+        # Subtest: rejects negative Current Day with a visible message and leaves state unchanged
+        ok 15 - rejects negative Current Day with a visible message and leaves state unchanged
+          ---
+          duration_ms: 0.4158
+          ...
+        # Subtest: rejects non-numeric Current Day with a visible message and leaves state unchanged
+        ok 16 - rejects non-numeric Current Day with a visible message and leaves state unchanged
+          ---
+          duration_ms: 0.4557
+          ...
+        # Subtest: TC-F-06.4 - zero story points are allowed, as SRS Section 5.2 requires
+        ok 17 - TC-F-06.4 - zero story points are allowed, as SRS Section 5.2 requires
+          ---
+          duration_ms: 0.6011
+          ...
+        # Subtest: state still passes validation after every invalid attempt
+        ok 18 - state still passes validation after every invalid attempt
+          ---
+          duration_ms: 2.4408
+          ...
+        1..18
+    ok 1 - TC-NF-03.1 - every SRS Section 5.2 invalid case is rejected and nothing is stored
+      ---
+      duration_ms: 16.2034
+      type: 'suite'
+      ...
+    # Subtest: Sprint duration range (BDC-SR-002)
+        # Subtest: validateSprintConfig keeps its export and enforces the 60-day ceiling
+        ok 1 - validateSprintConfig keeps its export and enforces the 60-day ceiling
+          ---
+          duration_ms: 0.3428
+          ...
+        # Subtest: an oversized duration never reaches the burndown calculation
+        ok 2 - an oversized duration never reaches the burndown calculation
+          ---
+          duration_ms: 1.1827
+          ...
+        # Subtest: the full 1 to 60 range is accepted
+        ok 3 - the full 1 to 60 range is accepted
+          ---
+          duration_ms: 0.7181
+          ...
+        1..3
+    ok 2 - Sprint duration range (BDC-SR-002)
+      ---
+      duration_ms: 2.5419
+      type: 'suite'
+      ...
+    # Subtest: init() validates a supplied dataset (BDC-SR-003)
+        # Subtest: a valid dataset is loaded as given
+        ok 1 - a valid dataset is loaded as given
+          ---
+          duration_ms: 0.6794
+          ...
+        # Subtest: an invalid dataset is replaced by the default dataset
+        ok 2 - an invalid dataset is replaced by the default dataset
+          ---
+          duration_ms: 0.5779
+          ...
+        # Subtest: a missing part falls back to the default for that part
+        ok 3 - a missing part falls back to the default for that part
+          ---
+          duration_ms: 0.5225
+          ...
+        # Subtest: no argument and reset() still load the defaults with no errors
+        ok 4 - no argument and reset() still load the defaults with no errors
+          ---
+          duration_ms: 0.6011
+          ...
+        1..4
+    ok 3 - init() validates a supplied dataset (BDC-SR-003)
+      ---
+      duration_ms: 2.6428
+      type: 'suite'
+      ...
+    # Subtest: restoreFromJSON() - TC-SR-03.1 safe recovery from corrupted storage
+        # Subtest: malformed JSON restores the default dataset without throwing
+        ok 1 - malformed JSON restores the default dataset without throwing
+          ---
+          duration_ms: 1.1889
+          ...
+        # Subtest: valid JSON with schema violations restores the default dataset
+        ok 2 - valid JSON with schema violations restores the default dataset
+          ---
+          duration_ms: 1.6186
+          ...
+        # Subtest: empty storage restores the default dataset
+        ok 3 - empty storage restores the default dataset
+          ---
+          duration_ms: 0.7035
+          ...
+        # Subtest: valid saved state is loaded and subscribers are notified
+        ok 4 - valid saved state is loaded and subscribers are notified
+          ---
+          duration_ms: 0.6571
+          ...
+        1..4
+    ok 4 - restoreFromJSON() - TC-SR-03.1 safe recovery from corrupted storage
+      ---
+      duration_ms: 4.4977
+      type: 'suite'
+      ...
+    # Subtest: DEF-01 - subscribers can read why defaults were restored (BDC-SR-003)
+        # Subtest: a failed restore publishes the reasons together with the restored defaults
+        ok 1 - a failed restore publishes the reasons together with the restored defaults
+          ---
+          duration_ms: 0.6676
+          ...
+        # Subtest: schema violations are also visible to the listener at notification time
+        ok 2 - schema violations are also visible to the listener at notification time
+          ---
+          duration_ms: 0.5741
+          ...
+        # Subtest: a later successful restore clears the reasons before it publishes
+        ok 3 - a later successful restore clears the reasons before it publishes
+          ---
+          duration_ms: 0.9357
+          ...
+        # Subtest: init() with an invalid dataset also publishes the reasons
+        ok 4 - init() with an invalid dataset also publishes the reasons
+          ---
+          duration_ms: 0.6061
+          ...
+        1..4
+    ok 5 - DEF-01 - subscribers can read why defaults were restored (BDC-SR-003)
+      ---
+      duration_ms: 3.0897
+      type: 'suite'
+      ...
+    # Subtest: serialize() round-trips every state the app can reach
+        # Subtest: a realistic session survives save and reload unchanged
+        ok 1 - a realistic session survives save and reload unchanged
+          ---
+          duration_ms: 0.9241
+          ...
+        # Subtest: moving the Current Day back keeps later completion days through a reload
+        ok 2 - moving the Current Day back keeps later completion days through a reload
+          ---
+          duration_ms: 0.9856
+          ...
+        # Subtest: shortening the sprint keeps completion history through a reload
+        ok 3 - shortening the sprint keeps completion history through a reload
+          ---
+          duration_ms: 1.2304
+          ...
+        # Subtest: an empty backlog survives a reload
+        ok 4 - an empty backlog survives a reload
+          ---
+          duration_ms: 0.8092
+          ...
+        1..4
+    ok 6 - serialize() round-trips every state the app can reach
+      ---
+      duration_ms: 4.2545
+      type: 'suite'
+      ...
+    1..6
+ok 11 - DataManager validation & saved state (BDC-NF-003, BDC-SR-002, BDC-SR-003)
+  ---
+  duration_ms: 34.8351
+  type: 'suite'
+  ...
+# Subtest: R3: Sprint 1 QA Test Checklist (docs/test-plan/sprint1_checklist.md)
+    # Subtest: checklist file exists in docs/test-plan directory
+    ok 1 - checklist file exists in docs/test-plan directory
+      ---
+      duration_ms: 3.5049
+      ...
+    # Subtest: covers all 15 functional requirement categories (BDC-F-001 to BDC-F-015)
+    ok 2 - covers all 15 functional requirement categories (BDC-F-001 to BDC-F-015)
+      ---
+      duration_ms: 0.8503
+      ...
+    # Subtest: contains all 30 checkable functional test cases (TC-F-01.1 to TC-F-15.2)
+    ok 3 - contains all 30 checkable functional test cases (TC-F-01.1 to TC-F-15.2)
+      ---
+      duration_ms: 2.4502
+      ...
+    # Subtest: contains all 8 checkable Non-Functional test cases (TC-NF-01.1 to TC-NF-05.2)
+    ok 4 - contains all 8 checkable Non-Functional test cases (TC-NF-01.1 to TC-NF-05.2)
+      ---
+      duration_ms: 1.2667
+      ...
+    # Subtest: contains all 6 checkable Security & Robustness test cases (TC-SR-01.1 to TC-SR-05.1)
+    ok 5 - contains all 6 checkable Security & Robustness test cases (TC-SR-01.1 to TC-SR-05.1)
+      ---
+      duration_ms: 1.0621
+      ...
+    # Subtest: includes Traceability & Coverage Matrix and Team Sign-off section
+    ok 6 - includes Traceability & Coverage Matrix and Team Sign-off section
+      ---
+      duration_ms: 0.5404
+      ...
+    1..6
+ok 12 - R3: Sprint 1 QA Test Checklist (docs/test-plan/sprint1_checklist.md)
+  ---
+  duration_ms: 12.6631
+  type: 'suite'
+  ...
+# Subtest: Dashboard pipeline: DataManager -> calculations -> chart / table / timeline / KPIs
+    # Subtest: Default data (TC-F-02.1, TC-F-04.1, TC-F-05.1, TC-F-10.1, TC-F-11.1, TC-F-15.1)
+        # Subtest: a fresh load shows the 10 original issues with every field and the exact SRS Appendix B results
+        ok 1 - a fresh load shows the 10 original issues with every field and the exact SRS Appendix B results
+          ---
+          duration_ms: 7.3179
+          ...
+        1..1
+    ok 1 - Default data (TC-F-02.1, TC-F-04.1, TC-F-05.1, TC-F-10.1, TC-F-11.1, TC-F-15.1)
+      ---
+      duration_ms: 9.5237
+      type: 'suite'
+      ...
+    # Subtest: Sprint configuration (TC-F-01.1)
+        # Subtest: TC-F-01.1 - configuring "Sprint 2" for 5 days re-renders every layer for Total Days = 5
+        ok 1 - TC-F-01.1 - configuring "Sprint 2" for 5 days re-renders every layer for Total Days = 5
+          ---
+          duration_ms: 2.0446
+          ...
+        1..1
+    ok 2 - Sprint configuration (TC-F-01.1)
+      ---
+      duration_ms: 2.259
+      type: 'suite'
+      ...
+    # Subtest: Adding an issue (TC-F-02.2, TC-F-06.1)
+        # Subtest: adding PROJ-111 (5 points) updates scope, ideal line, actual line, table and KPIs together
+        ok 1 - adding PROJ-111 (5 points) updates scope, ideal line, actual line, table and KPIs together
+          ---
+          duration_ms: 3.2205
+          ...
+        # Subtest: deleting the added issue returns every layer to the default snapshot
+        ok 2 - deleting the added issue returns every layer to the default snapshot
+          ---
+          duration_ms: 1.7887
+          ...
+        # Subtest: TC-F-06.4 - a zero-point issue appears in the table but changes no total, line or KPI
+        ok 3 - TC-F-06.4 - a zero-point issue appears in the table but changes no total, line or KPI
+          ---
+          duration_ms: 1.4426
+          ...
+        # Subtest: a Done issue added at the Current Day burns down immediately
+        ok 4 - a Done issue added at the Current Day burns down immediately
+          ---
+          duration_ms: 0.8932
+          ...
+        1..4
+    ok 3 - Adding an issue (TC-F-02.2, TC-F-06.1)
+      ---
+      duration_ms: 8.0785
+      type: 'suite'
+      ...
+    # Subtest: Changing status and completion day (TC-F-07.1, TC-F-07.3, TC-F-15.2)
+        # Subtest: marking PROJ-106 Done on Day 4 gives completed 32, remaining 18 in every layer
+        ok 1 - marking PROJ-106 Done on Day 4 gives completed 32, remaining 18 in every layer
+          ---
+          duration_ms: 1.4165
+          ...
+        # Subtest: changing the completion day of a Done issue recalculates every earlier day
+        ok 2 - changing the completion day of a Done issue recalculates every earlier day
+          ---
+          duration_ms: 1.2375
+          ...
+        # Subtest: reopening Done work to In Progress clears the completion day in every layer
+        ok 3 - reopening Done work to In Progress clears the completion day in every layer
+          ---
+          duration_ms: 1.0437
+          ...
+        # Subtest: reopening Done work to To Do clears the completion day in every layer
+        ok 4 - reopening Done work to To Do clears the completion day in every layer
+          ---
+          duration_ms: 1.4559
+          ...
+        # Subtest: reopening to In Progress returns the exact default snapshot
+        ok 5 - reopening to In Progress returns the exact default snapshot
+          ---
+          duration_ms: 1.2576
+          ...
+        # Subtest: moving a Done issue out of Done and back keeps the history consistent
+        ok 6 - moving a Done issue out of Done and back keeps the history consistent
+          ---
+          duration_ms: 1.2568
+          ...
+        1..6
+    ok 4 - Changing status and completion day (TC-F-07.1, TC-F-07.3, TC-F-15.2)
+      ---
+      duration_ms: 8.3972
+      type: 'suite'
+      ...
+    # Subtest: Deleting issues (TC-F-08.1, TC-SR-04.1)
+        # Subtest: deleting PROJ-110 only gives total 45, completed 29, remaining 16, Ideal(4) 27, variance +11
+        ok 1 - deleting PROJ-110 only gives total 45, completed 29, remaining 16, Ideal(4) 27, variance +11
+          ---
+          duration_ms: 0.8238
+          ...
+        # Subtest: deleting a completed issue removes its burn-down from the actual line
+        ok 2 - deleting a completed issue removes its burn-down from the actual line
+          ---
+          duration_ms: 0.773
+          ...
+        # Subtest: deleting every issue gives defined zero results in every layer, then Reset restores the defaults
+        ok 3 - deleting every issue gives defined zero results in every layer, then Reset restores the defaults
+          ---
+          duration_ms: 4.0701
+          ...
+        # Subtest: an emptied backlog accepts a new issue and reports a sensible schedule
+        ok 4 - an emptied backlog accepts a new issue and reports a sensible schedule
+          ---
+          duration_ms: 1.0197
+          ...
+        1..4
+    ok 5 - Deleting issues (TC-F-08.1, TC-SR-04.1)
+      ---
+      duration_ms: 7.0763
+      type: 'suite'
+      ...
+    # Subtest: Reset restores the exact defaults (TC-F-04.1, TC-F-09.1)
+        # Subtest: Reset after issue, status, day and configuration changes restores the canonical dataset
+        ok 1 - Reset after issue, status, day and configuration changes restores the canonical dataset
+          ---
+          duration_ms: 2.2252
+          ...
+        # Subtest: mutating copies returned by the store never changes what Reset restores or what the views show
+        ok 2 - mutating copies returned by the store never changes what Reset restores or what the views show
+          ---
+          duration_ms: 1.7914
+          ...
+        1..2
+    ok 6 - Reset restores the exact defaults (TC-F-04.1, TC-F-09.1)
+      ---
+      duration_ms: 4.2477
+      type: 'suite'
+      ...
+    # Subtest: Current Day and timeline boundaries (TC-F-03.1, TC-F-03.2, TC-F-12, TC-F-14.1)
+        # Subtest: Day 0: marker, actual endpoint, KPIs, status and timeline control all agree
+        ok 1 - Day 0: marker, actual endpoint, KPIs, status and timeline control all agree
+          ---
+          duration_ms: 1.5521
+          ...
+        # Subtest: Day 1: marker, actual endpoint, KPIs, status and timeline control all agree
+        ok 2 - Day 1: marker, actual endpoint, KPIs, status and timeline control all agree
+          ---
+          duration_ms: 0.602
+          ...
+        # Subtest: Day 2: marker, actual endpoint, KPIs, status and timeline control all agree
+        ok 3 - Day 2: marker, actual endpoint, KPIs, status and timeline control all agree
+          ---
+          duration_ms: 0.5756
+          ...
+        # Subtest: Day 3: marker, actual endpoint, KPIs, status and timeline control all agree
+        ok 4 - Day 3: marker, actual endpoint, KPIs, status and timeline control all agree
+          ---
+          duration_ms: 0.5052
+          ...
+        # Subtest: Day 4: marker, actual endpoint, KPIs, status and timeline control all agree
+        ok 5 - Day 4: marker, actual endpoint, KPIs, status and timeline control all agree
+          ---
+          duration_ms: 0.4688
+          ...
+        # Subtest: Day 5: marker, actual endpoint, KPIs, status and timeline control all agree
+        ok 6 - Day 5: marker, actual endpoint, KPIs, status and timeline control all agree
+          ---
+          duration_ms: 0.5269
+          ...
+        # Subtest: Day 6: marker, actual endpoint, KPIs, status and timeline control all agree
+        ok 7 - Day 6: marker, actual endpoint, KPIs, status and timeline control all agree
+          ---
+          duration_ms: 0.6836
+          ...
+        # Subtest: Day 7: marker, actual endpoint, KPIs, status and timeline control all agree
+        ok 8 - Day 7: marker, actual endpoint, KPIs, status and timeline control all agree
+          ---
+          duration_ms: 0.5225
+          ...
+        # Subtest: Day 8: marker, actual endpoint, KPIs, status and timeline control all agree
+        ok 9 - Day 8: marker, actual endpoint, KPIs, status and timeline control all agree
+          ---
+          duration_ms: 0.6463
+          ...
+        # Subtest: Day 9: marker, actual endpoint, KPIs, status and timeline control all agree
+        ok 10 - Day 9: marker, actual endpoint, KPIs, status and timeline control all agree
+          ---
+          duration_ms: 0.6074
+          ...
+        # Subtest: Day 10: marker, actual endpoint, KPIs, status and timeline control all agree
+        ok 11 - Day 10: marker, actual endpoint, KPIs, status and timeline control all agree
+          ---
+          duration_ms: 0.5619
+          ...
+        # Subtest: moving Day 4 to Day 6 updates the marker, actual endpoint and status without a reload
+        ok 12 - moving Day 4 to Day 6 updates the marker, actual endpoint and status without a reload
+          ---
+          duration_ms: 0.7344
+          ...
+        # Subtest: Day 0 plots only the starting point and the final day plots the whole actual line
+        ok 13 - Day 0 plots only the starting point and the final day plots the whole actual line
+          ---
+          duration_ms: 1.4976
+          ...
+        1..13
+    ok 7 - Current Day and timeline boundaries (TC-F-03.1, TC-F-03.2, TC-F-12, TC-F-14.1)
+      ---
+      duration_ms: 10.2361
+      type: 'suite'
+      ...
+    # Subtest: Single-day sprints and zero-point work (TC-SR-04.1, TC-SR-04.2)
+        # Subtest: shortening to a one-day sprint clamps the Current Day and keeps every layer consistent
+        ok 1 - shortening to a one-day sprint clamps the Current Day and keeps every layer consistent
+          ---
+          duration_ms: 1.2426
+          ...
+        # Subtest: a backlog made only of zero-point work stays finite in every layer
+        ok 2 - a backlog made only of zero-point work stays finite in every layer
+          ---
+          duration_ms: 0.911
+          ...
+        # Subtest: a one-day sprint with zero-point work and an empty backlog stays defined
+        ok 3 - a one-day sprint with zero-point work and an empty backlog stays defined
+          ---
+          duration_ms: 0.6966
+          ...
+        1..3
+    ok 8 - Single-day sprints and zero-point work (TC-SR-04.1, TC-SR-04.2)
+      ---
+      duration_ms: 3.1481
+      type: 'suite'
+      ...
+    # Subtest: Documented design: shortening a sprint keeps history (system validation OBS-03)
+        # Subtest: the table keeps Done issues beyond the new duration while the KPIs count only days inside it
+        ok 1 - the table keeps Done issues beyond the new duration while the KPIs count only days inside it
+          ---
+          duration_ms: 0.8395
+          ...
+        1..1
+    ok 9 - Documented design: shortening a sprint keeps history (system validation OBS-03)
+      ---
+      duration_ms: 1.0001
+      type: 'suite'
+      ...
+    1..9
+ok 13 - Dashboard pipeline: DataManager -> calculations -> chart / table / timeline / KPIs
+  ---
+  duration_ms: 55.9305
+  type: 'suite'
+  ...
+# Subtest: State integrity across layers
+    # Subtest: Rejected operations change nothing (TC-NF-03.1, TC-SR-02.1, TC-F-01.2, TC-F-03.2, TC-F-06.2, TC-F-07.2)
+        # Subtest: add: negative points is rejected with a message and no layer changes
+        ok 1 - add: negative points is rejected with a message and no layer changes
+          ---
+          duration_ms: 7.9342
+          ...
+        # Subtest: add: non-numeric points is rejected with a message and no layer changes
+        ok 2 - add: non-numeric points is rejected with a message and no layer changes
+          ---
+          duration_ms: 1.5754
+          ...
+        # Subtest: add: infinite points is rejected with a message and no layer changes
+        ok 3 - add: infinite points is rejected with a message and no layer changes
+          ---
+          duration_ms: 1.1995
+          ...
+        # Subtest: add: empty key is rejected with a message and no layer changes
+        ok 4 - add: empty key is rejected with a message and no layer changes
+          ---
+          duration_ms: 1.0332
+          ...
+        # Subtest: add: duplicate key is rejected with a message and no layer changes
+        ok 5 - add: duplicate key is rejected with a message and no layer changes
+          ---
+          duration_ms: 1.6067
+          ...
+        # Subtest: add: duplicate key in other case with spaces is rejected with a message and no layer changes
+        ok 6 - add: duplicate key in other case with spaces is rejected with a message and no layer changes
+          ---
+          duration_ms: 1.1142
+          ...
+        # Subtest: add: empty summary is rejected with a message and no layer changes
+        ok 7 - add: empty summary is rejected with a message and no layer changes
+          ---
+          duration_ms: 1.0407
+          ...
+        # Subtest: add: Done after the Current Day is rejected with a message and no layer changes
+        ok 8 - add: Done after the Current Day is rejected with a message and no layer changes
+          ---
+          duration_ms: 1.1192
+          ...
+        # Subtest: add: Done without a day is rejected with a message and no layer changes
+        ok 9 - add: Done without a day is rejected with a message and no layer changes
+          ---
+          duration_ms: 1.3427
+          ...
+        # Subtest: update: Done after the Current Day is rejected with a message and no layer changes
+        ok 10 - update: Done after the Current Day is rejected with a message and no layer changes
+          ---
+          duration_ms: 1.3639
+          ...
+        # Subtest: update: Done beyond the duration is rejected with a message and no layer changes
+        ok 11 - update: Done beyond the duration is rejected with a message and no layer changes
+          ---
+          duration_ms: 0.9818
+          ...
+        # Subtest: update: Done on day 0 is rejected with a message and no layer changes
+        ok 12 - update: Done on day 0 is rejected with a message and no layer changes
+          ---
+          duration_ms: 1.1589
+          ...
+        # Subtest: update: Done with a fractional day is rejected with a message and no layer changes
+        ok 13 - update: Done with a fractional day is rejected with a message and no layer changes
+          ---
+          duration_ms: 1.3146
+          ...
+        # Subtest: update: Done with a text day is rejected with a message and no layer changes
+        ok 14 - update: Done with a text day is rejected with a message and no layer changes
+          ---
+          duration_ms: 1.1535
+          ...
+        # Subtest: update: Done without a day is rejected with a message and no layer changes
+        ok 15 - update: Done without a day is rejected with a message and no layer changes
+          ---
+          duration_ms: 0.8036
+          ...
+        # Subtest: update: unknown status is rejected with a message and no layer changes
+        ok 16 - update: unknown status is rejected with a message and no layer changes
+          ---
+          duration_ms: 1.2191
+          ...
+        # Subtest: update: unknown issue is rejected with a message and no layer changes
+        ok 17 - update: unknown issue is rejected with a message and no layer changes
+          ---
+          duration_ms: 1.6981
+          ...
+        # Subtest: update: malformed changes is rejected with a message and no layer changes
+        ok 18 - update: malformed changes is rejected with a message and no layer changes
+          ---
+          duration_ms: 1.1675
+          ...
+        # Subtest: delete: unknown issue is rejected with a message and no layer changes
+        ok 19 - delete: unknown issue is rejected with a message and no layer changes
+          ---
+          duration_ms: 1.1134
+          ...
+        # Subtest: sprint: zero duration is rejected with a message and no layer changes
+        ok 20 - sprint: zero duration is rejected with a message and no layer changes
+          ---
+          duration_ms: 1.7558
+          ...
+        # Subtest: sprint: negative duration is rejected with a message and no layer changes
+        ok 21 - sprint: negative duration is rejected with a message and no layer changes
+          ---
+          duration_ms: 0.9116
+          ...
+        # Subtest: sprint: text duration is rejected with a message and no layer changes
+        ok 22 - sprint: text duration is rejected with a message and no layer changes
+          ---
+          duration_ms: 0.8671
+          ...
+        # Subtest: sprint: fractional duration is rejected with a message and no layer changes
+        ok 23 - sprint: fractional duration is rejected with a message and no layer changes
+          ---
+          duration_ms: 0.862
+          ...
+        # Subtest: sprint: duration beyond 60 is rejected with a message and no layer changes
+        ok 24 - sprint: duration beyond 60 is rejected with a message and no layer changes
+          ---
+          duration_ms: 1.3732
+          ...
+        # Subtest: sprint: empty name is rejected with a message and no layer changes
+        ok 25 - sprint: empty name is rejected with a message and no layer changes
+          ---
+          duration_ms: 1.196
+          ...
+        # Subtest: sprint: end before start is rejected with a message and no layer changes
+        ok 26 - sprint: end before start is rejected with a message and no layer changes
+          ---
+          duration_ms: 1.1173
+          ...
+        # Subtest: sprint: impossible date is rejected with a message and no layer changes
+        ok 27 - sprint: impossible date is rejected with a message and no layer changes
+          ---
+          duration_ms: 0.8271
+          ...
+        # Subtest: sprint: valid name with invalid duration is rejected with a message and no layer changes
+        ok 28 - sprint: valid name with invalid duration is rejected with a message and no layer changes
+          ---
+          duration_ms: 0.8413
+          ...
+        # Subtest: sprint: valid duration with inverted dates is rejected with a message and no layer changes
+        ok 29 - sprint: valid duration with inverted dates is rejected with a message and no layer changes
+          ---
+          duration_ms: 0.9506
+          ...
+        # Subtest: sprint: valid name and duration with a bad date is rejected with a message and no layer changes
+        ok 30 - sprint: valid name and duration with a bad date is rejected with a message and no layer changes
+          ---
+          duration_ms: 0.8369
+          ...
+        # Subtest: day: below zero is rejected with a message and no layer changes
+        ok 31 - day: below zero is rejected with a message and no layer changes
+          ---
+          duration_ms: 1.8087
+          ...
+        # Subtest: day: beyond the duration is rejected with a message and no layer changes
+        ok 32 - day: beyond the duration is rejected with a message and no layer changes
+          ---
+          duration_ms: 0.8526
+          ...
+        # Subtest: day: fractional is rejected with a message and no layer changes
+        ok 33 - day: fractional is rejected with a message and no layer changes
+          ---
+          duration_ms: 0.7596
+          ...
+        # Subtest: day: text is rejected with a message and no layer changes
+        ok 34 - day: text is rejected with a message and no layer changes
+          ---
+          duration_ms: 0.7539
+          ...
+        # Subtest: day: NaN is rejected with a message and no layer changes
+        ok 35 - day: NaN is rejected with a message and no layer changes
+          ---
+          duration_ms: 1.0462
+          ...
+        # Subtest: day: Infinity is rejected with a message and no layer changes
+        ok 36 - day: Infinity is rejected with a message and no layer changes
+          ---
+          duration_ms: 1.1123
+          ...
+        # Subtest: after the whole rejected sequence the state is still valid and consistent
+        ok 37 - after the whole rejected sequence the state is still valid and consistent
+          ---
+          duration_ms: 2.7504
+          ...
+        # Subtest: a rejected change after a successful one keeps the successful change only
+        ok 38 - a rejected change after a successful one keeps the successful change only
+          ---
+          duration_ms: 1.2911
+          ...
+        1..38
+    ok 1 - Rejected operations change nothing (TC-NF-03.1, TC-SR-02.1, TC-F-01.2, TC-F-03.2, TC-F-06.2, TC-F-07.2)
+      ---
+      duration_ms: 56.1151
+      type: 'suite'
+      ...
+    # Subtest: Successful operations publish exactly one consistent update
+        # Subtest: add issue: one notification, and subscribers already see the finished state
+        ok 1 - add issue: one notification, and subscribers already see the finished state
+          ---
+          duration_ms: 1.1806
+          ...
+        # Subtest: mark Done: one notification, and subscribers already see the finished state
+        ok 2 - mark Done: one notification, and subscribers already see the finished state
+          ---
+          duration_ms: 0.7697
+          ...
+        # Subtest: reopen: one notification, and subscribers already see the finished state
+        ok 3 - reopen: one notification, and subscribers already see the finished state
+          ---
+          duration_ms: 0.6719
+          ...
+        # Subtest: delete issue: one notification, and subscribers already see the finished state
+        ok 4 - delete issue: one notification, and subscribers already see the finished state
+          ---
+          duration_ms: 0.6131
+          ...
+        # Subtest: change Current Day: one notification, and subscribers already see the finished state
+        ok 5 - change Current Day: one notification, and subscribers already see the finished state
+          ---
+          duration_ms: 0.631
+          ...
+        # Subtest: configure sprint: one notification, and subscribers already see the finished state
+        ok 6 - configure sprint: one notification, and subscribers already see the finished state
+          ---
+          duration_ms: 0.6959
+          ...
+        1..6
+    ok 2 - Successful operations publish exactly one consistent update
+      ---
+      duration_ms: 4.9313
+      type: 'suite'
+      ...
+    # Subtest: Invalid saved state never reaches the views (BDC-SR-003, TC-SR-03.1)
+        # Subtest: malformed JSON: defaults are restored in every layer and the reasons are returned
+        ok 1 - malformed JSON: defaults are restored in every layer and the reasons are returned
+          ---
+          duration_ms: 2.5857
+          ...
+        # Subtest: plain text: defaults are restored in every layer and the reasons are returned
+        ok 2 - plain text: defaults are restored in every layer and the reasons are returned
+          ---
+          duration_ms: 1.3093
+          ...
+        # Subtest: empty string: defaults are restored in every layer and the reasons are returned
+        ok 3 - empty string: defaults are restored in every layer and the reasons are returned
+          ---
+          duration_ms: 1.4937
+          ...
+        # Subtest: JSON null: defaults are restored in every layer and the reasons are returned
+        ok 4 - JSON null: defaults are restored in every layer and the reasons are returned
+          ---
+          duration_ms: 1.6738
+          ...
+        # Subtest: JSON array: defaults are restored in every layer and the reasons are returned
+        ok 5 - JSON array: defaults are restored in every layer and the reasons are returned
+          ---
+          duration_ms: 3.6382
+          ...
+        # Subtest: empty object: defaults are restored in every layer and the reasons are returned
+        ok 6 - empty object: defaults are restored in every layer and the reasons are returned
+          ---
+          duration_ms: 1.1544
+          ...
+        # Subtest: number: defaults are restored in every layer and the reasons are returned
+        ok 7 - number: defaults are restored in every layer and the reasons are returned
+          ---
+          duration_ms: 5.1726
+          ...
+        # Subtest: valid sprint with invalid issues (no partial adoption): defaults are restored in every layer and the reasons are returned
+        ok 8 - valid sprint with invalid issues (no partial adoption): defaults are restored in every layer and the reasons are returned
+          ---
+          duration_ms: 2.4589
+          ...
+        # Subtest: invalid sprint with valid issues (no partial adoption): defaults are restored in every layer and the reasons are returned
+        ok 9 - invalid sprint with valid issues (no partial adoption): defaults are restored in every layer and the reasons are returned
+          ---
+          duration_ms: 1.2682
+          ...
+        # Subtest: negative story points: defaults are restored in every layer and the reasons are returned
+        ok 10 - negative story points: defaults are restored in every layer and the reasons are returned
+          ---
+          duration_ms: 1.1774
+          ...
+        # Subtest: story points saved as text: defaults are restored in every layer and the reasons are returned
+        ok 11 - story points saved as text: defaults are restored in every layer and the reasons are returned
+          ---
+          duration_ms: 1.9593
+          ...
+        # Subtest: Done issue without a day: defaults are restored in every layer and the reasons are returned
+        ok 12 - Done issue without a day: defaults are restored in every layer and the reasons are returned
+          ---
+          duration_ms: 1.1833
+          ...
+        # Subtest: duplicate issue keys: defaults are restored in every layer and the reasons are returned
+        ok 13 - duplicate issue keys: defaults are restored in every layer and the reasons are returned
+          ---
+          duration_ms: 1.0556
+          ...
+        # Subtest: Current Day beyond the duration: defaults are restored in every layer and the reasons are returned
+        ok 14 - Current Day beyond the duration: defaults are restored in every layer and the reasons are returned
+          ---
+          duration_ms: 0.9759
+          ...
+        # Subtest: duration beyond 60: defaults are restored in every layer and the reasons are returned
+        ok 15 - duration beyond 60: defaults are restored in every layer and the reasons are returned
+          ---
+          duration_ms: 1.1082
+          ...
+        # Subtest: null and undefined storage values restore the defaults
+        ok 16 - null and undefined storage values restore the defaults
+          ---
+          duration_ms: 1.7785
+          ...
+        # Subtest: a valid saved state is restored exactly and drives every layer
+        ok 17 - a valid saved state is restored exactly and drives every layer
+          ---
+          duration_ms: 2.4251
+          ...
+        # Subtest: saved state with extra or hostile fields is cleaned before it is used
+        ok 18 - saved state with extra or hostile fields is cleaned before it is used
+          ---
+          duration_ms: 1.1155
+          ...
+        1..18
+    ok 3 - Invalid saved state never reaches the views (BDC-SR-003, TC-SR-03.1)
+      ---
+      duration_ms: 34.6645
+      type: 'suite'
+      ...
+    # Subtest: Hostile text stays inert through the whole pipeline (TC-SR-01.1)
+        # Subtest: the stored text is kept verbatim and the views receive it as plain data
+        ok 1 - the stored text is kept verbatim and the views receive it as plain data
+          ---
+          duration_ms: 0.5546
+          ...
+        # Subtest: a hostile sprint name is escaped in the banner and cannot break out of any attribute
+        ok 2 - a hostile sprint name is escaped in the banner and cannot break out of any attribute
+          ---
+          duration_ms: 0.5524
+          ...
+        # Subtest: hostile text survives a save and reload as inert data
+        ok 3 - hostile text survives a save and reload as inert data
+          ---
+          duration_ms: 0.7671
+          ...
+        # Subtest: rejected hostile input is echoed back escaped when the Add Issue form re-renders
+        ok 4 - rejected hostile input is echoed back escaped when the Add Issue form re-renders
+          ---
+          duration_ms: 0.5672
+          ...
+        # Subtest: type and status values are only compared against known options, never written into the markup
+        ok 5 - type and status values are only compared against known options, never written into the markup
+          ---
+          duration_ms: 0.2672
+          ...
+        1..5
+    ok 4 - Hostile text stays inert through the whole pipeline (TC-SR-01.1)
+      ---
+      duration_ms: 3.0851
+      type: 'suite'
+      ...
+    1..4
+ok 14 - State integrity across layers
+  ---
+  duration_ms: 100.3628
+  type: 'suite'
+  ...
+# Subtest: BurndownEngine boundary guards (BDC-SR-004)
+    # Subtest: TC-SR-04.2 - story points that overflow to Infinity give a defined result
+    ok 1 - TC-SR-04.2 - story points that overflow to Infinity give a defined result
+      ---
+      duration_ms: 2.7426
+      ...
+    # Subtest: a variance that rounds to negative zero is reported as plain zero
+    ok 2 - a variance that rounds to negative zero is reported as plain zero
+      ---
+      duration_ms: 0.277
+      ...
+    # Subtest: a non-numeric day threshold counts nothing as completed
+    ok 3 - a non-numeric day threshold counts nothing as completed
+      ---
+      duration_ms: 0.5876
+      ...
+    # Subtest: a non-numeric day on the ideal line falls back to the start of the sprint
+    ok 4 - a non-numeric day on the ideal line falls back to the start of the sprint
+      ---
+      duration_ms: 0.3021
+      ...
+    1..4
+ok 15 - BurndownEngine boundary guards (BDC-SR-004)
+  ---
+  duration_ms: 6.2271
+  type: 'suite'
+  ...
+# Subtest: ValidationManager guards (BDC-NF-003, BDC-SR-002)
+    # Subtest: TC-SR-02.1 - non-object issue input is rejected with every required-field error and no exception
+    ok 1 - TC-SR-02.1 - non-object issue input is rejected with every required-field error and no exception
+      ---
+      duration_ms: 1.0217
+      ...
+    # Subtest: TC-F-06.2 - duplicate detection ignores junk entries and understands issue objects
+    ok 2 - TC-F-06.2 - duplicate detection ignores junk entries and understands issue objects
+      ---
+      duration_ms: 1.3113
+      ...
+    # Subtest: TC-F-07.2 - a Done issue is judged against the Current Day even when the context is missing or unusable
+    ok 3 - TC-F-07.2 - a Done issue is judged against the Current Day even when the context is missing or unusable
+      ---
+      duration_ms: 0.3143
+      ...
+    # Subtest: an unusable sprint duration in the context leaves only the Current Day as the limit
+    ok 4 - an unusable sprint duration in the context leaves only the Current Day as the limit
+      ---
+      duration_ms: 0.5518
+      ...
+    # Subtest: validateStatusUpdate treats an unusable Current Day as Day 0 and an unusable duration as unbounded
+    ok 5 - validateStatusUpdate treats an unusable Current Day as Day 0 and an unusable duration as unbounded
+      ---
+      duration_ms: 1.0109
+      ...
+    1..5
+ok 16 - ValidationManager guards (BDC-NF-003, BDC-SR-002)
+  ---
+  duration_ms: 6.3546
+  type: 'suite'
+  ...
+# Subtest: BurndownEngine (BDC-F-002, BDC-F-010, BDC-F-011, BDC-F-012)
+    # Subtest: Exports & module contract
+        # Subtest: exposes named exports and a default computeAll export
+        ok 1 - exposes named exports and a default computeAll export
+          ---
+          duration_ms: 3.3489
+          ...
+        # Subtest: SCHEDULE_STATUS is frozen against mutation
+        ok 2 - SCHEDULE_STATUS is frozen against mutation
+          ---
+          duration_ms: 0.9649
+          ...
+        1..2
+    ok 1 - Exports & module contract
+      ---
+      duration_ms: 6.054
+      type: 'suite'
+      ...
+    # Subtest: TC-F-02 - Total Committed Story Points (BDC-F-002)
+        # Subtest: TC-F-02.1 - default dataset totals exactly 50 points
+        ok 1 - TC-F-02.1 - default dataset totals exactly 50 points
+          ---
+          duration_ms: 1.6423
+          ...
+        # Subtest: TC-F-02.1 - total counts every status, not just Done
+        ok 2 - TC-F-02.1 - total counts every status, not just Done
+          ---
+          duration_ms: 0.3677
+          ...
+        # Subtest: TC-F-02.2 - total updates immediately on addition and deletion
+        ok 3 - TC-F-02.2 - total updates immediately on addition and deletion
+          ---
+          duration_ms: 0.933
+          ...
+        1..3
+    ok 2 - TC-F-02 - Total Committed Story Points (BDC-F-002)
+      ---
+      duration_ms: 3.5814
+      type: 'suite'
+      ...
+    # Subtest: Completed & remaining points (SAD Section 4.1)
+        # Subtest: default dataset on Day 4 reports 29 completed and 21 remaining
+        ok 1 - default dataset on Day 4 reports 29 completed and 21 remaining
+          ---
+          duration_ms: 0.8034
+          ...
+        # Subtest: completion is inclusive of the threshold day
+        ok 2 - completion is inclusive of the threshold day
+          ---
+          duration_ms: 0.5216
+          ...
+        # Subtest: issues without a completedDay never count as burned down
+        ok 3 - issues without a completedDay never count as burned down
+          ---
+          duration_ms: 0.3117
+          ...
+        1..3
+    ok 3 - Completed & remaining points (SAD Section 4.1)
+      ---
+      duration_ms: 2.0787
+      type: 'suite'
+      ...
+    # Subtest: TC-F-10 - Ideal burndown (BDC-F-010)
+        # Subtest: TC-F-10.1 - Ideal(0)=50, Ideal(4)=30, Ideal(10)=0 for the default dataset
+        ok 1 - TC-F-10.1 - Ideal(0)=50, Ideal(4)=30, Ideal(10)=0 for the default dataset
+          ---
+          duration_ms: 0.5499
+          ...
+        # Subtest: TC-F-10.1 - full ideal series is linear across 11 points
+        ok 2 - TC-F-10.1 - full ideal series is linear across 11 points
+          ---
+          duration_ms: 0.6268
+          ...
+        # Subtest: TC-F-10.2 - zero duration returns a defined value, never NaN or Infinity
+        ok 3 - TC-F-10.2 - zero duration returns a defined value, never NaN or Infinity
+          ---
+          duration_ms: 0.3196
+          ...
+        # Subtest: TC-F-10.2 - negative, non-numeric and non-finite durations are rejected safely
+        ok 4 - TC-F-10.2 - negative, non-numeric and non-finite durations are rejected safely
+          ---
+          duration_ms: 0.3238
+          ...
+        # Subtest: fractional ideal values carry no floating-point noise
+        ok 5 - fractional ideal values carry no floating-point noise
+          ---
+          duration_ms: 0.2218
+          ...
+        # Subtest: day is clamped so ideal never goes negative
+        ok 6 - day is clamped so ideal never goes negative
+          ---
+          duration_ms: 0.2005
+          ...
+        1..6
+    ok 4 - TC-F-10 - Ideal burndown (BDC-F-010)
+      ---
+      duration_ms: 2.7243
+      type: 'suite'
+      ...
+    # Subtest: TC-F-11 - Actual burndown (BDC-F-011)
+        # Subtest: TC-F-11.1 - Actual(1)=45, Actual(2)=42, Actual(3)=34, Actual(4)=21
+        ok 1 - TC-F-11.1 - Actual(1)=45, Actual(2)=42, Actual(3)=34, Actual(4)=21
+          ---
+          duration_ms: 0.6098
+          ...
+        # Subtest: TC-F-11.1 - Actual(0) equals the full committed scope
+        ok 2 - TC-F-11.1 - Actual(0) equals the full committed scope
+          ---
+          duration_ms: 0.2649
+          ...
+        # Subtest: TC-F-11.2 - no actual values are plotted beyond the Current Day
+        ok 3 - TC-F-11.2 - no actual values are plotted beyond the Current Day
+          ---
+          duration_ms: 0.5118
+          ...
+        # Subtest: TC-F-11.2 - moving Current Day to 6 extends the plotted range
+        ok 4 - TC-F-11.2 - moving Current Day to 6 extends the plotted range
+          ---
+          duration_ms: 0.6088
+          ...
+        # Subtest: actual series is empty for an invalid duration
+        ok 5 - actual series is empty for an invalid duration
+          ---
+          duration_ms: 0.2877
+          ...
+        1..5
+    ok 5 - TC-F-11 - Actual burndown (BDC-F-011)
+      ---
+      duration_ms: 2.658
+      type: 'suite'
+      ...
+    # Subtest: TC-F-12 - Variance & schedule status (BDC-F-012)
+        # Subtest: TC-F-12.1 - default dataset at Day 4 gives variance +9, Ahead of Schedule
+        ok 1 - TC-F-12.1 - default dataset at Day 4 gives variance +9, Ahead of Schedule
+          ---
+          duration_ms: 0.3486
+          ...
+        # Subtest: TC-F-12.1 - Ideal=30 with Actual=28 gives variance +2, Ahead of Schedule
+        ok 2 - TC-F-12.1 - Ideal=30 with Actual=28 gives variance +2, Ahead of Schedule
+          ---
+          duration_ms: 1.0412
+          ...
+        # Subtest: TC-F-12.2 - variance 0, +1 and -1 all classify as On Track
+        ok 3 - TC-F-12.2 - variance 0, +1 and -1 all classify as On Track
+          ---
+          duration_ms: 0.2691
+          ...
+        # Subtest: TC-F-12.2 - tolerance boundary is exclusive just outside +/-1
+        ok 4 - TC-F-12.2 - tolerance boundary is exclusive just outside +/-1
+          ---
+          duration_ms: 0.1911
+          ...
+        # Subtest: TC-F-12.3 - Ideal=30 with Actual=32 and 38 classify as Behind Schedule
+        ok 5 - TC-F-12.3 - Ideal=30 with Actual=32 and 38 classify as Behind Schedule
+          ---
+          duration_ms: 0.1721
+          ...
+        # Subtest: non-finite variance falls back to On Track rather than throwing
+        ok 6 - non-finite variance falls back to On Track rather than throwing
+          ---
+          duration_ms: 0.2379
+          ...
+        1..6
+    ok 6 - TC-F-12 - Variance & schedule status (BDC-F-012)
+      ---
+      duration_ms: 2.7324
+      type: 'suite'
+      ...
+    # Subtest: computeAll - SAD Interface 1
+        # Subtest: returns the full documented response shape
+        ok 1 - returns the full documented response shape
+          ---
+          duration_ms: 0.6242
+          ...
+        # Subtest: default dataset on Day 4 matches SRS Appendix B exactly
+        ok 2 - default dataset on Day 4 matches SRS Appendix B exactly
+          ---
+          duration_ms: 0.3608
+          ...
+        # Subtest: Current Day is clamped into 0..durationDays
+        ok 3 - Current Day is clamped into 0..durationDays
+          ---
+          duration_ms: 0.6586
+          ...
+        # Subtest: is pure - repeated calls agree and inputs are never mutated
+        ok 4 - is pure - repeated calls agree and inputs are never mutated
+          ---
+          duration_ms: 0.8438
+          ...
+        1..4
+    ok 7 - computeAll - SAD Interface 1
+      ---
+      duration_ms: 2.7681
+      type: 'suite'
+      ...
+    # Subtest: TC-SR-04 - Boundary & safe edge-case handling (BDC-SR-004)
+        # Subtest: TC-SR-04.1 - empty backlog yields defined zeros, no NaN or Infinity
+        ok 1 - TC-SR-04.1 - empty backlog yields defined zeros, no NaN or Infinity
+          ---
+          duration_ms: 0.6759
+          ...
+        # Subtest: TC-SR-04.2 - all-zero story points produce a defined result
+        ok 2 - TC-SR-04.2 - all-zero story points produce a defined result
+          ---
+          duration_ms: 0.452
+          ...
+        # Subtest: TC-SR-04.2 - zero and negative durations are rejected without crashing
+        ok 3 - TC-SR-04.2 - zero and negative durations are rejected without crashing
+          ---
+          duration_ms: 0.5827
+          ...
+        # Subtest: TC-SR-04.2 - In Progress issues with a null completion date are excluded
+        ok 4 - TC-SR-04.2 - In Progress issues with a null completion date are excluded
+          ---
+          duration_ms: 0.4027
+          ...
+        # Subtest: malformed inputs never throw and never leak NaN or Infinity
+        ok 5 - malformed inputs never throw and never leak NaN or Infinity
+          ---
+          duration_ms: 0.7873
+          ...
+        # Subtest: negative, non-numeric and non-finite story points contribute zero
+        ok 6 - negative, non-numeric and non-finite story points contribute zero
+          ---
+          duration_ms: 0.249
+          ...
+        1..6
+    ok 8 - TC-SR-04 - Boundary & safe edge-case handling (BDC-SR-004)
+      ---
+      duration_ms: 3.4682
+      type: 'suite'
+      ...
+    # Subtest: TC-NF-05 - Modularity & independent testability (BDC-NF-005)
+        # Subtest: TC-NF-05.2 - engine runs headless with no DOM available
+        ok 1 - TC-NF-05.2 - engine runs headless with no DOM available
+          ---
+          duration_ms: 0.3598
+          ...
+        # Subtest: TC-NF-05.1 - module declares no imports, so it cannot form a cycle
+        ok 2 - TC-NF-05.1 - module declares no imports, so it cannot form a cycle
+          ---
+          duration_ms: 39.2171
+          ...
+        1..2
+    ok 9 - TC-NF-05 - Modularity & independent testability (BDC-NF-005)
+      ---
+      duration_ms: 39.8649
+      type: 'suite'
+      ...
+    1..9
+ok 17 - BurndownEngine (BDC-F-002, BDC-F-010, BDC-F-011, BDC-F-012)
+  ---
+  duration_ms: 67.7126
+  type: 'suite'
+  ...
+# Subtest: validateIssue (BDC-F-006, BDC-NF-003, BDC-SR-001, BDC-SR-002)
+    # Subtest: accepts a completely valid issue object
+    ok 1 - accepts a completely valid issue object
+      ---
+      duration_ms: 2.5855
+      ...
+    # Subtest: issueKey validation
+        # Subtest: rejects empty or whitespace-only key
+        ok 1 - rejects empty or whitespace-only key
+          ---
+          duration_ms: 0.7553
+          ...
+        # Subtest: rejects case-insensitive duplicate keys
+        ok 2 - rejects case-insensitive duplicate keys
+          ---
+          duration_ms: 0.3301
+          ...
+        # Subtest: accepts keys containing XSS injection payloads (TC-SR-01.1)
+        ok 3 - accepts keys containing XSS injection payloads (TC-SR-01.1)
+          ---
+          duration_ms: 0.6734
+          ...
+        1..3
+    ok 2 - issueKey validation
+      ---
+      duration_ms: 2.1939
+      type: 'suite'
+      ...
+    # Subtest: summary validation
+        # Subtest: rejects empty or whitespace-only summary
+        ok 1 - rejects empty or whitespace-only summary
+          ---
+          duration_ms: 0.3747
+          ...
+        # Subtest: accepts summary containing HTML/XSS payloads as literal text
+        ok 2 - accepts summary containing HTML/XSS payloads as literal text
+          ---
+          duration_ms: 1.2761
+          ...
+        1..2
+    ok 3 - summary validation
+      ---
+      duration_ms: 2.207
+      type: 'suite'
+      ...
+    # Subtest: issueType validation
+        # Subtest: accepts Story, Task, and Bug
+        ok 1 - accepts Story, Task, and Bug
+          ---
+          duration_ms: 0.3553
+          ...
+        # Subtest: rejects invalid issue types
+        ok 2 - rejects invalid issue types
+          ---
+          duration_ms: 0.2964
+          ...
+        1..2
+    ok 4 - issueType validation
+      ---
+      duration_ms: 1.1631
+      type: 'suite'
+      ...
+    # Subtest: storyPoints validation
+        # Subtest: accepts non-negative numbers and decimal strings
+        ok 1 - accepts non-negative numbers and decimal strings
+          ---
+          duration_ms: 0.7875
+          ...
+        # Subtest: rejects negative, non-numeric, Infinity, and NaN story points
+        ok 2 - rejects negative, non-numeric, Infinity, and NaN story points
+          ---
+          duration_ms: 0.56
+          ...
+        # Subtest: rejects numbers exceeding safe numeric range like 1 followed by 303 zeros (P2 bugfix)
+        ok 3 - rejects numbers exceeding safe numeric range like 1 followed by 303 zeros (P2 bugfix)
+          ---
+          duration_ms: 0.5582
+          ...
+        1..3
+    ok 5 - storyPoints validation
+      ---
+      duration_ms: 2.1878
+      type: 'suite'
+      ...
+    # Subtest: status validation
+        # Subtest: accepts To Do, In Progress, and Done
+        ok 1 - accepts To Do, In Progress, and Done
+          ---
+          duration_ms: 0.3517
+          ...
+        # Subtest: rejects invalid statuses
+        ok 2 - rejects invalid statuses
+          ---
+          duration_ms: 0.2974
+          ...
+        1..2
+    ok 6 - status validation
+      ---
+      duration_ms: 0.8422
+      type: 'suite'
+      ...
+    # Subtest: completedDay validation when Status is Done
+        # Subtest: requires completedDay when status is Done
+        ok 1 - requires completedDay when status is Done
+          ---
+          duration_ms: 0.3465
+          ...
+        # Subtest: accepts valid completedDay within 1 and min(currentDay, durationDays)
+        ok 2 - accepts valid completedDay within 1 and min(currentDay, durationDays)
+          ---
+          duration_ms: 0.3441
+          ...
+        # Subtest: rejects completedDay exceeding min(currentDay, durationDays) or invalid whole numbers
+        ok 3 - rejects completedDay exceeding min(currentDay, durationDays) or invalid whole numbers
+          ---
+          duration_ms: 0.4224
+          ...
+        # Subtest: uses specific error when Current Day is 0
+        ok 4 - uses specific error when Current Day is 0
+          ---
+          duration_ms: 0.3457
+          ...
+        # Subtest: ignores completedDay when status is not Done
+        ok 5 - ignores completedDay when status is not Done
+          ---
+          duration_ms: 0.4642
+          ...
+        1..5
+    ok 7 - completedDay validation when Status is Done
+      ---
+      duration_ms: 2.3459
+      type: 'suite'
+      ...
+    # Subtest: field order and multiple errors
+        # Subtest: returns all applicable errors in exact field order without throwing
+        ok 1 - returns all applicable errors in exact field order without throwing
+          ---
+          duration_ms: 0.5118
+          ...
+        1..1
+    ok 8 - field order and multiple errors
+      ---
+      duration_ms: 0.6549
+      type: 'suite'
+      ...
+    1..8
+ok 18 - validateIssue (BDC-F-006, BDC-NF-003, BDC-SR-001, BDC-SR-002)
+  ---
+  duration_ms: 21.348
+  type: 'suite'
+  ...
+# Subtest: ValidationManager - Sprint 2 (BDC-NF-003, BDC-SR-002, BDC-SR-003)
+    # Subtest: validateSprint (BDC-F-001, BDC-SR-002)
+        # Subtest: accepts a valid configuration
+        ok 1 - accepts a valid configuration
+          ---
+          duration_ms: 3.9956
+          ...
+        # Subtest: accepts the default dataset sprint
+        ok 2 - accepts the default dataset sprint
+          ---
+          duration_ms: 0.6653
+          ...
+        # Subtest: rejects non-object configurations
+        ok 3 - rejects non-object configurations
+          ---
+          duration_ms: 0.3265
+          ...
+        # Subtest: rejects an empty or missing sprint name
+        ok 4 - rejects an empty or missing sprint name
+          ---
+          duration_ms: 0.4287
+          ...
+        # Subtest: TC-SR-02.1 - rejects zero, negative, fractional, non-numeric and non-finite durations
+        ok 5 - TC-SR-02.1 - rejects zero, negative, fractional, non-numeric and non-finite durations
+          ---
+          duration_ms: 0.526
+          ...
+        # Subtest: enforces the 1 to 60 working-day range the configuration form advertises
+        ok 6 - enforces the 1 to 60 working-day range the configuration form advertises
+          ---
+          duration_ms: 0.4468
+          ...
+        # Subtest: TC-F-01.3 - rejects an end date before the start date
+        ok 7 - TC-F-01.3 - rejects an end date before the start date
+          ---
+          duration_ms: 0.2359
+          ...
+        # Subtest: accepts a one-day sprint whose end equals its start
+        ok 8 - accepts a one-day sprint whose end equals its start
+          ---
+          duration_ms: 0.3146
+          ...
+        # Subtest: rejects impossible calendar dates instead of rolling them forward
+        ok 9 - rejects impossible calendar dates instead of rolling them forward
+          ---
+          duration_ms: 0.4484
+          ...
+        # Subtest: rejects dates that are not YYYY-MM-DD strings
+        ok 10 - rejects dates that are not YYYY-MM-DD strings
+          ---
+          duration_ms: 0.3438
+          ...
+        # Subtest: dates are optional when both are omitted
+        ok 11 - dates are optional when both are omitted
+          ---
+          duration_ms: 0.233
+          ...
+        # Subtest: reports every problem at once so the form can list them all
+        ok 12 - reports every problem at once so the form can list them all
+          ---
+          duration_ms: 0.3377
+          ...
+        1..12
+    ok 1 - validateSprint (BDC-F-001, BDC-SR-002)
+      ---
+      duration_ms: 10.0543
+      type: 'suite'
+      ...
+    # Subtest: validateCurrentDay (BDC-F-003, BDC-SR-002)
+        # Subtest: accepts every day from 0 to the duration
+        ok 1 - accepts every day from 0 to the duration
+          ---
+          duration_ms: 0.7263
+          ...
+        # Subtest: day 0 is valid, per SRS Appendix C (0 to durationDays)
+        ok 2 - day 0 is valid, per SRS Appendix C (0 to durationDays)
+          ---
+          duration_ms: 0.2391
+          ...
+        # Subtest: TC-F-03.2 / TC-SR-02.1 - rejects 11, -1, "abc", fractions and non-finite values
+        ok 3 - TC-F-03.2 / TC-SR-02.1 - rejects 11, -1, "abc", fractions and non-finite values
+          ---
+          duration_ms: 0.5335
+          ...
+        1..3
+    ok 2 - validateCurrentDay (BDC-F-003, BDC-SR-002)
+      ---
+      duration_ms: 1.7552
+      type: 'suite'
+      ...
+    # Subtest: validateStatusUpdate (BDC-F-007, SRS Section 5.2)
+        # Subtest: accepts Done with a completion day up to the Current Day
+        ok 1 - accepts Done with a completion day up to the Current Day
+          ---
+          duration_ms: 0.5445
+          ...
+        # Subtest: TC-F-07.2 - rejects a completion day after the Current Day
+        ok 2 - TC-F-07.2 - rejects a completion day after the Current Day
+          ---
+          duration_ms: 0.2645
+          ...
+        # Subtest: TC-F-07.2 - rejects a completion day after the sprint duration
+        ok 3 - TC-F-07.2 - rejects a completion day after the sprint duration
+          ---
+          duration_ms: 0.3893
+          ...
+        # Subtest: rejects zero, negative, fractional, string and missing completion days
+        ok 4 - rejects zero, negative, fractional, string and missing completion days
+          ---
+          duration_ms: 0.3256
+          ...
+        # Subtest: rejects any completion while the Current Day is 0
+        ok 5 - rejects any completion while the Current Day is 0
+          ---
+          duration_ms: 0.2489
+          ...
+        # Subtest: TC-F-07.3 - moving out of Done needs no completion day
+        ok 6 - TC-F-07.3 - moving out of Done needs no completion day
+          ---
+          duration_ms: 0.4823
+          ...
+        # Subtest: rejects unknown statuses
+        ok 7 - rejects unknown statuses
+          ---
+          duration_ms: 0.3134
+          ...
+        1..7
+    ok 3 - validateStatusUpdate (BDC-F-007, SRS Section 5.2)
+      ---
+      duration_ms: 2.995
+      type: 'suite'
+      ...
+    # Subtest: validateStoredState / sanitizeStoredState (BDC-SR-003)
+        # Subtest: accepts the default dataset
+        ok 1 - accepts the default dataset
+          ---
+          duration_ms: 2.6759
+          ...
+        # Subtest: accepts an empty backlog, which deleting every issue produces
+        ok 2 - accepts an empty backlog, which deleting every issue produces
+          ---
+          duration_ms: 0.3304
+          ...
+        # Subtest: rejects a missing or malformed top-level structure
+        ok 3 - rejects a missing or malformed top-level structure
+          ---
+          duration_ms: 0.4451
+          ...
+        # Subtest: rejects an invalid saved sprint
+        ok 4 - rejects an invalid saved sprint
+          ---
+          duration_ms: 0.8408
+          ...
+        # Subtest: rejects saved issues that break the issue rules
+        ok 5 - rejects saved issues that break the issue rules
+          ---
+          duration_ms: 1.3841
+          ...
+        # Subtest: rejects duplicate issue keys, ignoring case
+        ok 6 - rejects duplicate issue keys, ignoring case
+          ---
+          duration_ms: 0.3707
+          ...
+        # Subtest: rejects a non-object entry in the issue list
+        ok 7 - rejects a non-object entry in the issue list
+          ---
+          duration_ms: 0.307
+          ...
+        # Subtest: keeps completion days after the saved Current Day (moving the day back is normal)
+        ok 8 - keeps completion days after the saved Current Day (moving the day back is normal)
+          ---
+          duration_ms: 0.3034
+          ...
+        # Subtest: keeps completion days after a shortened duration (history is preserved)
+        ok 9 - keeps completion days after a shortened duration (history is preserved)
+          ---
+          duration_ms: 0.3044
+          ...
+        # Subtest: the clean copy holds only SRS Appendix C fields and recomputes the total
+        ok 10 - the clean copy holds only SRS Appendix C fields and recomputes the total
+          ---
+          duration_ms: 0.5373
+          ...
+        # Subtest: the clean copy does not share references with the input
+        ok 11 - the clean copy does not share references with the input
+          ---
+          duration_ms: 0.3037
+          ...
+        # Subtest: a failed check returns no state
+        ok 12 - a failed check returns no state
+          ---
+          duration_ms: 0.4638
+          ...
+        1..12
+    ok 4 - validateStoredState / sanitizeStoredState (BDC-SR-003)
+      ---
+      duration_ms: 8.8741
+      type: 'suite'
+      ...
+    # Subtest: parseStoredState (BDC-SR-003, TC-SR-03.1)
+        # Subtest: round-trips a serialized default dataset
+        ok 1 - round-trips a serialized default dataset
+          ---
+          duration_ms: 14.7526
+          ...
+        # Subtest: TC-SR-03.1 - malformed JSON fails without throwing
+        ok 2 - TC-SR-03.1 - malformed JSON fails without throwing
+          ---
+          duration_ms: 0.7782
+          ...
+        # Subtest: TC-SR-03.1 - valid JSON with schema violations fails without throwing
+        ok 3 - TC-SR-03.1 - valid JSON with schema violations fails without throwing
+          ---
+          duration_ms: 0.4003
+          ...
+        # Subtest: empty and non-string input reports that nothing was saved
+        ok 4 - empty and non-string input reports that nothing was saved
+          ---
+          duration_ms: 0.2815
+          ...
+        # Subtest: a __proto__ key in saved JSON cannot pollute object prototypes
+        ok 5 - a __proto__ key in saved JSON cannot pollute object prototypes
+          ---
+          duration_ms: 0.4439
+          ...
+        1..5
+    ok 5 - parseStoredState (BDC-SR-003, TC-SR-03.1)
+      ---
+      duration_ms: 17.0119
+      type: 'suite'
+      ...
+    1..5
+ok 19 - ValidationManager - Sprint 2 (BDC-NF-003, BDC-SR-002, BDC-SR-003)
+  ---
+  duration_ms: 42.1194
+  type: 'suite'
+  ...
+# Subtest: Performance: Update Time (BDC-NF-001, TC-NF-01.1)
+    # Subtest: default dataset: 200 iterations of addIssue + setCurrentDay + getKPIs each execute < 2000 ms
+    ok 1 - default dataset: 200 iterations of addIssue + setCurrentDay + getKPIs each execute < 2000 ms
+      ---
+      duration_ms: 33.9795
+      ...
+    # Subtest: stress: 1000 generated issues with state updates each execute < 2000 ms
+    ok 2 - stress: 1000 generated issues with state updates each execute < 2000 ms
+      ---
+      duration_ms: 91.5043
+      ...
+    # Subtest: consecutive updates with a delayed first update report accurate distinct timings (P2 bugfix)
+    ok 3 - consecutive updates with a delayed first update report accurate distinct timings (P2 bugfix)
+      ---
+      duration_ms: 0.4362
+      ...
+    1..3
+ok 20 - Performance: Update Time (BDC-NF-001, TC-NF-01.1)
+  ---
+  duration_ms: 128.1249
+  type: 'suite'
+  ...
+# Subtest: UI: AddIssueForm (BDC-F-006, BDC-NF-002, BDC-SR-001)
+    # Subtest: renderAddIssueFormHTML
+        # Subtest: contains all six labelled controls and data-testid hooks
+        ok 1 - contains all six labelled controls and data-testid hooks
+          ---
+          duration_ms: 1.959
+          ...
+        # Subtest: hides Completion Day input when status is not Done
+        ok 2 - hides Completion Day input when status is not Done
+          ---
+          duration_ms: 0.3752
+          ...
+        # Subtest: shows Completion Day input when status is Done
+        ok 3 - shows Completion Day input when status is Done
+          ---
+          duration_ms: 0.3312
+          ...
+        # Subtest: escapes user-supplied values containing XSS payloads in HTML attributes
+        ok 4 - escapes user-supplied values containing XSS payloads in HTML attributes
+          ---
+          duration_ms: 0.2327
+          ...
+        # Subtest: escapes error text safely in the error list
+        ok 5 - escapes error text safely in the error list
+          ---
+          duration_ms: 0.2394
+          ...
+        1..5
+    ok 1 - renderAddIssueFormHTML
+      ---
+      duration_ms: 4.3601
+      type: 'suite'
+      ...
+    # Subtest: parseAddIssueFormValues
+        # Subtest: maps FormData instance correctly
+        ok 1 - maps FormData instance correctly
+          ---
+          duration_ms: 2.5094
+          ...
+        # Subtest: maps plain object correctly with defaults
+        ok 2 - maps plain object correctly with defaults
+          ---
+          duration_ms: 0.3262
+          ...
+        # Subtest: handles null/undefined gracefully
+        ok 3 - handles null/undefined gracefully
+          ---
+          duration_ms: 0.3776
+          ...
+        1..3
+    ok 2 - parseAddIssueFormValues
+      ---
+      duration_ms: 3.8495
+      type: 'suite'
+      ...
+    # Subtest: Regression: Completion Day group visibility (P2 bugfix)
+        # Subtest: verifies explicit CSS rule hides form-group when hidden attribute is present
+        ok 1 - verifies explicit CSS rule hides form-group when hidden attribute is present
+          ---
+          duration_ms: 2.5079
+          ...
+        # Subtest: mountAddIssueForm sets display:none on completion day group initially and toggles on status change
+        ok 2 - mountAddIssueForm sets display:none on completion day group initially and toggles on status change
+          ---
+          duration_ms: 1.2946
+          ...
+        1..2
+    ok 3 - Regression: Completion Day group visibility (P2 bugfix)
+      ---
+      duration_ms: 4.1238
+      type: 'suite'
+      ...
+    1..3
+ok 21 - UI: AddIssueForm (BDC-F-006, BDC-NF-002, BDC-SR-001)
+  ---
+  duration_ms: 13.5995
+  type: 'suite'
+  ...
+# Subtest: BDC-F-005 (TC-F-05.1): Display Backlog Table
+    # Subtest: default dataset yields exactly 10 rows
+    ok 1 - default dataset yields exactly 10 rows
+      ---
+      duration_ms: 1.6262
+      ...
+    # Subtest: issue keys match PROJ-101 through PROJ-110 in exact sequential order
+    ok 2 - issue keys match PROJ-101 through PROJ-110 in exact sequential order
+      ---
+      duration_ms: 1.1499
+      ...
+    # Subtest: every field in each row strictly equals the corresponding dataset field
+    ok 3 - every field in each row strictly equals the corresponding dataset field
+      ---
+      duration_ms: 0.4064
+      ...
+    # Subtest: uncompleted issues (PROJ-106 through PROJ-110) display "--" as completion day
+    ok 4 - uncompleted issues (PROJ-106 through PROJ-110) display "--" as completion day
+      ---
+      duration_ms: 0.2989
+      ...
+    # Subtest: completed issues (PROJ-101 through PROJ-105) display correct numeric completion day string
+    ok 5 - completed issues (PROJ-101 through PROJ-105) display correct numeric completion day string
+      ---
+      duration_ms: 0.2718
+      ...
+    # Subtest: empty or invalid issue collection returns empty array without throwing
+    ok 6 - empty or invalid issue collection returns empty array without throwing
+      ---
+      duration_ms: 0.2202
+      ...
+    # Subtest: HTML and script injection strings are preserved as raw plain text without modification
+    ok 7 - HTML and script injection strings are preserved as raw plain text without modification
+      ---
+      duration_ms: 0.3107
+      ...
+    1..7
+ok 22 - BDC-F-005 (TC-F-05.1): Display Backlog Table
+  ---
+  duration_ms: 6.8045
+  type: 'suite'
+  ...
+# Subtest: BDC-F-013 & BDC-F-014: Burndown Chart Config & Marker Tests
+    # Subtest: TC-F-13.1: chart config contains responsive line chart properties, datasets, axes, and legend
+    ok 1 - TC-F-13.1: chart config contains responsive line chart properties, datasets, axes, and legend
+      ---
+      duration_ms: 2.6479
+      ...
+    # Subtest: TC-F-13.1: Ideal dataset contains values 50, 45, 40, ..., 0 across days 0..10
+    ok 2 - TC-F-13.1: Ideal dataset contains values 50, 45, 40, ..., 0 across days 0..10
+      ---
+      duration_ms: 1.5538
+      ...
+    # Subtest: TC-F-13.1: Actual dataset contains values 50, 45, 42, 34, 21 for days 0-4 and nulls thereafter
+    ok 3 - TC-F-13.1: Actual dataset contains values 50, 45, 42, 34, 21 for days 0-4 and nulls thereafter
+      ---
+      duration_ms: 0.4396
+      ...
+    # Subtest: TC-F-13.1: future unelapsed actual values are strictly null and never converted to zero
+    ok 4 - TC-F-13.1: future unelapsed actual values are strictly null and never converted to zero
+      ---
+      duration_ms: 0.4278
+      ...
+    # Subtest: TC-F-13.1: changing currentDay dynamically changes the count of plotted Actual points
+    ok 5 - TC-F-13.1: changing currentDay dynamically changes the count of plotted Actual points
+      ---
+      duration_ms: 0.5105
+      ...
+    # Subtest: TC-F-14.1: getMarkerDay handles first, intermediate, and final sprint days correctly and clamps boundaries
+    ok 6 - TC-F-14.1: getMarkerDay handles first, intermediate, and final sprint days correctly and clamps boundaries
+      ---
+      duration_ms: 0.3047
+      ...
+    # Subtest: TC-F-13.2: handles empty or edge-case datasets gracefully without throwing
+    ok 7 - TC-F-13.2: handles empty or edge-case datasets gracefully without throwing
+      ---
+      duration_ms: 0.6845
+      ...
+    1..7
+ok 23 - BDC-F-013 & BDC-F-014: Burndown Chart Config & Marker Tests
+  ---
+  duration_ms: 9.268
+  type: 'suite'
+  ...
+# Subtest: UI: CurrentDayControl (BDC-F-003, BDC-NF-002)
+    # Subtest: renderCurrentDayControlHTML
+        # Subtest: renders interactive range slider with attributes bound to sprint duration and current day
+        ok 1 - renders interactive range slider with attributes bound to sprint duration and current day
+          ---
+          duration_ms: 1.6431
+          ...
+        # Subtest: stepper buttons are appropriately enabled/disabled on boundaries
+        ok 2 - stepper buttons are appropriately enabled/disabled on boundaries
+          ---
+          duration_ms: 0.3362
+          ...
+        # Subtest: safely clamps out-of-range inputs when rendering
+        ok 3 - safely clamps out-of-range inputs when rendering
+          ---
+          duration_ms: 0.3633
+          ...
+        # Subtest: supports custom control ID
+        ok 4 - supports custom control ID
+          ---
+          duration_ms: 0.2343
+          ...
+        1..4
+    ok 1 - renderCurrentDayControlHTML
+      ---
+      duration_ms: 3.8331
+      type: 'suite'
+      ...
+    1..1
+ok 24 - UI: CurrentDayControl (BDC-F-003, BDC-NF-002)
+  ---
+  duration_ms: 5.0457
+  type: 'suite'
+  ...
+# Subtest: UI: KPICards (BDC-F-015, BDC-NF-002)
+    # Subtest: formatVariance
+        # Subtest: formats positive variance with leading plus sign
+        ok 1 - formats positive variance with leading plus sign
+          ---
+          duration_ms: 1.4247
+          ...
+        # Subtest: formats zero and negative variance correctly
+        ok 2 - formats zero and negative variance correctly
+          ---
+          duration_ms: 0.4119
+          ...
+        # Subtest: handles non-numeric or non-finite variance gracefully
+        ok 3 - handles non-numeric or non-finite variance gracefully
+          ---
+          duration_ms: 0.2523
+          ...
+        1..3
+    ok 1 - formatVariance
+      ---
+      duration_ms: 3.4391
+      type: 'suite'
+      ...
+    # Subtest: getStatusBadgeMetadata (BDC-NF-002 Accessible status indicators)
+        # Subtest: maps Ahead of Schedule to positive modifier and distinct label
+        ok 1 - maps Ahead of Schedule to positive modifier and distinct label
+          ---
+          duration_ms: 0.2759
+          ...
+        # Subtest: maps On Track to neutral modifier
+        ok 2 - maps On Track to neutral modifier
+          ---
+          duration_ms: 0.276
+          ...
+        # Subtest: maps Behind Schedule to alert modifier
+        ok 3 - maps Behind Schedule to alert modifier
+          ---
+          duration_ms: 0.4105
+          ...
+        1..3
+    ok 2 - getStatusBadgeMetadata (BDC-NF-002 Accessible status indicators)
+      ---
+      duration_ms: 1.3685
+      type: 'suite'
+      ...
+    # Subtest: renderKPICardsHTML (BDC-F-015)
+        # Subtest: TC-F-15.1 - renders all 6 live KPI cards with default dataset Day 4 values
+        ok 1 - TC-F-15.1 - renders all 6 live KPI cards with default dataset Day 4 values
+          ---
+          duration_ms: 0.8024
+          ...
+        # Subtest: TC-F-15.2 - renders Behind Schedule status and negative variance cleanly
+        ok 2 - TC-F-15.2 - renders Behind Schedule status and negative variance cleanly
+          ---
+          duration_ms: 0.3565
+          ...
+        # Subtest: supports empty or partial metrics gracefully without throwing
+        ok 3 - supports empty or partial metrics gracefully without throwing
+          ---
+          duration_ms: 0.2716
+          ...
+        1..3
+    ok 3 - renderKPICardsHTML (BDC-F-015)
+      ---
+      duration_ms: 2.7528
+      type: 'suite'
+      ...
+    1..3
+ok 25 - UI: KPICards (BDC-F-015, BDC-NF-002)
+  ---
+  duration_ms: 8.9946
+  type: 'suite'
+  ...
+# Subtest: Chart theme (BDC-F-013, BDC-NF-002)
+    # Subtest: the dark theme keeps text light and the tooltip dark, so the chart stays readable on a dark page
+    ok 1 - the dark theme keeps text light and the tooltip dark, so the chart stays readable on a dark page
+      ---
+      duration_ms: 1.9192
+      ...
+    # Subtest: both themes draw a dashed ideal line and a solid actual line with distinguishable colours
+    ok 2 - both themes draw a dashed ideal line and a solid actual line with distinguishable colours
+      ---
+      duration_ms: 1.3161
+      ...
+    # Subtest: an unknown or missing theme falls back to the light theme
+    ok 3 - an unknown or missing theme falls back to the light theme
+      ---
+      duration_ms: 0.5287
+      ...
+    # Subtest: the number of days is derived from the ideal series when no usable duration is given
+    ok 4 - the number of days is derived from the ideal series when no usable duration is given
+      ---
+      duration_ms: 0.7902
+      ...
+    # Subtest: an empty series gives a single-day chart, not an error
+    ok 5 - an empty series gives a single-day chart, not an error
+      ---
+      duration_ms: 0.3127
+      ...
+    1..5
+ok 26 - Chart theme (BDC-F-013, BDC-NF-002)
+  ---
+  duration_ms: 7.055
+  type: 'suite'
+  ...
+# Subtest: Defaults for missing data (BDC-SR-004, TC-SR-04.2)
+    # Subtest: the sprint banner shows neutral placeholders for an empty sprint
+    ok 1 - the sprint banner shows neutral placeholders for an empty sprint
+      ---
+      duration_ms: 0.9455
+      ...
+    # Subtest: the sprint form opens with a 10-day duration and an empty name when nothing is saved
+    ok 2 - the sprint form opens with a 10-day duration and an empty name when nothing is saved
+      ---
+      duration_ms: 0.4724
+      ...
+    # Subtest: the Current Day control falls back to Day 0 of 10 for unusable values
+    ok 3 - the Current Day control falls back to Day 0 of 10 for unusable values
+      ---
+      duration_ms: 0.5202
+      ...
+    # Subtest: the backlog table rows are plain strings even for incomplete issues
+    ok 4 - the backlog table rows are plain strings even for incomplete issues
+      ---
+      duration_ms: 0.6296
+      ...
+    1..4
+ok 27 - Defaults for missing data (BDC-SR-004, TC-SR-04.2)
+  ---
+  duration_ms: 3.152
+  type: 'suite'
+  ...
+# Subtest: Add Issue form rendering and parsing (BDC-F-006)
+    # Subtest: a success message is shown in a polite status region and is escaped
+    ok 1 - a success message is shown in a polite status region and is escaped
+      ---
+      duration_ms: 0.6597
+      ...
+    # Subtest: the form pre-selects the chosen type and status after a rejected submission
+    ok 2 - the form pre-selects the chosen type and status after a rejected submission
+      ---
+      duration_ms: 0.4789
+      ...
+    # Subtest: the completion-day field is hidden until the status is Done
+    ok 3 - the completion-day field is hidden until the status is Done
+      ---
+      duration_ms: 0.2765
+      ...
+    # Subtest: parsing form data yields strings with defaults, from a missing form, FormData-like and plain objects
+    ok 4 - parsing form data yields strings with defaults, from a missing form, FormData-like and plain objects
+      ---
+      duration_ms: 0.5622
+      ...
+    # Subtest: mounting is a safe no-op without a usable container, and unmount clears a container that has no form
+    ok 5 - mounting is a safe no-op without a usable container, and unmount clears a container that has no form
+      ---
+      duration_ms: 0.8566
+      ...
+    1..5
+ok 28 - Add Issue form rendering and parsing (BDC-F-006)
+  ---
+  duration_ms: 3.2311
+  type: 'suite'
+  ...
+# Subtest: BDC-SR-001: invalid duration is escaped when redisplaying a rejected config
+ok 29 - BDC-SR-001: invalid duration is escaped when redisplaying a rejected config
+  ---
+  duration_ms: 2.4197
+  ...
+# Subtest: BDC-SR-005: policy precedes scripts and disallows inline script/eval
+ok 30 - BDC-SR-005: policy precedes scripts and disallows inline script/eval
+  ---
+  duration_ms: 1.3104
+  ...
+# Subtest: BDC-SR-005: noscript warning uses external CSS instead of a blocked inline style
+ok 31 - BDC-SR-005: noscript warning uses external CSS instead of a blocked inline style
+  ---
+  duration_ms: 0.795
+  ...
+# Subtest: UI: SprintBanner (BDC-F-001, BDC-SR-001)
+    # Subtest: escapeHTML (BDC-SR-001 - XSS Prevention)
+        # Subtest: TC-SR-01.1 - safely escapes markup, script tags, and attribute injections
+        ok 1 - TC-SR-01.1 - safely escapes markup, script tags, and attribute injections
+          ---
+          duration_ms: 0.9909
+          ...
+        # Subtest: handles null and undefined gracefully
+        ok 2 - handles null and undefined gracefully
+          ---
+          duration_ms: 0.4414
+          ...
+        1..2
+    ok 1 - escapeHTML (BDC-SR-001 - XSS Prevention)
+      ---
+      duration_ms: 2.3848
+      type: 'suite'
+      ...
+    # Subtest: renderSprintBannerHTML (BDC-F-001)
+        # Subtest: renders sprint metadata accurately per SRS specifications
+        ok 1 - renders sprint metadata accurately per SRS specifications
+          ---
+          duration_ms: 0.3534
+          ...
+        # Subtest: TC-SR-01.1 - renders user-controlled sprint name as inert text rather than executing markup
+        ok 2 - TC-SR-01.1 - renders user-controlled sprint name as inert text rather than executing markup
+          ---
+          duration_ms: 0.171
+          ...
+        # Subtest: supports editable toggle flag
+        ok 3 - supports editable toggle flag
+          ---
+          duration_ms: 0.1635
+          ...
+        1..3
+    ok 2 - renderSprintBannerHTML (BDC-F-001)
+      ---
+      duration_ms: 1.0846
+      type: 'suite'
+      ...
+    # Subtest: renderSprintConfigFormHTML (BDC-F-001 Configuration Form)
+        # Subtest: renders form inputs pre-populated with current sprint parameters
+        ok 1 - renders form inputs pre-populated with current sprint parameters
+          ---
+          duration_ms: 0.2913
+          ...
+        # Subtest: displays validation error messages in accessible alert region
+        ok 2 - displays validation error messages in accessible alert region
+          ---
+          duration_ms: 0.2373
+          ...
+        1..2
+    ok 3 - renderSprintConfigFormHTML (BDC-F-001 Configuration Form)
+      ---
+      duration_ms: 0.7991
+      type: 'suite'
+      ...
+    1..3
+ok 32 - UI: SprintBanner (BDC-F-001, BDC-SR-001)
+  ---
+  duration_ms: 5.1626
+  type: 'suite'
+  ...
+# Subtest: UI: ThemeManager (Light / Dark Theme Toggle & Persistence)
+    # Subtest: defaults to light theme when no stored preference exists
+    ok 1 - defaults to light theme when no stored preference exists
+      ---
+      duration_ms: 1.86
+      ...
+    # Subtest: reads saved theme preference from storage
+    ok 2 - reads saved theme preference from storage
+      ---
+      duration_ms: 0.3929
+      ...
+    # Subtest: applyTheme sets data-theme attribute on documentElement and saves to storage
+    ok 3 - applyTheme sets data-theme attribute on documentElement and saves to storage
+      ---
+      duration_ms: 0.4769
+      ...
+    # Subtest: toggleTheme alternates between light and dark themes cleanly
+    ok 4 - toggleTheme alternates between light and dark themes cleanly
+      ---
+      duration_ms: 0.5491
+      ...
+    # Subtest: initTheme binds click listener and triggers callback on theme change
+    ok 5 - initTheme binds click listener and triggers callback on theme change
+      ---
+      duration_ms: 0.6039
+      ...
+    1..5
+ok 33 - UI: ThemeManager (Light / Dark Theme Toggle & Persistence)
+  ---
+  duration_ms: 6.0129
+  type: 'suite'
+  ...
+# Subtest: Theme persistence with unavailable storage
+    # Subtest: startup works when merely touching storage throws (private browsing or blocked cookies)
+    ok 1 - startup works when merely touching storage throws (private browsing or blocked cookies)
+      ---
+      duration_ms: 1.6721
+      ...
+    # Subtest: startup works when reading or writing a stored value throws (quota exceeded)
+    ok 2 - startup works when reading or writing a stored value throws (quota exceeded)
+      ---
+      duration_ms: 0.3787
+      ...
+    # Subtest: with storage blocked, an OS set to dark mode still gets the dark theme
+    ok 3 - with storage blocked, an OS set to dark mode still gets the dark theme
+      ---
+      duration_ms: 0.3725
+      ...
+    # Subtest: on a first visit the OS colour preference decides the theme
+    ok 4 - on a first visit the OS colour preference decides the theme
+      ---
+      duration_ms: 0.4396
+      ...
+    # Subtest: a saved choice overrides the OS preference in both directions
+    ok 5 - a saved choice overrides the OS preference in both directions
+      ---
+      duration_ms: 0.3954
+      ...
+    # Subtest: a corrupted saved value is ignored in favour of the OS preference
+    ok 6 - a corrupted saved value is ignored in favour of the OS preference
+      ---
+      duration_ms: 0.4242
+      ...
+    # Subtest: storage is still used when only a global localStorage exists
+    ok 7 - storage is still used when only a global localStorage exists
+      ---
+      duration_ms: 1.1481
+      ...
+    # Subtest: without any window the theme falls back to light and applying one still works
+    ok 8 - without any window the theme falls back to light and applying one still works
+      ---
+      duration_ms: 0.2476
+      ...
+    1..8
+ok 34 - Theme persistence with unavailable storage
+  ---
+  duration_ms: 6.7008
+  type: 'suite'
+  ...
+1..34
+# tests 410
+# suites 91
+# pass 410
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 582.6943
+# exit code: 0

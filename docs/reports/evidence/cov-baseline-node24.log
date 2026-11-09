@@ -1,0 +1,547 @@
+# Raw output: unit coverage at the BASELINE commit, before any test was added
+# Executed: 2026-11-08T12:41:46Z (UTC) / 2026-11-08T18:11:46+0530 (IST)
+# Commit:   222089658f26badaf5c9f6d3c60e75986ebd6320 (baseline; tools/coverage.mjs copied in untracked, application and test code untouched)
+# Node:     v24.11.1
+# OS:       Microsoft Windows [Version 10.0.26300.9818]
+# Command:  node tools/coverage.mjs --details --json cov-baseline-node24.json
+# ------------------------------------------------------------------
+▶ DataManager.addIssue (BDC-F-006, BDC-F-002, BDC-SR-001, BDC-SR-002, BDC-NF-003)
+  ✔ TC-F-06.1: successfully adds valid issue and updates series, KPIs, and subscribers (4.5238ms)
+  ✔ TC-F-06.2: duplicate PROJ-101 (and variants) rejected with unchanged state and listener count (2.1492ms)
+  ✔ TC-F-06.3: empty key, empty summary, both reject with errors and nothing added (0.6648ms)
+  ✔ TC-F-06.4: story points 0 accepted, total stays 50, and getKPIs() has no NaN/Infinity/undefined (0.8618ms)
+  ✔ TC-F-02.2 (add half): total committed story points increases from 50 to 55 (0.4071ms)
+  ✔ TC-SR-01.1: stores XSS injection strings byte-for-byte unchanged (0.5058ms)
+  ✔ TC-SR-02.1 / TC-NF-03.1: points -3, "abc", Infinity rejected with no state change (0.57ms)
+  ✔ Done status with valid day increases completedPoints; non-Done status stores completedDay null (0.7547ms)
+  ✔ dm.reset() after adding issues restores baseline dataset (10 issues, 50 points, currentDay 4) (1.7084ms)
+  ✔ rejects story points exceeding safe range and guarantees KPIs and chart series remain finite (P2 bugfix) (0.7941ms)
+✔ DataManager.addIssue (BDC-F-006, BDC-F-002, BDC-SR-001, BDC-SR-002, BDC-NF-003) (15.1748ms)
+▶ DataManager (BDC-F-001, BDC-F-003, BDC-F-015)
+  ▶ Module Contracts & Defaults
+    ✔ instantiates with deep-cloned default sprint and issues (3.7891ms)
+    ✔ defaultDataManager singleton instance is exported and functional (0.6958ms)
+    ✔ reset() restores baseline state (4.0002ms)
+  ✔ Module Contracts & Defaults (10.7ms)
+  ▶ TC-F-01 - Sprint Configuration (BDC-F-001)
+    ✔ TC-F-01.1 - accepts and saves a valid sprint configuration (0.6927ms)
+    ✔ TC-F-01.1 - adjusts Current Day if new duration is shorter than current day (0.492ms)
+    ✔ TC-F-01.2 - rejects invalid duration (0, negative, non-numeric) and retains previous valid config (3.4001ms)
+    ✔ TC-F-01.3 - rejects end date preceding start date and retains previous valid config (0.5278ms)
+    ✔ rejects empty or whitespace-only sprint name (0.444ms)
+  ✔ TC-F-01 - Sprint Configuration (BDC-F-001) (6.295ms)
+  ▶ TC-F-03 - Current Day Timeline Control (BDC-F-003)
+    ✔ TC-F-03.1 - moving control to valid day updates Current Day and notifies subscribers (0.4761ms)
+    ✔ TC-F-03.1 - supports boundary days 0 and durationDays (0.2835ms)
+    ✔ TC-F-03.2 - out-of-range values (< 0 or > durationDays) are rejected safely without state mutation (0.2878ms)
+  ✔ TC-F-03 - Current Day Timeline Control (BDC-F-003) (1.2286ms)
+  ▶ TC-F-15 - Live Sprint KPI Dashboard (BDC-F-015)
+    ✔ TC-F-15.1 - default dataset at Day 4 produces exact SRS Appendix A & B KPI values (1.0804ms)
+    ✔ TC-F-15.2 - moving Current Day updates all KPIs live and deterministically (0.8091ms)
+    ✔ subscribers are notified when sprint configuration or current day changes (0.4719ms)
+  ✔ TC-F-15 - Live Sprint KPI Dashboard (BDC-F-015) (2.5722ms)
+  ▶ Validation Helpers
+    ✔ validateSprintConfig handles valid and invalid payloads (0.4861ms)
+    ✔ validateCurrentDay validates boundaries correctly (0.3359ms)
+  ✔ Validation Helpers (0.9801ms)
+✔ DataManager (BDC-F-001, BDC-F-003, BDC-F-015) (25.2402ms)
+▶ R1: Default Simulated Jira Dataset (defaultDataset.js)
+  ▶ Import Styles & Exports
+    ✔ supports default export and named export interchangeably (3.8581ms)
+    ✔ exports DEFAULT_DATASET, DEFAULT_SPRINT, and DEFAULT_ISSUES constants (0.3433ms)
+    ✔ exports deepClone and deepFreeze helper utilities (0.1688ms)
+  ✔ Import Styles & Exports (5.9567ms)
+  ▶ Sprint Metadata (SRS Appendix C & SAD §3.1)
+    ✔ contains canonical sprint properties per SRS Appendix C and SAD (0.3442ms)
+  ✔ Sprint Metadata (SRS Appendix C & SAD §3.1) (0.4824ms)
+  ▶ Issue Collection & Canonical Schema
+    ✔ contains exactly 10 issues with keys PROJ-101 through PROJ-110 (1.8324ms)
+    ✔ each issue has all canonical fields with valid types and no redundant aliases (0.5001ms)
+    ✔ individual issue values match SRS Appendix A Table 11 exactly (0.3963ms)
+  ✔ Issue Collection & Canonical Schema (3.0009ms)
+  ▶ Mathematical Integrity
+    ✔ sum of storyPoints across all 10 issues equals 50 (0.3521ms)
+    ✔ issues completed by Day 4 total exactly 29 points (0.2993ms)
+    ✔ remaining story points on Day 4 total exactly 21 points (0.3033ms)
+    ✔ completed issues match SRS Appendix A specifications (0.3107ms)
+  ✔ Mathematical Integrity (1.4877ms)
+  ▶ Isolation & Immutability (Deep Cloning)
+    ✔ mutating returned dataset does not pollute subsequent calls (0.4177ms)
+    ✔ getDefaultSprint() and getDefaultIssues() return isolated copies (0.2402ms)
+    ✔ internal constants and all nested objects are deeply frozen against mutation (0.1484ms)
+    ✔ deepFreeze helper recursively seals objects and arrays (0.1419ms)
+    ✔ deepFreeze recursively seals Symbol-keyed properties and functions (0.1953ms)
+    ✔ deepFreeze safely handles ArrayBuffer views and TypedArrays without throwing (0.3402ms)
+    ✔ deepFreeze inspects property descriptors and freezes accessors without executing throwing getters (0.1668ms)
+    ✔ deepClone creates completely isolated deep clones for objects and arrays (0.2664ms)
+    ✔ deepClone safely handles functions, methods, Dates, RegExps, and Symbol keys without crashing (0.3322ms)
+    ✔ consecutive calls to getDefaultDataset return distinct object references (0.2488ms)
+  ✔ Isolation & Immutability (Deep Cloning) (2.8827ms)
+✔ R1: Default Simulated Jira Dataset (defaultDataset.js) (15.2354ms)
+▶ BDC-F-007/008/009: Sprint 2 workflow and recovery
+  ✔ Done updates publish once, refresh KPIs and return isolated copies (5.8254ms)
+  ✔ reopening to To Do clears completion history (1.9466ms)
+  ✔ reopening to In Progress clears completion history (0.4097ms)
+  ✔ rejects completion day null without publishing or mutating (1.7941ms)
+  ✔ rejects completion day  without publishing or mutating (0.38ms)
+  ✔ rejects completion day 4 without publishing or mutating (0.3631ms)
+  ✔ rejects completion day 0 without publishing or mutating (0.3532ms)
+  ✔ rejects completion day -1 without publishing or mutating (0.2916ms)
+  ✔ rejects completion day 11 without publishing or mutating (0.3247ms)
+  ✔ rejects completion day 1.5 without publishing or mutating (0.2604ms)
+  ✔ rejects completion day NaN without publishing or mutating (0.3114ms)
+  ✔ rejects completion day Infinity without publishing or mutating (0.332ms)
+  ✔ TC-F-07.2: future completion is rejected atomically at Current Day 4 (0.6729ms)
+  ✔ completion is valid once that day is reached and survives rewinding (2.5173ms)
+  ✔ Day 0 rejects Done but allows reopening without a completion day (0.4437ms)
+  ✔ rejects unknown issues, invalid workflow and malformed changes (0.577ms)
+  ✔ deleting completed and incomplete issues recalculates scope and notifies once each (0.5336ms)
+  ✔ empty backlog is finite and reset restores exact canonical dataset (1.1058ms)
+  ✔ single-day zero-point sprint supports boundary days and rejects zero duration (0.6391ms)
+✔ BDC-F-007/008/009: Sprint 2 workflow and recovery (21.6722ms)
+▶ DataManager validation & saved state (BDC-NF-003, BDC-SR-002, BDC-SR-003)
+  ▶ TC-NF-03.1 - every SRS Section 5.2 invalid case is rejected and nothing is stored
+    ✔ rejects negative story points with a visible message and leaves state unchanged (2.8834ms)
+    ✔ rejects non-numeric story points with a visible message and leaves state unchanged (0.5736ms)
+    ✔ rejects infinite story points with a visible message and leaves state unchanged (0.3686ms)
+    ✔ rejects completion day after the Current Day with a visible message and leaves state unchanged (0.3427ms)
+    ✔ rejects completion day after the duration with a visible message and leaves state unchanged (0.287ms)
+    ✔ rejects empty issue key with a visible message and leaves state unchanged (0.2855ms)
+    ✔ rejects duplicate issue key with a visible message and leaves state unchanged (0.2302ms)
+    ✔ rejects empty summary with a visible message and leaves state unchanged (0.2622ms)
+    ✔ rejects zero duration with a visible message and leaves state unchanged (0.8446ms)
+    ✔ rejects negative duration with a visible message and leaves state unchanged (0.3383ms)
+    ✔ rejects non-numeric duration with a visible message and leaves state unchanged (0.3054ms)
+    ✔ rejects duration beyond 60 days with a visible message and leaves state unchanged (0.2297ms)
+    ✔ rejects impossible calendar date with a visible message and leaves state unchanged (0.2705ms)
+    ✔ rejects Current Day beyond the duration with a visible message and leaves state unchanged (0.4326ms)
+    ✔ rejects negative Current Day with a visible message and leaves state unchanged (0.2011ms)
+    ✔ rejects non-numeric Current Day with a visible message and leaves state unchanged (0.1597ms)
+    ✔ zero story points are allowed, as SRS Section 5.2 requires (0.4762ms)
+    ✔ state still passes validation after every invalid attempt (2.2678ms)
+  ✔ TC-NF-03.1 - every SRS Section 5.2 invalid case is rejected and nothing is stored (12.9135ms)
+  ▶ Sprint duration range (BDC-SR-002)
+    ✔ validateSprintConfig keeps its export and enforces the 60-day ceiling (0.2939ms)
+    ✔ an oversized duration never reaches the burndown calculation (0.9563ms)
+    ✔ the full 1 to 60 range is accepted (0.4942ms)
+  ✔ Sprint duration range (BDC-SR-002) (1.9616ms)
+  ▶ init() validates a supplied dataset (BDC-SR-003)
+    ✔ a valid dataset is loaded as given (0.4673ms)
+    ✔ an invalid dataset is replaced by the default dataset (0.5159ms)
+    ✔ a missing part falls back to the default for that part (0.3757ms)
+    ✔ no argument and reset() still load the defaults with no errors (0.547ms)
+  ✔ init() validates a supplied dataset (BDC-SR-003) (2.1544ms)
+  ▶ restoreFromJSON() - TC-SR-03.1 safe recovery from corrupted storage
+    ✔ malformed JSON restores the default dataset without throwing (0.9569ms)
+    ✔ valid JSON with schema violations restores the default dataset (0.5666ms)
+    ✔ empty storage restores the default dataset (0.3737ms)
+    ✔ valid saved state is loaded and subscribers are notified (0.5681ms)
+  ✔ restoreFromJSON() - TC-SR-03.1 safe recovery from corrupted storage (2.695ms)
+  ▶ serialize() round-trips every state the app can reach
+    ✔ a realistic session survives save and reload unchanged (0.733ms)
+    ✔ moving the Current Day back keeps later completion days through a reload (0.6963ms)
+    ✔ shortening the sprint keeps completion history through a reload (0.7964ms)
+    ✔ an empty backlog survives a reload (0.4406ms)
+  ✔ serialize() round-trips every state the app can reach (2.9028ms)
+✔ DataManager validation & saved state (BDC-NF-003, BDC-SR-002, BDC-SR-003) (25.9474ms)
+▶ R3: Sprint 1 QA Test Checklist (docs/test-plan/sprint1_checklist.md)
+  ✔ checklist file exists in docs/test-plan directory (1.6889ms)
+  ✔ covers all 15 functional requirement categories (BDC-F-001 to BDC-F-015) (9.1303ms)
+  ✔ contains all 30 checkable functional test cases (TC-F-01.1 to TC-F-15.2) (7.7875ms)
+  ✔ contains all 8 checkable Non-Functional test cases (TC-NF-01.1 to TC-NF-05.2) (10.149ms)
+  ✔ contains all 6 checkable Security & Robustness test cases (TC-SR-01.1 to TC-SR-05.1) (9.2754ms)
+  ✔ includes Traceability & Coverage Matrix and Team Sign-off section (21.1861ms)
+✔ R3: Sprint 1 QA Test Checklist (docs/test-plan/sprint1_checklist.md) (63.3452ms)
+▶ BurndownEngine (BDC-F-002, BDC-F-010, BDC-F-011, BDC-F-012)
+  ▶ Exports & module contract
+    ✔ exposes named exports and a default computeAll export (3.8078ms)
+    ✔ SCHEDULE_STATUS is frozen against mutation (1.0617ms)
+  ✔ Exports & module contract (6.4209ms)
+  ▶ TC-F-02 - Total Committed Story Points (BDC-F-002)
+    ✔ TC-F-02.1 - default dataset totals exactly 50 points (0.7439ms)
+    ✔ TC-F-02.1 - total counts every status, not just Done (0.2585ms)
+    ✔ TC-F-02.2 - total updates immediately on addition and deletion (0.364ms)
+  ✔ TC-F-02 - Total Committed Story Points (BDC-F-002) (1.6505ms)
+  ▶ Completed & remaining points (SAD Section 4.1)
+    ✔ default dataset on Day 4 reports 29 completed and 21 remaining (0.5361ms)
+    ✔ completion is inclusive of the threshold day (0.2614ms)
+    ✔ issues without a completedDay never count as burned down (0.9082ms)
+  ✔ Completed & remaining points (SAD Section 4.1) (1.9687ms)
+  ▶ TC-F-10 - Ideal burndown (BDC-F-010)
+    ✔ TC-F-10.1 - Ideal(0)=50, Ideal(4)=30, Ideal(10)=0 for the default dataset (0.3584ms)
+    ✔ TC-F-10.1 - full ideal series is linear across 11 points (0.3821ms)
+    ✔ TC-F-10.2 - zero duration returns a defined value, never NaN or Infinity (0.1518ms)
+    ✔ TC-F-10.2 - negative, non-numeric and non-finite durations are rejected safely (0.2284ms)
+    ✔ fractional ideal values carry no floating-point noise (0.1296ms)
+    ✔ day is clamped so ideal never goes negative (0.127ms)
+  ✔ TC-F-10 - Ideal burndown (BDC-F-010) (1.7281ms)
+  ▶ TC-F-11 - Actual burndown (BDC-F-011)
+    ✔ TC-F-11.1 - Actual(1)=45, Actual(2)=42, Actual(3)=34, Actual(4)=21 (0.3196ms)
+    ✔ TC-F-11.1 - Actual(0) equals the full committed scope (0.1587ms)
+    ✔ TC-F-11.2 - no actual values are plotted beyond the Current Day (0.4419ms)
+    ✔ TC-F-11.2 - moving Current Day to 6 extends the plotted range (0.3066ms)
+    ✔ actual series is empty for an invalid duration (0.1616ms)
+  ✔ TC-F-11 - Actual burndown (BDC-F-011) (1.6229ms)
+  ▶ TC-F-12 - Variance & schedule status (BDC-F-012)
+    ✔ TC-F-12.1 - default dataset at Day 4 gives variance +9, Ahead of Schedule (0.3786ms)
+    ✔ TC-F-12.1 - Ideal=30 with Actual=28 gives variance +2, Ahead of Schedule (0.1204ms)
+    ✔ TC-F-12.2 - variance 0, +1 and -1 all classify as On Track (0.2006ms)
+    ✔ TC-F-12.2 - tolerance boundary is exclusive just outside +/-1 (0.1442ms)
+    ✔ TC-F-12.3 - Ideal=30 with Actual=32 and 38 classify as Behind Schedule (0.1236ms)
+    ✔ non-finite variance falls back to On Track rather than throwing (0.1936ms)
+  ✔ TC-F-12 - Variance & schedule status (BDC-F-012) (1.4406ms)
+  ▶ computeAll - SAD Interface 1
+    ✔ returns the full documented response shape (0.5575ms)
+    ✔ default dataset on Day 4 matches SRS Appendix B exactly (0.3778ms)
+    ✔ Current Day is clamped into 0..durationDays (0.3986ms)
+    ✔ is pure - repeated calls agree and inputs are never mutated (0.6428ms)
+  ✔ computeAll - SAD Interface 1 (2.2331ms)
+  ▶ TC-SR-04 - Boundary & safe edge-case handling (BDC-SR-004)
+    ✔ TC-SR-04.1 - empty backlog yields defined zeros, no NaN or Infinity (0.6008ms)
+    ✔ TC-SR-04.2 - all-zero story points produce a defined result (0.5029ms)
+    ✔ TC-SR-04.2 - zero and negative durations are rejected without crashing (0.4539ms)
+    ✔ TC-SR-04.2 - In Progress issues with a null completion date are excluded (0.5281ms)
+    ✔ malformed inputs never throw and never leak NaN or Infinity (0.7313ms)
+    ✔ negative, non-numeric and non-finite story points contribute zero (0.1749ms)
+  ✔ TC-SR-04 - Boundary & safe edge-case handling (BDC-SR-004) (3.3694ms)
+  ▶ TC-NF-05 - Modularity & independent testability (BDC-NF-005)
+    ✔ TC-NF-05.2 - engine runs headless with no DOM available (0.3302ms)
+    ✔ TC-NF-05.1 - module declares no imports, so it cannot form a cycle (38.821ms)
+  ✔ TC-NF-05 - Modularity & independent testability (BDC-NF-005) (39.4985ms)
+✔ BurndownEngine (BDC-F-002, BDC-F-010, BDC-F-011, BDC-F-012) (61.5ms)
+▶ validateIssue (BDC-F-006, BDC-NF-003, BDC-SR-001, BDC-SR-002)
+  ✔ accepts a completely valid issue object (3.2212ms)
+  ▶ issueKey validation
+    ✔ rejects empty or whitespace-only key (0.4596ms)
+    ✔ rejects case-insensitive duplicate keys (0.2278ms)
+    ✔ accepts keys containing XSS injection payloads (TC-SR-01.1) (0.2065ms)
+  ✔ issueKey validation (1.184ms)
+  ▶ summary validation
+    ✔ rejects empty or whitespace-only summary (0.2967ms)
+    ✔ accepts summary containing HTML/XSS payloads as literal text (1.8666ms)
+  ✔ summary validation (2.3942ms)
+  ▶ issueType validation
+    ✔ accepts Story, Task, and Bug (0.3098ms)
+    ✔ rejects invalid issue types (0.2274ms)
+  ✔ issueType validation (0.8502ms)
+  ▶ storyPoints validation
+    ✔ accepts non-negative numbers and decimal strings (0.7831ms)
+    ✔ rejects negative, non-numeric, Infinity, and NaN story points (0.3097ms)
+    ✔ rejects numbers exceeding safe numeric range like 1 followed by 303 zeros (P2 bugfix) (0.1961ms)
+  ✔ storyPoints validation (1.5366ms)
+  ▶ status validation
+    ✔ accepts To Do, In Progress, and Done (0.2469ms)
+    ✔ rejects invalid statuses (0.1669ms)
+  ✔ status validation (0.6324ms)
+  ▶ completedDay validation when Status is Done
+    ✔ requires completedDay when status is Done (0.2181ms)
+    ✔ accepts valid completedDay within 1 and min(currentDay, durationDays) (0.3012ms)
+    ✔ rejects completedDay exceeding min(currentDay, durationDays) or invalid whole numbers (0.2028ms)
+    ✔ uses specific error when Current Day is 0 (0.1189ms)
+    ✔ ignores completedDay when status is not Done (0.1292ms)
+  ✔ completedDay validation when Status is Done (1.2065ms)
+  ▶ field order and multiple errors
+    ✔ returns all applicable errors in exact field order without throwing (0.3775ms)
+  ✔ field order and multiple errors (0.4974ms)
+✔ validateIssue (BDC-F-006, BDC-NF-003, BDC-SR-001, BDC-SR-002) (13.6285ms)
+▶ ValidationManager - Sprint 2 (BDC-NF-003, BDC-SR-002, BDC-SR-003)
+  ▶ validateSprint (BDC-F-001, BDC-SR-002)
+    ✔ accepts a valid configuration (3.2693ms)
+    ✔ accepts the default dataset sprint (0.7255ms)
+    ✔ rejects non-object configurations (0.352ms)
+    ✔ rejects an empty or missing sprint name (0.4446ms)
+    ✔ TC-SR-02.1 - rejects zero, negative, fractional, non-numeric and non-finite durations (0.4628ms)
+    ✔ enforces the 1 to 60 working-day range the configuration form advertises (0.3548ms)
+    ✔ TC-F-01.3 - rejects an end date before the start date (0.2508ms)
+    ✔ accepts a one-day sprint whose end equals its start (0.1681ms)
+    ✔ rejects impossible calendar dates instead of rolling them forward (0.3989ms)
+    ✔ rejects dates that are not YYYY-MM-DD strings (0.2688ms)
+    ✔ dates are optional when both are omitted (0.1438ms)
+    ✔ reports every problem at once so the form can list them all (0.1434ms)
+  ✔ validateSprint (BDC-F-001, BDC-SR-002) (10.6066ms)
+  ▶ validateCurrentDay (BDC-F-003, BDC-SR-002)
+    ✔ accepts every day from 0 to the duration (0.415ms)
+    ✔ day 0 is valid, per SRS Appendix C (0 to durationDays) (0.1423ms)
+    ✔ TC-F-03.2 / TC-SR-02.1 - rejects 11, -1, "abc", fractions and non-finite values (0.2649ms)
+  ✔ validateCurrentDay (BDC-F-003, BDC-SR-002) (0.9899ms)
+  ▶ validateStatusUpdate (BDC-F-007, SRS Section 5.2)
+    ✔ accepts Done with a completion day up to the Current Day (0.3869ms)
+    ✔ TC-F-07.2 - rejects a completion day after the Current Day (0.1474ms)
+    ✔ TC-F-07.2 - rejects a completion day after the sprint duration (0.1ms)
+    ✔ rejects zero, negative, fractional, string and missing completion days (0.1692ms)
+    ✔ rejects any completion while the Current Day is 0 (0.1151ms)
+    ✔ TC-F-07.3 - moving out of Done needs no completion day (0.1366ms)
+    ✔ rejects unknown statuses (0.1617ms)
+  ✔ validateStatusUpdate (BDC-F-007, SRS Section 5.2) (1.4904ms)
+  ▶ validateStoredState / sanitizeStoredState (BDC-SR-003)
+    ✔ accepts the default dataset (1.3723ms)
+    ✔ accepts an empty backlog, which deleting every issue produces (0.2647ms)
+    ✔ rejects a missing or malformed top-level structure (0.3814ms)
+    ✔ rejects an invalid saved sprint (0.6167ms)
+    ✔ rejects saved issues that break the issue rules (1.4481ms)
+    ✔ rejects duplicate issue keys, ignoring case (0.3808ms)
+    ✔ rejects a non-object entry in the issue list (0.2821ms)
+    ✔ keeps completion days after the saved Current Day (moving the day back is normal) (0.2595ms)
+    ✔ keeps completion days after a shortened duration (history is preserved) (0.3052ms)
+    ✔ the clean copy holds only SRS Appendix C fields and recomputes the total (0.501ms)
+    ✔ the clean copy does not share references with the input (0.2857ms)
+    ✔ a failed check returns no state (0.1368ms)
+  ✔ validateStoredState / sanitizeStoredState (BDC-SR-003) (6.8369ms)
+  ▶ parseStoredState (BDC-SR-003, TC-SR-03.1)
+    ✔ round-trips a serialized default dataset (0.8323ms)
+    ✔ TC-SR-03.1 - malformed JSON fails without throwing (1.5624ms)
+    ✔ TC-SR-03.1 - valid JSON with schema violations fails without throwing (0.3841ms)
+    ✔ empty and non-string input reports that nothing was saved (0.2999ms)
+    ✔ a __proto__ key in saved JSON cannot pollute object prototypes (0.4011ms)
+  ✔ parseStoredState (BDC-SR-003, TC-SR-03.1) (3.9272ms)
+✔ ValidationManager - Sprint 2 (BDC-NF-003, BDC-SR-002, BDC-SR-003) (25.0042ms)
+▶ Performance: Update Time (BDC-NF-001, TC-NF-01.1)
+  ✔ default dataset: 200 iterations of addIssue + setCurrentDay + getKPIs each execute < 2000 ms (64.7825ms)
+  ✔ stress: 1000 generated issues with state updates each execute < 2000 ms (163.9591ms)
+  ✔ consecutive updates with a delayed first update report accurate distinct timings (P2 bugfix) (0.3514ms)
+✔ Performance: Update Time (BDC-NF-001, TC-NF-01.1) (230.5558ms)
+▶ UI: AddIssueForm (BDC-F-006, BDC-NF-002, BDC-SR-001)
+  ▶ renderAddIssueFormHTML
+    ✔ contains all six labelled controls and data-testid hooks (1.8784ms)
+    ✔ hides Completion Day input when status is not Done (0.3776ms)
+    ✔ shows Completion Day input when status is Done (0.2471ms)
+    ✔ escapes user-supplied values containing XSS payloads in HTML attributes (0.2638ms)
+    ✔ escapes error text safely in the error list (0.2656ms)
+  ✔ renderAddIssueFormHTML (4.5704ms)
+  ▶ parseAddIssueFormValues
+    ✔ maps FormData instance correctly (1.5546ms)
+    ✔ maps plain object correctly with defaults (0.2486ms)
+    ✔ handles null/undefined gracefully (0.6686ms)
+  ✔ parseAddIssueFormValues (4.0051ms)
+  ▶ Regression: Completion Day group visibility (P2 bugfix)
+    ✔ verifies explicit CSS rule hides form-group when hidden attribute is present (9.1367ms)
+    ✔ mountAddIssueForm sets display:none on completion day group initially and toggles on status change (2.7701ms)
+  ✔ Regression: Completion Day group visibility (P2 bugfix) (12.1545ms)
+✔ UI: AddIssueForm (BDC-F-006, BDC-NF-002, BDC-SR-001) (21.7814ms)
+▶ BDC-F-005 (TC-F-05.1): Display Backlog Table
+  ✔ default dataset yields exactly 10 rows (1.5494ms)
+  ✔ issue keys match PROJ-101 through PROJ-110 in exact sequential order (1.6755ms)
+  ✔ every field in each row strictly equals the corresponding dataset field (0.3472ms)
+  ✔ uncompleted issues (PROJ-106 through PROJ-110) display "--" as completion day (0.4064ms)
+  ✔ completed issues (PROJ-101 through PROJ-105) display correct numeric completion day string (0.3364ms)
+  ✔ empty or invalid issue collection returns empty array without throwing (0.242ms)
+  ✔ HTML and script injection strings are preserved as raw plain text without modification (0.2152ms)
+✔ BDC-F-005 (TC-F-05.1): Display Backlog Table (6.9878ms)
+▶ BDC-F-013 & BDC-F-014: Burndown Chart Config & Marker Tests
+  ✔ TC-F-13.1: chart config contains responsive line chart properties, datasets, axes, and legend (2.0989ms)
+  ✔ TC-F-13.1: Ideal dataset contains values 50, 45, 40, ..., 0 across days 0..10 (1.2337ms)
+  ✔ TC-F-13.1: Actual dataset contains values 50, 45, 42, 34, 21 for days 0-4 and nulls thereafter (0.3424ms)
+  ✔ TC-F-13.1: future unelapsed actual values are strictly null and never converted to zero (0.3212ms)
+  ✔ TC-F-13.1: changing currentDay dynamically changes the count of plotted Actual points (0.6281ms)
+  ✔ TC-F-14.1: getMarkerDay handles first, intermediate, and final sprint days correctly and clamps boundaries (0.2487ms)
+  ✔ TC-F-13.2: handles empty or edge-case datasets gracefully without throwing (0.4492ms)
+✔ BDC-F-013 & BDC-F-014: Burndown Chart Config & Marker Tests (7.2389ms)
+▶ UI: CurrentDayControl (BDC-F-003, BDC-NF-002)
+  ▶ renderCurrentDayControlHTML
+    ✔ renders interactive range slider with attributes bound to sprint duration and current day (1.4577ms)
+    ✔ stepper buttons are appropriately enabled/disabled on boundaries (0.2896ms)
+    ✔ safely clamps out-of-range inputs when rendering (0.2042ms)
+    ✔ supports custom control ID (0.1565ms)
+  ✔ renderCurrentDayControlHTML (3.491ms)
+✔ UI: CurrentDayControl (BDC-F-003, BDC-NF-002) (4.2327ms)
+▶ UI: KPICards (BDC-F-015, BDC-NF-002)
+  ▶ formatVariance
+    ✔ formats positive variance with leading plus sign (1.2967ms)
+    ✔ formats zero and negative variance correctly (0.2611ms)
+    ✔ handles non-numeric or non-finite variance gracefully (0.23ms)
+  ✔ formatVariance (3.0962ms)
+  ▶ getStatusBadgeMetadata (BDC-NF-002 Accessible status indicators)
+    ✔ maps Ahead of Schedule to positive modifier and distinct label (0.2562ms)
+    ✔ maps On Track to neutral modifier (0.1448ms)
+    ✔ maps Behind Schedule to alert modifier (0.1505ms)
+  ✔ getStatusBadgeMetadata (BDC-NF-002 Accessible status indicators) (0.7616ms)
+  ▶ renderKPICardsHTML (BDC-F-015)
+    ✔ TC-F-15.1 - renders all 6 live KPI cards with default dataset Day 4 values (0.8005ms)
+    ✔ TC-F-15.2 - renders Behind Schedule status and negative variance cleanly (0.2895ms)
+    ✔ supports empty or partial metrics gracefully without throwing (0.2073ms)
+  ✔ renderKPICardsHTML (BDC-F-015) (2.8363ms)
+✔ UI: KPICards (BDC-F-015, BDC-NF-002) (7.6292ms)
+✔ BDC-SR-001: invalid duration is escaped when redisplaying a rejected config (1.8399ms)
+✔ BDC-SR-005: policy precedes scripts and disallows inline script/eval (8.0708ms)
+✔ BDC-SR-005: noscript warning uses external CSS instead of a blocked inline style (2.3443ms)
+▶ UI: SprintBanner (BDC-F-001, BDC-SR-001)
+  ▶ escapeHTML (BDC-SR-001 - XSS Prevention)
+    ✔ TC-SR-01.1 - safely escapes markup, script tags, and attribute injections (1.3012ms)
+    ✔ handles null and undefined gracefully (0.2619ms)
+  ✔ escapeHTML (BDC-SR-001 - XSS Prevention) (2.8485ms)
+  ▶ renderSprintBannerHTML (BDC-F-001)
+    ✔ renders sprint metadata accurately per SRS specifications (0.4632ms)
+    ✔ TC-SR-01.1 - renders user-controlled sprint name as inert text rather than executing markup (0.2161ms)
+    ✔ supports editable toggle flag (0.1909ms)
+  ✔ renderSprintBannerHTML (BDC-F-001) (1.0989ms)
+  ▶ renderSprintConfigFormHTML (BDC-F-001 Configuration Form)
+    ✔ renders form inputs pre-populated with current sprint parameters (0.4111ms)
+    ✔ displays validation error messages in accessible alert region (0.2835ms)
+  ✔ renderSprintConfigFormHTML (BDC-F-001 Configuration Form) (0.8756ms)
+✔ UI: SprintBanner (BDC-F-001, BDC-SR-001) (5.7685ms)
+▶ UI: ThemeManager (Light / Dark Theme Toggle & Persistence)
+  ✔ defaults to light theme when no stored preference exists (1.4522ms)
+  ✔ reads saved theme preference from storage (0.2848ms)
+  ✔ applyTheme sets data-theme attribute on documentElement and saves to storage (0.3793ms)
+  ✔ toggleTheme alternates between light and dark themes cleanly (0.3111ms)
+  ✔ initTheme binds click listener and triggers callback on theme change (0.326ms)
+✔ UI: ThemeManager (Light / Dark Theme Toggle & Persistence) (4.0769ms)
+ℹ tests 255
+ℹ suites 63
+ℹ pass 255
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 568.3829
+ℹ start of coverage report
+ℹ -----------------------------------------------------------------------------------------------
+ℹ file                    | line % | branch % | funcs % | uncovered lines
+ℹ -----------------------------------------------------------------------------------------------
+ℹ src                     |        |          |         | 
+ℹ  js                     |        |          |         | 
+ℹ   data                  |        |          |         | 
+ℹ    dataManager.js       |  98.51 |    96.77 |  100.00 | 288-293
+ℹ    defaultDataset.js    |  95.26 |    75.68 |   83.33 | 31-32 34-35 37-38 57-58 69-70 78-79
+ℹ   logic                 |        |          |         | 
+ℹ    burndownEngine.js    |  99.40 |    95.18 |  100.00 | 45-46
+ℹ    validationManager.js | 100.00 |    95.62 |  100.00 | 
+ℹ   ui                    |        |          |         | 
+ℹ    addIssueForm.js      |  71.31 |    80.43 |   60.00 | 97-102 217-218 224-225 267-357 364-369
+ℹ    backlogTable.js      |  28.49 |    64.29 |   50.00 | 12-21 62-179
+ℹ    chartConfig.js       | 100.00 |    72.50 |   87.50 | 
+ℹ    currentDayControl.js |  66.00 |    77.78 |   50.00 | 98-148
+ℹ    kpiCards.js          |  91.08 |   100.00 |   75.00 | 193-211
+ℹ    sprintBanner.js      |  75.75 |    77.78 |   80.00 | 202-266
+ℹ    themeManager.js      |  89.92 |    80.00 |  100.00 | 18-20 22-24 42-43 47-48 71-72
+ℹ -----------------------------------------------------------------------------------------------
+ℹ all files               |  86.21 |    88.44 |   89.00 | 
+ℹ -----------------------------------------------------------------------------------------------
+ℹ end of coverage report
+
+Unit-test coverage of src/js (Node v24.11.1, source coverage/lcov.info)
+
+file                              |       lines (all) |        code lines |          branches |         functions
+-----------------------------------------------------------------------------------------------------------------
+src/js/data/dataManager.js        |    396/402 98.51% |    217/223 97.31% |      60/62 96.77% |     22/22 100.00%
+src/js/data/defaultDataset.js     |    241/253 95.26% |    148/160 92.50% |      28/37 75.68% |        5/6 83.33%
+src/js/logic/burndownEngine.js    |    333/335 99.40% |    143/145 98.62% |      79/83 95.18% |     19/19 100.00%
+src/js/logic/validationManager.js |   437/437 100.00% |   264/264 100.00% |    131/137 95.62% |     14/14 100.00%
+src/js/ui/addIssueForm.js         |    266/373 71.31% |    198/292 67.81% |      37/46 80.43% |        6/8 75.00%
+src/js/ui/backlogTable.js         |     51/179 28.49% |     22/125 17.60% |       9/14 64.29% |        2/4 50.00%
+src/js/ui/chartConfig.js          |   187/187 100.00% |   152/152 100.00% |      29/40 72.50% |        7/8 87.50%
+src/js/ui/currentDayControl.js    |     99/150 66.00% |     68/112 60.71% |        7/9 77.78% |        1/2 50.00%
+src/js/ui/kpiCards.js             |    194/213 91.08% |    138/154 89.61% |     22/22 100.00% |        3/4 75.00%
+src/js/ui/sprintBanner.js         |    203/268 75.75% |    140/197 71.07% |      14/18 77.78% |        4/5 80.00%
+src/js/ui/themeManager.js         |    107/119 89.92% |      60/69 86.96% |      20/25 80.00% |       6/6 100.00%
+-----------------------------------------------------------------------------------------------------------------
+measured files                    |  2514/2916 86.21% |  1550/1893 81.88% |    436/493 88.44% |      89/98 90.82%
+
+NOT LOADED by any unit test (5 files, 594 physical lines, absent from the totals above):
+  src/js/ui/backlogActions.js (151 lines)
+  src/js/ui/chart.js (199 lines)
+  src/js/ui/dashboard.js (196 lines)
+  src/js/ui/fileProtocolNotice.js (37 lines)
+  src/js/ui/themeBootstrap.js (11 lines)
+
+Uncovered code lines, functions and branches by unit tests (count 0):
+
+src/js/data/dataManager.js
+  lines:     288-293
+  branch:    line 287  if (!Number.isFinite(candidateTotal) || candidateTotal < 0 || candidateTotal > Number.MAX_SAFE_INTEGER) {
+  branch:    line 342  const status = changes.status ?? current.status;
+
+src/js/data/defaultDataset.js
+  lines:     31-32 34-35 37-38 57-58 69-70 78-79
+  function:  line 37 anonymous_1
+  branch:    line 30  if (data instanceof Date) {
+  branch:    line 33  if (data instanceof RegExp) {
+  branch:    line 36  if (Array.isArray(data)) {
+  branch:    line 56  if (obj === null || (typeof obj !== 'object' && typeof obj !== 'function')) {
+  branch:    line 68  } catch {
+  branch:    line 71  if (!desc) continue;
+  branch:    line 77  if (desc.set && typeof desc.set === 'function' && !Object.isFrozen(desc.set)) {
+  branch:    line 77  if (desc.set && typeof desc.set === 'function' && !Object.isFrozen(desc.set)) {
+  branch:    line 77  if (desc.set && typeof desc.set === 'function' && !Object.isFrozen(desc.set)) {
+
+src/js/logic/burndownEngine.js
+  lines:     45-46
+  branch:    line 44  if (!Number.isFinite(value)) {
+  branch:    line 48  return Object.is(rounded, -0) ? 0 : rounded;
+  branch:    line 152  const threshold = typeof day === 'number' && Number.isFinite(day) ? day : 0;
+  branch:    line 187  : 0;
+
+src/js/logic/validationManager.js
+  branch:    line 29  const f = (fields && typeof fields === 'object') ? fields : {};
+  branch:    line 95  : 0;
+  branch:    line 98  : Infinity;
+  branch:    line 39  const kStr = typeof k === 'string' ? k : (k && typeof k.issueKey === 'string' ? k.issueKey : '');
+  branch:    line 296  const today = isWholeNumber(currentDay) ? currentDay : 0;
+  branch:    line 297  const duration = isWholeNumber(durationDays) && durationDays >= MIN_SPRINT_DAYS ? durationDays : Infinity;
+
+src/js/ui/addIssueForm.js
+  lines:     97-102 217-218 224-225 267-268 270-271 273 275-280 282-293 295-305 308-315 317-326 328-331 333-336 338-341 343-352 354-357 364-369
+  function:  line 363 unmount
+  function:  line 266 handleSubmit
+  branch:    line 39  return val !== null ? String(val) : '';
+  branch:    line 42  return val !== undefined && val !== null ? String(val) : '';
+  branch:    line 42  return val !== undefined && val !== null ? String(val) : '';
+  branch:    line 96  if (successMessage) {
+  branch:    line 129  <option value="Story" ${issueType === 'Story' ? 'selected' : ''}>Story</option>
+  branch:    line 130  <option value="Task" ${issueType === 'Task' ? 'selected' : ''}>Task</option>
+  branch:    line 131  <option value="Bug" ${issueType === 'Bug' ? 'selected' : ''}>Bug</option>
+  branch:    line 216  if (!container || typeof container !== 'object') {
+  branch:    line 223  if (!form) {
+
+src/js/ui/backlogTable.js
+  lines:     12-21 62-64 66-67 69 72-75 78-88 90-100 103-104 106-116 119-122 125-128 131-134 137-140 143-148 151-154 156-171 173-175 177-179
+  function:  line 12 getStatusClass
+  function:  line 61 renderTable
+  branch:    line 42  issueKey: String(issue?.issueKey ?? ''),
+  branch:    line 43  summary: String(issue?.summary ?? ''),
+  branch:    line 44  issueType: String(issue?.issueType ?? ''),
+  branch:    line 47  : '',
+  branch:    line 48  status: String(issue?.status ?? ''),
+
+src/js/ui/chartConfig.js
+  function:  line 45 anonymous_2
+  branch:    line 45  ? Math.max(...idealSeries.map(p => Number(p.day) || 0))
+  branch:    line 54  const gridColor = isDark ? '#1f2937' : '#e2e8f0';
+  branch:    line 55  const axisTextColor = isDark ? '#9ca3af' : '#64748b';
+  branch:    line 56  const axisTitleColor = isDark ? '#e5e7eb' : '#475569';
+  branch:    line 57  const legendTextColor = isDark ? '#f9fafb' : '#0f172a';
+  branch:    line 58  const idealColor = isDark ? '#94a3b8' : '#64748b';
+  branch:    line 59  const actualColor = isDark ? '#60a5fa' : '#2563eb';
+  branch:    line 60  const tooltipBg = isDark ? '#111827' : '#ffffff';
+  branch:    line 61  const tooltipTitle = isDark ? '#f9fafb' : '#0f172a';
+  branch:    line 62  const tooltipBody = isDark ? '#9ca3af' : '#475569';
+  branch:    line 63  const tooltipBorder = isDark ? '#374151' : '#e2e8f0';
+
+src/js/ui/currentDayControl.js
+  lines:     98-100 102-106 108-110 112-117 119-124 126-137 139-140 142-148
+  function:  line 97 mountCurrentDayControl
+  branch:    line 22  : 10;
+  branch:    line 25  : 0;
+
+src/js/ui/kpiCards.js
+  lines:     193-195 197-200 202-203 205-211
+  function:  line 192 mountKPICards
+
+src/js/ui/sprintBanner.js
+  lines:     202-204 206-208 210-218 220-222 224-229 231-240 242-255 257-258 260-266
+  function:  line 201 mountSprintBanner
+  branch:    line 41  const name = escapeHTML(sprint?.sprintName || 'Untitled Sprint');
+  branch:    line 42  const duration = typeof sprint?.durationDays === 'number' ? sprint.durationDays : 0;
+  branch:    line 43  const currentDay = typeof sprint?.currentDay === 'number' ? sprint.currentDay : 0;
+  branch:    line 98  const duration = escapeHTML(sprint?.durationDays ?? 10);
+
+src/js/ui/themeManager.js
+  lines:     18-20 23-24 43 47-48 72
+  branch:    line 17  }
+  branch:    line 21  } catch {
+  branch:    line 41  } catch {
+  branch:    line 46  if (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').ma
+  branch:    line 70  } catch {
+
+Wrote D:/pesu/Subjects/SE/TEAM-07/docs/reports/evidence/cov-baseline-node24.json
+# exit code: 0
