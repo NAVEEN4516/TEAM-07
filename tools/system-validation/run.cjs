@@ -1935,20 +1935,26 @@ async function runSuite() {
     await tabUntil(a => a.id === 'current-day-slider');
     await page.keyboard.press('Home'); // Day 0
     await page.waitForTimeout(50);
-    await tabUntil(a => a.testId === 'btn-prev-day', 5, true);
     const prevDisabledAt0 = await page.evaluate(() => document.querySelector('[data-testid="btn-prev-day"]').hasAttribute('disabled'));
 
-    await tabUntil(a => a.testId === 'btn-next-day');
-    await page.keyboard.press('Space'); // Day 1
+    // Move to Day 1 via slider ArrowRight
+    await page.keyboard.press('ArrowRight'); // Day 1
     await page.waitForTimeout(50);
+    // Both buttons enabled at Day 1; Shift+Tab to Next Day, then Prev Day
+    await tabUntil(a => a.testId === 'btn-next-day', 5, true);
+    await page.keyboard.press('Space'); // Day 1 -> Day 2 via Next Day button
+    await page.waitForTimeout(50);
+    await tabUntil(a => a.testId === 'btn-prev-day', 5, true);
+    await page.keyboard.press('Space'); // Day 2 -> Day 1 via Prev Day button
+    await page.waitForTimeout(50);
+
+    // Tab forward to slider and go to Day 10
     await tabUntil(a => a.id === 'current-day-slider');
     await page.keyboard.press('End'); // Day 10
     await page.waitForTimeout(50);
-    await tabUntil(a => a.testId === 'btn-next-day', 5, true);
     const nextDisabledAt10 = await page.evaluate(() => document.querySelector('[data-testid="btn-next-day"]').hasAttribute('disabled'));
 
     // Restore Day 4
-    await tabUntil(a => a.id === 'current-day-slider');
     await page.keyboard.press('Home');
     for (let k = 0; k < 4; k++) await page.keyboard.press('ArrowRight');
     await page.waitForTimeout(50);
