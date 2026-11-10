@@ -1910,7 +1910,7 @@ async function runSuite() {
     });
 
     // Fix duration to 10 and save
-    await tabUntil(a => a.id === 'input-duration-days', 20, true);
+    await tabUntil(a => a.id === 'input-duration-days');
     await page.keyboard.press('Control+A');
     await page.keyboard.type('10');
     await tabUntil(a => a.testId === 'btn-save-sprint');
