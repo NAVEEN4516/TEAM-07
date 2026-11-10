@@ -76,7 +76,7 @@ async function launchBrowser(browserTypeStr) {
   if (browserTypeStr === 'firefox') {
     try {
       const b = await firefox.launch({ headless: true });
-      return { browser: b, channel: 'firefox', version: b.version() };
+      return { browser: b, channel: 'firefox', version: `${b.version()} (Playwright build)` };
     } catch (err) {
       return { browser: null, channel: 'firefox', version: null, error: err.message };
     }
