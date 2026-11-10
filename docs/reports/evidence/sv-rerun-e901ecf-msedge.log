@@ -1,0 +1,23 @@
+[2026-11-09T05:42:27.907Z] Target Tested Commit: 222089658f26badaf5c9f6d3c60e75986ebd6320
+[2026-11-09T05:42:27.910Z] Tester: stacktrace-bhuvi
+[2026-11-09T05:42:28.531Z] Browser launched successfully: msedge version 157.0.4341.42
+[2026-11-09T05:42:28.531Z] --- Executing Group G1: Default State ---
+[2026-11-09T05:42:29.660Z] --- Executing Group G2: Sprint Configuration ---
+[2026-11-09T05:42:31.403Z] --- Executing Group G3: Current Day and Marker ---
+[2026-11-09T05:42:33.231Z] --- Executing Group G4: Add Issue ---
+[2026-11-09T05:42:35.215Z] --- Executing Group G5: Edit / Reopen ---
+[2026-11-09T05:42:36.630Z] --- Executing Group G6: Delete / Empty ---
+[2026-11-09T05:42:42.875Z] --- Executing Group G7: Reset Data ---
+[2026-11-09T05:42:44.326Z] --- Executing Group G8: Status Classification and Chart ---
+[2026-11-09T05:42:46.011Z] --- Executing Group G9: Edge Cases ---
+[2026-11-09T05:42:47.207Z] --- Executing Step 3: Viewports, Themes & Responsiveness ---
+[2026-11-09T05:42:54.584Z] --- Executing Step 4: Accessibility & Keyboard Navigation ---
+[2026-11-09T05:42:55.287Z] --- Executing Step 5: Security & Resilience ---
+[2026-11-09T05:42:56.199Z] --- Executing Step 6: Performance Measurements (Method A) ---
+[2026-11-09T05:43:11.668Z] Perf [Add Issue]: min=11.40ms, med=19.10ms, max=22.20ms
+[2026-11-09T05:43:11.669Z] Perf [Change Day]: min=12.40ms, med=17.80ms, max=25.60ms
+[2026-11-09T05:43:11.669Z] Perf [Edit Done]: min=11.50ms, med=17.90ms, max=23.30ms
+[2026-11-09T05:43:11.669Z] Perf [Delete]: min=14.70ms, med=17.60ms, max=27.60ms
+[2026-11-09T05:43:11.669Z] Perf [Reset]: min=13.70ms, med=17.30ms, max=18.80ms
+[2026-11-09T05:43:11.701Z] --- Recording Inspection & Automated Unit-Level Test Cases ---
+[2026-11-09T05:43:11.706Z] [SV-RUNNER] Results saved to C:\Users\reddy\AppData\Local\Temp\claude\a31b929cb2dd184e\fcbeac42-3e2a-4122-8b95-3333fe8e3573\scratchpad\dev-wt\docs\reports\evidence\sv-results-msedge-2026-11-07.json (53 records)

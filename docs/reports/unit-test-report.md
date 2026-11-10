@@ -128,7 +128,7 @@ Each flow from the brief, and the tests that cover it. All pass.
 | **Severity** | Low. Latent: automatic persistence is disabled and no UI reads `loadErrors`. |
 | **Requirement** | BDC-SR-003 (TC-SR-03.1) |
 | **Found at** | Baseline `2220896`, by probing the integrated flows before writing tests |
-| **Owner** | `src/js/data/dataManager.js`, code from my own earlier PR #42. Bhuvi's open PR #48 changes no `src` file, so there was no conflict to coordinate. |
+| **Owner** | `src/js/data/dataManager.js`, code from my own earlier PR #42. Bhuvi's PR #48 (since merged) changes no `src` file, so there was no conflict to coordinate. |
 
 **Steps.** Create a `DataManager`, subscribe a listener that reads `dm.loadErrors`, then call `dm.restoreFromJSON('{')`.
 
