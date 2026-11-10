@@ -1,0 +1,26 @@
+[2026-11-10T11:06:05.734Z] Target Tested Commit: 85391ae9181a666cc5b975968070e3dc5059a352
+[2026-11-10T11:06:05.741Z] Target App Source Tree: 4a2278fd1774ecfb0cb43d1e6f9b00e386b344e8
+[2026-11-10T11:06:05.741Z] Worktree Clean (src, tests, tools): true
+[2026-11-10T11:06:05.741Z] Tester: stacktrace-bhuvi
+[2026-11-10T11:06:06.375Z] Browser launched successfully: chrome version 156.0.8078.80
+[2026-11-10T11:06:06.375Z] --- Executing Group G1: Default State ---
+[2026-11-10T11:06:08.020Z] --- Executing Group G2: Sprint Configuration ---
+[2026-11-10T11:06:11.566Z] --- Executing Group G3: Current Day and Marker ---
+[2026-11-10T11:06:16.910Z] --- Executing Group G4: Add Issue ---
+[2026-11-10T11:06:19.706Z] --- Executing Group G5: Edit / Reopen ---
+[2026-11-10T11:06:23.079Z] --- Executing Group G6: Delete / Empty ---
+[2026-11-10T11:06:31.085Z] --- Executing Group G7: Reset Data ---
+[2026-11-10T11:06:33.699Z] --- Executing Group G8: Status Classification and Chart ---
+[2026-11-10T11:06:36.460Z] --- Executing Group G9: Edge Cases ---
+[2026-11-10T11:06:38.814Z] --- Executing Step 3: Viewports, Themes & Responsiveness ---
+[2026-11-10T11:06:50.727Z] --- Executing Step 4: Accessibility & Keyboard Navigation ---
+[2026-11-10T11:06:53.852Z] --- Executing Group G-KB: Keyboard-Only Navigation ---
+[2026-11-10T11:07:01.923Z] --- Executing Step 5: Security & Resilience ---
+[2026-11-10T11:07:04.021Z] --- Executing Step 6: Performance Measurements (Method A) ---
+[2026-11-10T11:07:23.121Z] Perf [Add Issue]: min=31.10ms, med=34.40ms, max=43.40ms
+[2026-11-10T11:07:23.121Z] Perf [Change Day]: min=26.90ms, med=34.60ms, max=45.40ms
+[2026-11-10T11:07:23.121Z] Perf [Edit Done]: min=28.00ms, med=44.30ms, max=55.00ms
+[2026-11-10T11:07:23.121Z] Perf [Delete]: min=26.00ms, med=36.10ms, max=46.00ms
+[2026-11-10T11:07:23.121Z] Perf [Reset]: min=20.60ms, med=38.40ms, max=50.40ms
+[2026-11-10T11:07:23.145Z] --- Recording Inspection & Automated Unit-Level Test Cases ---
+[2026-11-10T11:07:23.152Z] [SV-RUNNER] Results saved to C:\Users\Bhuvi\Desktop\sem5\se\TEAM-07\docs\reports\evidence\sv-results-chrome-2026-11-10-85391ae.json (63 records)
