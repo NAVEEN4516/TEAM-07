@@ -1851,25 +1851,7 @@ async function runSuite() {
     await page.reload();
     await page.waitForSelector('#backlog-table');
 
-    // 2. Skip link via keyboard
-    await page.keyboard.press('Tab');
-    const skipActive = await getActive();
-    await page.keyboard.press('Enter');
-    const mainActive = await getActive();
-    results.push(makeRecord({
-      tcId: 'TC-NF-02.1-KB-SKIP',
-      reqId: 'BDC-NF-002',
-      group: 'G-KB',
-      inputs: 'Press Tab then Enter on initial load',
-      expected: 'Skip link focused on first Tab; Enter moves focus to main-content',
-      actual: `First tab="${skipActive.text}", Enter focus="${mainActive.id}"`,
-      status: (skipActive.text === 'Skip to dashboard' && mainActive.id === 'main-content') ? 'PASS' : 'FAIL',
-      browserName: launchRes.channel,
-      browserVersion,
-      method: 'automated keyboard-only'
-    }));
-
-    // 3. Theme toggle via keyboard
+    // 2. Theme toggle via keyboard
     await tabUntil(a => a.id === 'theme-toggle-btn');
     await page.keyboard.press('Space');
     const darkThemeActive = await page.evaluate(() => document.documentElement.getAttribute('data-theme') === 'dark');
@@ -1886,6 +1868,26 @@ async function runSuite() {
       expected: 'Theme toggles to dark and back to light; focus remains on theme toggle button',
       actual: `Dark theme=${darkThemeActive}, Light theme=${lightThemeActive}, Focus remained="${focusAfterLight.id}"`,
       status: (darkThemeActive && lightThemeActive && focusAfterLight.id === 'theme-toggle-btn') ? 'PASS' : 'FAIL',
+      browserName: launchRes.channel,
+      browserVersion,
+      method: 'automated keyboard-only'
+    }));
+
+    // 3. Skip link via keyboard
+    await page.reload();
+    await page.waitForSelector('#backlog-table');
+    await page.keyboard.press('Tab');
+    const skipActive = await getActive();
+    await page.keyboard.press('Enter');
+    const mainActive = await getActive();
+    results.push(makeRecord({
+      tcId: 'TC-NF-02.1-KB-SKIP',
+      reqId: 'BDC-NF-002',
+      group: 'G-KB',
+      inputs: 'Press Tab then Enter on initial load',
+      expected: 'Skip link focused on first Tab; Enter moves focus to main-content',
+      actual: `First tab="${skipActive.text}", Enter focus="${mainActive.id}"`,
+      status: (skipActive.text === 'Skip to dashboard' && mainActive.id === 'main-content') ? 'PASS' : 'FAIL',
       browserName: launchRes.channel,
       browserVersion,
       method: 'automated keyboard-only'
@@ -2081,7 +2083,7 @@ async function runSuite() {
     }));
 
     // 9. Reset Data via keyboard
-    await tabUntil(a => a.id === 'reset-data-btn', 60);
+    await tabUntil(a => a.id === 'reset-data-btn', 70, true);
     await page.keyboard.press('Enter');
     await page.waitForTimeout(200);
     const focusAfterReset = await getActive();
