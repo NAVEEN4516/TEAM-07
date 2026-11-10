@@ -622,7 +622,7 @@ async function runSuite() {
     // TC-F-01.3: End date before start date rejected with serialized state unchanged
     const stateBefore013 = await page.evaluate(async () => {
       const dmMod = await import('/js/data/dataManager.js');
-      return JSON.stringify(dmMod.defaultDataManager.toJSON());
+      return dmMod.defaultDataManager.serialize();
     });
 
     await loc.configBtn.click();
@@ -634,7 +634,7 @@ async function runSuite() {
 
     const stateAfter013 = await page.evaluate(async () => {
       const dmMod = await import('/js/data/dataManager.js');
-      return JSON.stringify(dmMod.defaultDataManager.toJSON());
+      return dmMod.defaultDataManager.serialize();
     });
 
     const stateUnchanged013 = stateBefore013 === stateAfter013;
@@ -1037,7 +1037,7 @@ async function runSuite() {
     // TC-F-07.2: Completion day out of range (Day 5 at Current Day 4, and 11) & Day 0 rejection with state unchanged
     const stateBefore72 = await page.evaluate(async () => {
       const dmMod = await import('/js/data/dataManager.js');
-      return JSON.stringify(dmMod.defaultDataManager.toJSON());
+      return dmMod.defaultDataManager.serialize();
     });
 
     // 1. Day 5 when Current Day is 4
@@ -1055,7 +1055,7 @@ async function runSuite() {
 
     const stateAfterDay5And11 = await page.evaluate(async () => {
       const dmMod = await import('/js/data/dataManager.js');
-      return JSON.stringify(dmMod.defaultDataManager.toJSON());
+      return dmMod.defaultDataManager.serialize();
     });
 
     // 3. Any completion at Day 0 rejected with serialized state unchanged
@@ -1068,7 +1068,7 @@ async function runSuite() {
 
     const stateAtDay0Before = await page.evaluate(async () => {
       const dmMod = await import('/js/data/dataManager.js');
-      return JSON.stringify(dmMod.defaultDataManager.toJSON());
+      return dmMod.defaultDataManager.serialize();
     });
 
     await editBtn106.click();
@@ -1080,7 +1080,7 @@ async function runSuite() {
 
     const stateAtDay0After = await page.evaluate(async () => {
       const dmMod = await import('/js/data/dataManager.js');
-      return JSON.stringify(dmMod.defaultDataManager.toJSON());
+      return dmMod.defaultDataManager.serialize();
     });
 
     // Restore Current Day back to 4 for subsequent tests
