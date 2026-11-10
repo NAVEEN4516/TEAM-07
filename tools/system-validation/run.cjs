@@ -2039,7 +2039,7 @@ async function runSuite() {
     await page.keyboard.press('Enter');
     await page.waitForTimeout(100);
     await page.keyboard.press('ArrowUp'); // Done -> In Progress
-    await tabUntil(a => a.tag === 'BUTTON' && a.text === 'Save');
+    await tabUntil(a => a.tag === 'BUTTON' && (a.text === 'Save issue' || a.text.includes('Save')));
     await page.keyboard.press('Enter');
     await page.waitForTimeout(200);
     const compAfterReopenKb = await page.evaluate(() => document.querySelector('[data-testid="kpi-completed-points"] .kpi-value').textContent.trim());
