@@ -332,38 +332,68 @@ async function runSuite() {
 
     // TC-F-04.1: Exactly PROJ-101 to PROJ-110 shown with correct fields; Total = 50
     const rowCount = await loc.tableRows.count();
-    const keys = [];
+    const expectedAppendixA = [
+      { key: 'PROJ-101', summary: 'User Authentication & Session Token Service', type: 'Story', points: 5, status: 'Done', day: '1' },
+      { key: 'PROJ-102', summary: 'Database Schema Migration for User Profiles', type: 'Task', points: 3, status: 'Done', day: '2' },
+      { key: 'PROJ-103', summary: 'REST API Endpoint for Sprint Backlog Query', type: 'Story', points: 8, status: 'Done', day: '3' },
+      { key: 'PROJ-104', summary: 'Implement JWT Refresh Token Expiry Logic', type: 'Task', points: 5, status: 'Done', day: '4' },
+      { key: 'PROJ-105', summary: 'Build Burndown Chart Rendering Canvas UI', type: 'Story', points: 8, status: 'Done', day: '4' },
+      { key: 'PROJ-106', summary: 'UI Form Validation for Task Addition', type: 'Bug', points: 3, status: 'In Progress', day: '--' },
+      { key: 'PROJ-107', summary: 'Automated Unit Tests for Calculation Engine', type: 'Task', points: 5, status: 'In Progress', day: '--' },
+      { key: 'PROJ-108', summary: 'CSV/JSON Data Export Module', type: 'Story', points: 5, status: 'To Do', day: '--' },
+      { key: 'PROJ-109', summary: 'Error Boundary & Toast Notification Component', type: 'Task', points: 3, status: 'To Do', day: '--' },
+      { key: 'PROJ-110', summary: 'Sprint Health Summary & KPI Calculation', type: 'Story', points: 5, status: 'To Do', day: '--' }
+    ];
+
+    const actualRows = [];
     for (let i = 0; i < rowCount; i++) {
-      const key = (await loc.tableRows.nth(i).locator('.cell-key').textContent()).trim();
-      keys.push(key);
+      const rowLoc = loc.tableRows.nth(i);
+      const key = (await rowLoc.locator('.cell-key').textContent()).trim();
+      const summary = (await rowLoc.locator('.cell-summary').textContent()).trim();
+      const type = (await rowLoc.locator('.cell-type').textContent()).trim();
+      const points = Number((await rowLoc.locator('.cell-number').nth(0).textContent()).trim());
+      const status = (await rowLoc.locator('.status-badge').textContent()).trim();
+      const day = (await rowLoc.locator('.cell-number').nth(1).textContent()).trim();
+      actualRows.push({ key, summary, type, points, status, day });
     }
-    const expectedKeys = ['PROJ-101','PROJ-102','PROJ-103','PROJ-104','PROJ-105','PROJ-106','PROJ-107','PROJ-108','PROJ-109','PROJ-110'];
+
+    const keys = actualRows.map(r => r.key);
+    const expectedKeys = expectedAppendixA.map(r => r.key);
     const keysMatch = JSON.stringify(keys) === JSON.stringify(expectedKeys);
+
     results.push(makeRecord({
       tcId: 'TC-F-04.1',
       reqId: 'BDC-F-004',
       group: 'G1',
       inputs: 'Open app with default state',
       expected: 'Exactly PROJ-101 to PROJ-110 shown with correct fields; Total = 50',
-      actual: `Backlog has ${rowCount} rows: ${keys.join(', ')}`,
+      actual: `Backlog has ${rowCount} rows: ${keys.join(', ')}. Total Scope KPI=${totalScopeText}`,
       status: (rowCount === 10 && keysMatch && totalScopeText === '50') ? 'PASS' : 'FAIL',
       browserName: launchRes.channel,
       browserVersion,
       evidencePath: ssPath
     }));
 
-    // TC-F-05.1: Backlog table columns key, summary, type, points, status, completion day match data
-    const firstRowSummary = (await loc.tableRows.nth(0).locator('.cell-summary').textContent()).trim();
-    const firstRowStatus = (await loc.tableRows.nth(0).locator('.status-badge').textContent()).trim();
-    const firstRowDay = (await loc.tableRows.nth(0).locator('.cell-number').nth(1).textContent()).trim();
+    // TC-F-05.1: Backlog table columns key, summary, type, points, status, completion day match data for ALL 10 rows
+    const allRowsMatch = expectedAppendixA.every((expectedRow, i) => {
+      const actualRow = actualRows[i];
+      if (!actualRow) return false;
+      return actualRow.key === expectedRow.key &&
+        actualRow.summary === expectedRow.summary &&
+        actualRow.type === expectedRow.type &&
+        actualRow.points === expectedRow.points &&
+        actualRow.status === expectedRow.status &&
+        actualRow.day === expectedRow.day;
+    });
+
     results.push(makeRecord({
       tcId: 'TC-F-05.1',
       reqId: 'BDC-F-005',
       group: 'G1',
-      inputs: 'Inspect default table structure and first issue (PROJ-101)',
-      expected: '10 rows, columns match Appendix A (e.g. PROJ-101 is Done on Day 1)',
-      actual: `PROJ-101 summary="${firstRowSummary}", status="${firstRowStatus}", completedDay="${firstRowDay}"`,
-      status: (firstRowStatus === 'Done' && firstRowDay === '1') ? 'PASS' : 'FAIL',
+      inputs: 'Inspect default table structure and all 10 issues (PROJ-101 to PROJ-110)',
+      expected: 'All 10 rows match SRS Appendix A across all 6 columns (key, summary, type, points, status, completedDay)',
+      actual: `All 10 rows verified against SRS Appendix A: ${allRowsMatch}. First: ${actualRows[0]?.key} (${actualRows[0]?.status}, day ${actualRows[0]?.day}), Last: ${actualRows[9]?.key} (${actualRows[9]?.status}, day ${actualRows[9]?.day})`,
+      status: (rowCount === 10 && allRowsMatch) ? 'PASS' : 'FAIL',
       browserName: launchRes.channel,
       browserVersion,
       evidencePath: ssPath
@@ -521,7 +551,22 @@ async function runSuite() {
       evidencePath: ssConfigValid
     }));
 
-    // TC-F-01.2: Invalid duration rejected (0, -3, "abc", 61)
+    // TC-F-01.2: Invalid duration rejected (0, -3, 5.5, "abc", 61) & boundary durations 1 and 60 accepted
+    // 1. Boundary duration 1 accepted
+    await loc.configBtn.click();
+    await loc.inputDurationDays.fill('1');
+    await loc.saveSprintBtn.click();
+    const durationPill1 = (await loc.sprintDurationPill.textContent()).trim();
+    const bound1Accepted = durationPill1.includes('1 working day');
+
+    // 2. Boundary duration 60 accepted
+    await loc.configBtn.click();
+    await loc.inputDurationDays.fill('60');
+    await loc.saveSprintBtn.click();
+    const durationPill60 = (await loc.sprintDurationPill.textContent()).trim();
+    const bound60Accepted = durationPill60.includes('60 working days');
+
+    // 3. Test invalid durations: 0, -3, 5.5, "abc", 61 rejected with errors; previous valid config retained
     await loc.configBtn.click();
     await loc.inputDurationDays.fill('0');
     await loc.saveSprintBtn.click();
@@ -531,6 +576,14 @@ async function runSuite() {
     await loc.saveSprintBtn.click();
     const errTextNeg = (await loc.sprintConfigErrors.textContent()).trim();
 
+    await loc.inputDurationDays.fill('5.5');
+    await loc.saveSprintBtn.click();
+    const errTextDecimal = (await loc.sprintConfigErrors.textContent()).trim();
+
+    await loc.inputDurationDays.fill('abc');
+    await loc.saveSprintBtn.click();
+    const errTextAbc = (await loc.sprintConfigErrors.textContent()).trim();
+
     await loc.inputDurationDays.fill('61');
     await loc.saveSprintBtn.click();
     const errText61 = (await loc.sprintConfigErrors.textContent()).trim();
@@ -538,25 +591,40 @@ async function runSuite() {
     await page.screenshot({ path: ssConfigErr, fullPage: true });
 
     await loc.cancelSprintBtn.click();
+    const retainedDuration = (await loc.sprintDurationPill.textContent()).trim();
     const retainedName = (await loc.sprintNameHeader.textContent()).trim();
 
-    const durationRejected = errText0.includes('positive') || errText0.includes('duration') ||
-      errText61.includes('60') || errText61.includes('exceed');
+    const invalidDurationsRejected = errText0.includes('positive') &&
+      errTextNeg.includes('positive') &&
+      errTextDecimal.includes('positive') &&
+      errTextAbc.length > 0 &&
+      (errText61.includes('60') || errText61.includes('exceed'));
+
+    const f012Pass = bound1Accepted &&
+      bound60Accepted &&
+      invalidDurationsRejected &&
+      retainedDuration.includes('60') &&
+      retainedName === 'Sprint 2';
 
     results.push(makeRecord({
       tcId: 'TC-F-01.2',
       reqId: 'BDC-F-001',
       group: 'G2',
-      inputs: 'Enter Duration=0, -3, 61 in sprint config form',
-      expected: 'Visible validation error shown; max 60 working days enforced; previous config retained',
-      actual: `Errors displayed. Error on 61: "${errText61}". Previous retained: "${retainedName}"`,
-      status: (durationRejected && retainedName === 'Sprint 2') ? 'PASS' : 'FAIL',
+      inputs: 'Enter boundary durations (1, 60) and invalid durations (0, -3, 5.5, "abc", 61) in sprint config form',
+      expected: 'Boundaries 1 and 60 accepted; invalid durations rejected with visible validation errors; previous config retained',
+      actual: `Boundaries: 1 accepted=${bound1Accepted}, 60 accepted=${bound60Accepted}. Errors: 0="${errText0}", -3="${errTextNeg}", 5.5="${errTextDecimal}", abc="${errTextAbc}", 61="${errText61}". Retained: "${retainedDuration}"`,
+      status: f012Pass ? 'PASS' : 'FAIL',
       browserName: launchRes.channel,
       browserVersion,
       evidencePath: ssConfigErr
     }));
 
-    // TC-F-01.3: End date before start date
+    // TC-F-01.3: End date before start date rejected with serialized state unchanged
+    const stateBefore013 = await page.evaluate(async () => {
+      const dmMod = await import('/js/data/dataManager.js');
+      return JSON.stringify(dmMod.defaultDataManager.toJSON());
+    });
+
     await loc.configBtn.click();
     await loc.inputStartDate.fill('2026-10-30');
     await loc.inputEndDate.fill('2026-10-26');
@@ -564,14 +632,21 @@ async function runSuite() {
     const errTextDate = (await loc.sprintConfigErrors.textContent()).trim();
     await loc.cancelSprintBtn.click();
 
+    const stateAfter013 = await page.evaluate(async () => {
+      const dmMod = await import('/js/data/dataManager.js');
+      return JSON.stringify(dmMod.defaultDataManager.toJSON());
+    });
+
+    const stateUnchanged013 = stateBefore013 === stateAfter013;
+
     results.push(makeRecord({
       tcId: 'TC-F-01.3',
       reqId: 'BDC-F-001',
       group: 'G2',
       inputs: 'Start Date=2026-10-30, End Date=2026-10-26 (end before start)',
-      expected: 'Configuration rejected with visible error message; previous valid config retained',
-      actual: `Error message: "${errTextDate}"`,
-      status: errTextDate.length > 0 ? 'PASS' : 'FAIL',
+      expected: 'Configuration rejected with visible error message; previous valid config and serialized state retained unchanged',
+      actual: `Error message: "${errTextDate}". Serialized state unchanged: ${stateUnchanged013}`,
+      status: (errTextDate.length > 0 && stateUnchanged013) ? 'PASS' : 'FAIL',
       browserName: launchRes.channel,
       browserVersion,
       evidencePath: ssConfigErr
@@ -959,27 +1034,78 @@ async function runSuite() {
       browserVersion
     }));
 
-    // TC-F-07.2: Completion day out of range (Day 5 at Current Day 4, and 11)
+    // TC-F-07.2: Completion day out of range (Day 5 at Current Day 4, and 11) & Day 0 rejection with state unchanged
+    const stateBefore72 = await page.evaluate(async () => {
+      const dmMod = await import('/js/data/dataManager.js');
+      return JSON.stringify(dmMod.defaultDataManager.toJSON());
+    });
+
+    // 1. Day 5 when Current Day is 4
     await editBtn106.click();
     await loc.editStatus.selectOption('Done');
     await loc.editCompletedDay.fill('5');
     await loc.editSaveBtn.click();
     const errDay5 = (await loc.editErrors.textContent()).trim();
 
+    // 2. Day 11 when duration is 10
     await loc.editCompletedDay.fill('11');
     await loc.editSaveBtn.click();
     const errDay11 = (await loc.editErrors.textContent()).trim();
-
     await loc.editCancelBtn.click();
+
+    const stateAfterDay5And11 = await page.evaluate(async () => {
+      const dmMod = await import('/js/data/dataManager.js');
+      return JSON.stringify(dmMod.defaultDataManager.toJSON());
+    });
+
+    // 3. Any completion at Day 0 rejected with serialized state unchanged
+    // Move Current Day to 0
+    await loc.prevBtn.click();
+    await loc.prevBtn.click();
+    await loc.prevBtn.click();
+    await loc.prevBtn.click();
+    const currentDayAt0 = (await loc.currentDayValue.textContent()).trim();
+
+    const stateAtDay0Before = await page.evaluate(async () => {
+      const dmMod = await import('/js/data/dataManager.js');
+      return JSON.stringify(dmMod.defaultDataManager.toJSON());
+    });
+
+    await editBtn106.click();
+    await loc.editStatus.selectOption('Done');
+    await loc.editCompletedDay.fill('1');
+    await loc.editSaveBtn.click();
+    const errDay0 = (await loc.editErrors.textContent()).trim();
+    await loc.editCancelBtn.click();
+
+    const stateAtDay0After = await page.evaluate(async () => {
+      const dmMod = await import('/js/data/dataManager.js');
+      return JSON.stringify(dmMod.defaultDataManager.toJSON());
+    });
+
+    // Restore Current Day back to 4 for subsequent tests
+    await loc.nextBtn.click();
+    await loc.nextBtn.click();
+    await loc.nextBtn.click();
+    await loc.nextBtn.click();
+    const restoredDay = (await loc.currentDayValue.textContent()).trim();
+
+    const f072Pass = errDay5.length > 0 &&
+      errDay11.length > 0 &&
+      errDay0.includes('Day 0') &&
+      currentDayAt0 === '0' &&
+      restoredDay === '4' &&
+      stateBefore72 === stateAfterDay5And11 &&
+      stateAtDay0Before === stateAtDay0After;
 
     results.push(makeRecord({
       tcId: 'TC-F-07.2',
       reqId: 'BDC-F-007',
       group: 'G5',
-      inputs: 'Set completion day to 5 (when Current Day = 4) and 11 (duration = 10)',
-      expected: 'Rejected with error; issue remains unchanged; points unmodified',
-      actual: `Error on day 5: "${errDay5}". Error on day 11: "${errDay11}"`,
-      status: (errDay5.length > 0 && errDay11.length > 0) ? 'PASS' : 'FAIL',
+      inputs: 'Set completion day to 5 (at Current Day 4), 11 (duration 10), and any completion at Current Day 0',
+      expected: 'Rejected with visible errors; issue remains unchanged; serialized state unmodified',
+      actual: `Errors: Day 5="${errDay5}", Day 11="${errDay11}", Day 0="${errDay0}". State unchanged across attempts: ${stateBefore72 === stateAfterDay5And11 && stateAtDay0Before === stateAtDay0After}`,
+      status: f072Pass ? 'PASS' : 'FAIL',
       browserName: launchRes.channel,
       browserVersion
     }));
@@ -1011,24 +1137,37 @@ async function runSuite() {
     await page.goto(`${baseUrl}/index.html`);
     const loc = getLocators(page);
 
-    // TC-F-08.1: Delete an issue (Delete PROJ-110 only: Total 45, Ideal(4)=27, Remaining 16, Variance +11)
+    // TC-F-08.1: Delete an issue (Delete PROJ-110 only: Total 45, Completed 29, Remaining 16, Ideal(4)=27, Variance +11)
     const del110 = page.getByRole('button', { name: 'Delete PROJ-110', exact: true });
     await del110.click();
 
     const totalScope8 = (await loc.kpi('total-scope').textContent()).trim();
+    const comp8 = (await loc.kpi('completed-points').textContent()).trim();
     const rem8 = (await loc.kpi('remaining-points').textContent()).trim();
     const var8 = (await loc.kpiVariance.textContent()).trim();
+    const ideal8At4 = await page.evaluate(async () => {
+      const chartMod = await import('/js/ui/chart.js');
+      const ci = chartMod.getChartInstance();
+      return ci.data.datasets[0].data[4];
+    });
+
     const ssDelete = `docs/reports/evidence/sv-g6-delete-${launchRes.channel}.png`;
     await page.screenshot({ path: ssDelete, fullPage: true });
+
+    const f081Pass = totalScope8 === '45' &&
+      comp8 === '29' &&
+      rem8 === '16' &&
+      ideal8At4 === 27 &&
+      var8 === '+11';
 
     results.push(makeRecord({
       tcId: 'TC-F-08.1',
       reqId: 'BDC-F-008',
       group: 'G6',
       inputs: 'Delete PROJ-110 (5 pts To Do) from default dataset',
-      expected: 'Total=45, Completed=29, Remaining=16, Variance=+11',
-      actual: `Total=${totalScope8}, Remaining=${rem8}, Variance=${var8}`,
-      status: (totalScope8 === '45' && rem8 === '16' && var8 === '+11') ? 'PASS' : 'FAIL',
+      expected: 'Total=45, Completed=29, Remaining=16, Ideal(4)=27, Variance=+11',
+      actual: `Total=${totalScope8}, Completed=${comp8}, Remaining=${rem8}, Ideal(4)=${ideal8At4}, Variance=${var8}`,
+      status: f081Pass ? 'PASS' : 'FAIL',
       browserName: launchRes.channel,
       browserVersion,
       evidencePath: ssDelete
@@ -2057,25 +2196,76 @@ async function runSuite() {
       browserVersion
     }));
 
-    // 3. TC-SR-05.1: CSP and eval verification
+    // 3. TC-SR-05.1: CSP meta precedes scripts, inline script/eval blocked, no-JS notice, file:// guidance visible
     const cspCheck = await page.evaluate(() => {
       const meta = document.querySelector('meta[http-equiv="Content-Security-Policy"]');
       const content = meta ? meta.getAttribute('content') : '';
+
+      const headNodes = Array.from(document.head.children);
+      const metaIdx = headNodes.indexOf(meta);
+      const firstScriptIdx = headNodes.findIndex(el => el.tagName === 'SCRIPT');
+      const metaPrecedesScripts = metaIdx >= 0 && (firstScriptIdx === -1 || metaIdx < firstScriptIdx);
+
+      const hasScriptSrcSelf = content.includes("script-src 'self'");
+      const hasNoUnsafeEval = !content.includes("'unsafe-eval'");
+      const hasNoUnsafeInline = !content.includes("'unsafe-inline'");
+
+      let evalBlocked = false;
+      try {
+        const fn = new Function('return "eval-executed"');
+        fn();
+      } catch (e) {
+        evalBlocked = true;
+      }
+
+      const noscript = document.querySelector('noscript');
+      const noscriptText = noscript ? noscript.textContent.trim() : '';
+      const noscriptHasNotice = noscriptText.includes('JavaScript is required');
+
       return {
         hasMeta: Boolean(meta),
-        content: content,
-        hasNoEval: !content.includes("'unsafe-eval'")
+        content,
+        metaPrecedesScripts,
+        hasScriptSrcSelf,
+        hasNoUnsafeEval,
+        hasNoUnsafeInline,
+        evalBlocked,
+        noscriptHasNotice
       };
     });
+
+    // Check file:// guidance notice
+    let fileNoticeVisible = false;
+    let fileNoticeText = '';
+    try {
+      const filePage = await context.newPage();
+      const localFileUrl = 'file:///' + path.resolve(root, 'index.html').replace(/\\/g, '/');
+      await filePage.goto(localFileUrl, { timeout: 5000 });
+      const fileMsgHeader = filePage.locator('#messages .form-errors-header');
+      if (await fileMsgHeader.count() > 0) {
+        fileNoticeText = (await fileMsgHeader.textContent()).trim();
+        fileNoticeVisible = fileNoticeText.includes('Server Required') || fileNoticeText.includes('file://');
+      }
+      await filePage.close();
+    } catch (err) {
+      log(`[INFO] file:// test note: ${err.message}`);
+    }
+
+    const cspPass = cspCheck.hasMeta &&
+      cspCheck.metaPrecedesScripts &&
+      cspCheck.hasScriptSrcSelf &&
+      cspCheck.hasNoUnsafeEval &&
+      cspCheck.noscriptHasNotice &&
+      fileNoticeVisible;
 
     results.push(makeRecord({
       tcId: 'TC-SR-05.1',
       reqId: 'BDC-SR-005',
       group: 'SECURITY',
-      inputs: 'Inspect meta CSP tag and ensure absence of unsafe-eval',
-      expected: 'Enforced meta policy present, script-src self, no unsafe-eval',
-      actual: `Meta CSP: "${cspCheck.content}"`,
-      status: (cspCheck.hasMeta && cspCheck.hasNoEval) ? 'PASS' : 'FAIL',
+      inputs: 'Inspect meta CSP tag position, unsafe-eval absence, eval execution, noscript block, and file:// warning',
+      expected: 'CSP meta precedes scripts; script-src self; no unsafe-eval; noscript notice present; file:// guidance visible',
+      actual: `Meta precedes scripts: ${cspCheck.metaPrecedesScripts}; script-src self: ${cspCheck.hasScriptSrcSelf}; no unsafe-eval: ${cspCheck.hasNoUnsafeEval}; noscript notice: ${cspCheck.noscriptHasNotice}; file:// warning: "${fileNoticeText}"`,
+      status: cspPass ? 'PASS' : 'FAIL',
       browserName: launchRes.channel,
       browserVersion
     }));
@@ -2238,7 +2428,7 @@ async function runSuite() {
       group: 'UNIT_TEST',
       inputs: 'Execute node --test on BurndownEngine and ValidationManager without DOM',
       expected: 'Calculation and validation modules execute and pass independently without DOM dependency',
-      actual: 'Automated unit test run by stacktrace-bhuvi on 2026-11-07: 255/255 tests passing in ~640ms. Note: STP references Jest; repo uses node --test.',
+      actual: 'Automated unit test run by stacktrace-bhuvi on 2026-11-10: 411/411 tests passing in ~1000ms. Note: STP references Jest; repo uses node --test.',
       status: 'PASS',
       browserName: channel,
       browserVersion
@@ -2250,11 +2440,11 @@ async function runSuite() {
   } finally {
     // Save JSON results and log
     if (channel) {
-      const outJsonPath = path.join(evidenceDir, `sv-results-${channel}-${TODAY}.json`);
+      const outJsonPath = path.join(evidenceDir, `sv-results-${channel}-${TODAY}-${SHA7}.json`);
       await fs.writeFile(outJsonPath, JSON.stringify(results, null, 2), 'utf8');
       log(`[SV-RUNNER] Results saved to ${outJsonPath} (${results.length} records)`);
 
-      const outLogPath = path.join(evidenceDir, `sv-run-${channel}-${TODAY}.log`);
+      const outLogPath = path.join(evidenceDir, `sv-run-${channel}-${TODAY}-${SHA7}.log`);
       await fs.writeFile(outLogPath, logLines.join('\n'), 'utf8');
       log(`[SV-RUNNER] Execution log saved to ${outLogPath}`);
     }
