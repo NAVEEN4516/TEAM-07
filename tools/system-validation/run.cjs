@@ -8,6 +8,7 @@ const http = require('node:http');
 const fs = require('node:fs/promises');
 const fsSync = require('node:fs');
 const path = require('node:path');
+const { execSync } = require('node:child_process');
 const { chromium, firefox } = require('playwright');
 const assert = require('node:assert/strict');
 
@@ -21,8 +22,27 @@ const mime = {
   '.png': 'image/png'
 };
 
-const TESTED_SHA = 'e901ecf17232f97a307ab6c723ba13bdc26aa744';
-const SHA7 = 'e901ecf';
+function getGitMetadata() {
+  const testedCommit = execSync('git rev-parse HEAD', { encoding: 'utf8' }).trim();
+  const shortSha = execSync('git rev-parse --short HEAD', { encoding: 'utf8' }).trim();
+  const appSourceTree = execSync('git rev-parse HEAD:src', { encoding: 'utf8' }).trim();
+  const porcelainTools = execSync('git status --porcelain -- src tests tools', { encoding: 'utf8' }).trim();
+  const worktreeClean = porcelainTools.length === 0;
+
+  const srcTestsPorcelain = execSync('git status --porcelain -- src tests', { encoding: 'utf8' }).trim();
+  if (srcTestsPorcelain.length > 0 && process.env.ALLOW_DIRTY !== '1') {
+    console.error('[SV-RUNNER] ERROR: src/ or tests/ have uncommitted changes:');
+    console.error(srcTestsPorcelain);
+    console.error('Refusing to run to ensure evidence integrity. Set ALLOW_DIRTY=1 to override.');
+    process.exit(2);
+  }
+
+  return { testedCommit, shortSha, appSourceTree, worktreeClean };
+}
+
+const gitMeta = getGitMetadata();
+const TESTED_SHA = gitMeta.testedCommit;
+const SHA7 = gitMeta.shortSha;
 const TESTER = 'stacktrace-bhuvi';
 const TODAY = '2026-11-10';
 
@@ -106,7 +126,10 @@ function makeRecord({
     browserVersion: browserVersion || null,
     viewport: viewport,
     theme: theme,
-    commitSha: TESTED_SHA,
+    commitSha: gitMeta.testedCommit,
+    testedCommit: gitMeta.testedCommit,
+    appSourceTree: gitMeta.appSourceTree,
+    worktreeClean: gitMeta.worktreeClean,
     evidencePath: evidencePath,
     error: error ? String(error) : null,
     method: method
@@ -142,6 +165,8 @@ async function runSuite() {
     console.log(`[SV-RUNNER] Loopback HTTP server running at ${baseUrl}`);
 
     log(`Target Tested Commit: ${TESTED_SHA}`);
+    log(`Target App Source Tree: ${gitMeta.appSourceTree}`);
+    log(`Worktree Clean (src, tests, tools): ${gitMeta.worktreeClean}`);
     log(`Tester: ${TESTER}`);
 
     const launchRes = await launchBrowser(browserTypeStr);
