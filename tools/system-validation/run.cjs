@@ -89,7 +89,8 @@ function makeRecord({
   theme = 'light',
   evidencePath = null,
   error = null,
-  samples = null
+  samples = null,
+  method = 'automated (Playwright)'
 }) {
   const rec = {
     testCaseId: tcId,
@@ -107,7 +108,8 @@ function makeRecord({
     theme: theme,
     commitSha: TESTED_SHA,
     evidencePath: evidencePath,
-    error: error ? String(error) : null
+    error: error ? String(error) : null,
+    method: method
   };
   if (samples) {
     rec.samples = samples;
@@ -1469,6 +1471,322 @@ async function runSuite() {
       status: accessibilityTreeValid ? 'PASS' : 'FAIL',
       browserName: launchRes.channel,
       browserVersion
+    }));
+
+    await context.close();
+  }
+
+  // --------------------------------------------------------------------------
+  // STEP 4B: KEYBOARD-ONLY WORKFLOW (GROUP G-KB)
+  // --------------------------------------------------------------------------
+  log('--- Executing Group G-KB: Keyboard-Only Navigation ---');
+  {
+    const context = await createCleanContext();
+    const page = await context.newPage();
+    await page.goto(`${baseUrl}/index.html`);
+    await page.waitForSelector('#backlog-table');
+
+    async function getActive() {
+      return await page.evaluate(() => {
+        const el = document.activeElement;
+        return {
+          id: el.id,
+          tag: el.tagName,
+          testId: el.getAttribute('data-testid'),
+          ariaLabel: el.getAttribute('aria-label'),
+          text: el.textContent?.trim().slice(0, 30),
+          key: el.dataset?.issueKey,
+          disabled: el.hasAttribute('disabled')
+        };
+      });
+    }
+
+    async function tabUntil(predicate, max = 70, shift = false) {
+      for (let i = 0; i < max; i++) {
+        if (shift) {
+          await page.keyboard.press('Shift+Tab');
+        } else {
+          await page.keyboard.press('Tab');
+        }
+        const active = await getActive();
+        if (predicate(active)) return active;
+      }
+      throw new Error(`Tab target predicate not reached within ${max} presses`);
+    }
+
+    // 1. Record complete Tab order list
+    const tabOrderList = [];
+    for (let i = 0; i < 35; i++) {
+      await page.keyboard.press('Tab');
+      const info = await getActive();
+      tabOrderList.push(info.id || info.testId || info.ariaLabel || info.text || info.tag);
+      if (info.id === 'theme-toggle-btn' && tabOrderList.filter(x => x === 'theme-toggle-btn').length > 1) {
+        break;
+      }
+    }
+
+    results.push(makeRecord({
+      tcId: 'TC-NF-02.1-KB-ORDER',
+      reqId: 'BDC-NF-002',
+      group: 'G-KB',
+      inputs: 'Sequential Tab traversal from initial page load',
+      expected: 'All interactive controls reachable in logical order without pointer clicks',
+      actual: `Recorded ${tabOrderList.length} tab stops: ${tabOrderList.slice(0, 10).join(' -> ')}...`,
+      status: tabOrderList.length >= 25 ? 'PASS' : 'FAIL',
+      browserName: launchRes.channel,
+      browserVersion,
+      method: 'automated keyboard-only'
+    }));
+
+    // Reload page to start with clean focus state
+    await page.reload();
+    await page.waitForSelector('#backlog-table');
+
+    // 2. Skip link via keyboard
+    await page.keyboard.press('Tab');
+    const skipActive = await getActive();
+    await page.keyboard.press('Enter');
+    const mainActive = await getActive();
+    results.push(makeRecord({
+      tcId: 'TC-NF-02.1-KB-SKIP',
+      reqId: 'BDC-NF-002',
+      group: 'G-KB',
+      inputs: 'Press Tab then Enter on initial load',
+      expected: 'Skip link focused on first Tab; Enter moves focus to main-content',
+      actual: `First tab="${skipActive.text}", Enter focus="${mainActive.id}"`,
+      status: (skipActive.text === 'Skip to dashboard' && mainActive.id === 'main-content') ? 'PASS' : 'FAIL',
+      browserName: launchRes.channel,
+      browserVersion,
+      method: 'automated keyboard-only'
+    }));
+
+    // 3. Theme toggle via keyboard
+    await tabUntil(a => a.id === 'theme-toggle-btn');
+    await page.keyboard.press('Space');
+    const darkThemeActive = await page.evaluate(() => document.documentElement.getAttribute('data-theme') === 'dark');
+    const focusAfterDark = await getActive();
+    await page.keyboard.press('Space');
+    const lightThemeActive = await page.evaluate(() => document.documentElement.getAttribute('data-theme') === 'light');
+    const focusAfterLight = await getActive();
+
+    results.push(makeRecord({
+      tcId: 'TC-NF-02.1-KB-THEME',
+      reqId: 'BDC-NF-002',
+      group: 'G-KB',
+      inputs: 'Tab to theme toggle button, press Space twice',
+      expected: 'Theme toggles to dark and back to light; focus remains on theme toggle button',
+      actual: `Dark theme=${darkThemeActive}, Light theme=${lightThemeActive}, Focus remained="${focusAfterLight.id}"`,
+      status: (darkThemeActive && lightThemeActive && focusAfterLight.id === 'theme-toggle-btn') ? 'PASS' : 'FAIL',
+      browserName: launchRes.channel,
+      browserVersion,
+      method: 'automated keyboard-only'
+    }));
+
+    // 4. Configure Sprint via keyboard
+    await tabUntil(a => a.testId === 'btn-configure-sprint');
+    await page.keyboard.press('Enter');
+    await page.waitForTimeout(100);
+    const focusAfterConfigOpen = await getActive();
+
+    // Type invalid duration 65 and attempt to save
+    await tabUntil(a => a.id === 'input-duration-days');
+    await page.keyboard.press('Control+A');
+    await page.keyboard.type('65');
+    await tabUntil(a => a.testId === 'btn-save-sprint');
+    await page.keyboard.press('Enter');
+    await page.waitForTimeout(100);
+    const configErrorVisible = await page.evaluate(() => {
+      const el = document.querySelector('[data-testid="config-errors"], .form-errors');
+      return el && el.textContent.includes('60');
+    });
+
+    // Fix duration to 10 and save
+    await tabUntil(a => a.id === 'input-duration-days', 20, true);
+    await page.keyboard.press('Control+A');
+    await page.keyboard.type('10');
+    await tabUntil(a => a.testId === 'btn-save-sprint');
+    await page.keyboard.press('Enter');
+    await page.waitForTimeout(100);
+    const focusAfterConfigSave = await getActive();
+
+    results.push(makeRecord({
+      tcId: 'TC-NF-02.1-KB-CONFIG',
+      reqId: 'BDC-NF-002',
+      group: 'G-KB',
+      inputs: 'Configure Sprint opened with Enter, duration 65 tested and rejected, corrected to 10 and saved',
+      expected: 'Form opens with focus on sprint name; duration 65 shows error; saving closes form and restores focus to Configure Sprint button',
+      actual: `Focus on open="${focusAfterConfigOpen.id}", error shown on 65=${configErrorVisible}, focus on save="${focusAfterConfigSave.testId}"`,
+      status: (focusAfterConfigOpen.id === 'input-sprint-name' && configErrorVisible && focusAfterConfigSave.testId === 'btn-configure-sprint') ? 'PASS' : 'FAIL',
+      browserName: launchRes.channel,
+      browserVersion,
+      method: 'automated keyboard-only'
+    }));
+
+    // 5. Current Day slider & boundary buttons via keyboard
+    await tabUntil(a => a.id === 'current-day-slider');
+    await page.keyboard.press('Home'); // Day 0
+    await page.waitForTimeout(50);
+    await tabUntil(a => a.testId === 'btn-prev-day', 5, true);
+    const prevDisabledAt0 = await page.evaluate(() => document.querySelector('[data-testid="btn-prev-day"]').hasAttribute('disabled'));
+
+    await tabUntil(a => a.testId === 'btn-next-day');
+    await page.keyboard.press('Space'); // Day 1
+    await page.waitForTimeout(50);
+    await tabUntil(a => a.id === 'current-day-slider');
+    await page.keyboard.press('End'); // Day 10
+    await page.waitForTimeout(50);
+    await tabUntil(a => a.testId === 'btn-next-day', 5, true);
+    const nextDisabledAt10 = await page.evaluate(() => document.querySelector('[data-testid="btn-next-day"]').hasAttribute('disabled'));
+
+    // Restore Day 4
+    await tabUntil(a => a.id === 'current-day-slider');
+    await page.keyboard.press('Home');
+    for (let k = 0; k < 4; k++) await page.keyboard.press('ArrowRight');
+    await page.waitForTimeout(50);
+    const dayAfterKbNav = await page.evaluate(() => document.querySelector('#current-day-slider').value);
+
+    results.push(makeRecord({
+      tcId: 'TC-NF-02.1-KB-DAY',
+      reqId: 'BDC-NF-002',
+      group: 'G-KB',
+      inputs: 'Drive Current Day slider with Arrow/Home/End and Prev/Next buttons',
+      expected: 'Prev button disabled at Day 0; Next button disabled at Day 10; slider keys navigate accurately',
+      actual: `Prev disabled at Day 0=${prevDisabledAt0}, Next disabled at Day 10=${nextDisabledAt10}, Restored Day=${dayAfterKbNav}`,
+      status: (prevDisabledAt0 && nextDisabledAt10 && dayAfterKbNav === '4') ? 'PASS' : 'FAIL',
+      browserName: launchRes.channel,
+      browserVersion,
+      method: 'automated keyboard-only'
+    }));
+
+    // 6. Add Issue workflow & duplicate key rejection via keyboard
+    await tabUntil(a => a.id === 'add-issue-key');
+    await page.keyboard.type('PROJ-111');
+    await page.keyboard.press('Tab'); // Type
+    await page.keyboard.press('Tab'); // Points
+    await page.keyboard.type('5');
+    await page.keyboard.press('Tab'); // Status
+    await page.keyboard.press('Tab'); // Summary
+    await page.keyboard.type('Keyboard Workflow Verification');
+    await page.keyboard.press('Tab'); // Add Issue button
+    await page.keyboard.press('Enter');
+    await page.waitForTimeout(200);
+
+    const focusAfterAdd = await getActive();
+    const scopeAfterKbAdd = await page.evaluate(() => document.querySelector('[data-testid="kpi-total-scope"] .kpi-value').textContent.trim());
+
+    // Duplicate key rejection
+    await page.keyboard.type('PROJ-111');
+    await tabUntil(a => a.testId === 'btn-add-issue');
+    await page.keyboard.press('Enter');
+    await page.waitForTimeout(100);
+    const dupErrVisible = await page.evaluate(() => {
+      const err = document.querySelector('[data-testid="add-issue-errors"]');
+      return err && /already exists/i.test(err.textContent);
+    });
+
+    results.push(makeRecord({
+      tcId: 'TC-NF-02.1-KB-ADD',
+      reqId: 'BDC-NF-002',
+      group: 'G-KB',
+      inputs: 'Add PROJ-111 (5 pts) and duplicate PROJ-111 using only Tab, type, and Enter',
+      expected: 'Valid issue added and scope increases to 55; focus lands on add-issue-key; duplicate key rejected with error alert',
+      actual: `Total scope after add=${scopeAfterKbAdd}, focus after add="${focusAfterAdd.id}", duplicate rejected=${dupErrVisible}`,
+      status: (scopeAfterKbAdd === '55' && focusAfterAdd.id === 'add-issue-key' && dupErrVisible) ? 'PASS' : 'FAIL',
+      browserName: launchRes.channel,
+      browserVersion,
+      method: 'automated keyboard-only'
+    }));
+
+    // 7. Edit issue to Done, cancel with Escape, reopen via keyboard
+    await tabUntil(a => a.ariaLabel === 'Edit PROJ-106');
+    await page.keyboard.press('Enter');
+    await page.waitForTimeout(100);
+    const focusOnEditOpen = await getActive();
+
+    // Cancel with Escape
+    await page.keyboard.press('Escape');
+    await page.waitForTimeout(100);
+    const focusAfterEscape = await getActive();
+
+    // Reopen and edit to Done
+    await page.keyboard.press('Enter');
+    await page.waitForTimeout(100);
+    await page.keyboard.press('ArrowDown'); // In Progress -> Done
+    await page.keyboard.press('Tab'); // Completed Day
+    await page.keyboard.type('4');
+    await page.keyboard.press('Tab'); // Save button
+    await page.keyboard.press('Enter');
+    await page.waitForTimeout(200);
+    const focusAfterDoneSave = await getActive();
+    const compAfterDoneKb = await page.evaluate(() => document.querySelector('[data-testid="kpi-completed-points"] .kpi-value').textContent.trim());
+
+    // Reopen to In Progress
+    await page.keyboard.press('Enter');
+    await page.waitForTimeout(100);
+    await page.keyboard.press('ArrowUp'); // Done -> In Progress
+    await tabUntil(a => a.tag === 'BUTTON' && a.text === 'Save');
+    await page.keyboard.press('Enter');
+    await page.waitForTimeout(200);
+    const compAfterReopenKb = await page.evaluate(() => document.querySelector('[data-testid="kpi-completed-points"] .kpi-value').textContent.trim());
+
+    results.push(makeRecord({
+      tcId: 'TC-NF-02.1-KB-EDIT',
+      reqId: 'BDC-NF-002',
+      group: 'G-KB',
+      inputs: 'Edit PROJ-106 to Done on Day 4, cancel with Escape, reopen and save, then reopen to In Progress',
+      expected: 'Focus lands on status select; Escape restores focus to Edit button; Save restores focus to Edit button; points update 29 -> 32 -> 29',
+      actual: `Focus on open="${focusOnEditOpen.id}", Escape focus="${focusAfterEscape.ariaLabel}", Done focus="${focusAfterDoneSave.ariaLabel}", Completed pts=${compAfterDoneKb} -> ${compAfterReopenKb}`,
+      status: (focusOnEditOpen.id === 'edit-issue-status' &&
+        focusAfterEscape.ariaLabel === 'Edit PROJ-106' &&
+        focusAfterDoneSave.ariaLabel === 'Edit PROJ-106' &&
+        compAfterDoneKb === '32' && compAfterReopenKb === '29') ? 'PASS' : 'FAIL',
+      browserName: launchRes.channel,
+      browserVersion,
+      method: 'automated keyboard-only'
+    }));
+
+    // 8. Delete issue via keyboard
+    await tabUntil(a => a.ariaLabel === 'Delete PROJ-111');
+    await page.keyboard.press('Enter');
+    await page.waitForTimeout(200);
+    const focusAfterDelete = await getActive();
+    const scopeAfterDelete = await page.evaluate(() => document.querySelector('[data-testid="kpi-total-scope"] .kpi-value').textContent.trim());
+
+    results.push(makeRecord({
+      tcId: 'TC-NF-02.1-KB-DELETE',
+      reqId: 'BDC-NF-002',
+      group: 'G-KB',
+      inputs: 'Delete PROJ-111 using Enter on Delete button',
+      expected: 'Issue deleted; total scope returns to 50; focus moves to sensible next delete button',
+      actual: `Total scope=${scopeAfterDelete}, focus after delete="${focusAfterDelete.ariaLabel}"`,
+      status: (scopeAfterDelete === '50' && (focusAfterDelete.ariaLabel && focusAfterDelete.ariaLabel.startsWith('Delete'))) ? 'PASS' : 'FAIL',
+      browserName: launchRes.channel,
+      browserVersion,
+      method: 'automated keyboard-only'
+    }));
+
+    // 9. Reset Data via keyboard
+    await tabUntil(a => a.id === 'reset-data-btn', 60);
+    await page.keyboard.press('Enter');
+    await page.waitForTimeout(200);
+    const focusAfterReset = await getActive();
+    const resetMetrics = await page.evaluate(() => ({
+      scope: document.querySelector('[data-testid="kpi-total-scope"] .kpi-value').textContent.trim(),
+      rows: document.querySelectorAll('#backlog-table tbody tr').length,
+      day: document.querySelector('#current-day-slider').value
+    }));
+
+    results.push(makeRecord({
+      tcId: 'TC-NF-02.1-KB-RESET',
+      reqId: 'BDC-NF-002',
+      group: 'G-KB',
+      inputs: 'Tab to Reset Data button, press Enter',
+      expected: 'Canonical defaults restored (50 pts, 10 issues, Day 4); focus remains on Reset Data button',
+      actual: `Defaults: Scope=${resetMetrics.scope}, Rows=${resetMetrics.rows}, Day=${resetMetrics.day}, Focus="${focusAfterReset.id}"`,
+      status: (resetMetrics.scope === '50' && resetMetrics.rows === 10 && resetMetrics.day === '4' && focusAfterReset.id === 'reset-data-btn') ? 'PASS' : 'FAIL',
+      browserName: launchRes.channel,
+      browserVersion,
+      method: 'automated keyboard-only'
     }));
 
     await context.close();
