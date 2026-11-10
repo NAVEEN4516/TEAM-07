@@ -1,7 +1,7 @@
-# System Validation: Mozilla Firefox Manual Execution Sheet (SHA e901ecf)
+# System Validation: Mozilla Firefox Manual Execution Sheet (SHA 85391ae)
 
 - **Document ID:** SV-SHEET-FIREFOX-02
-- **Tested Commit:** `e901ecf17232f97a307ab6c723ba13bdc26aa744` (short `e901ecf`)
+- **Tested Commit:** `85391ae9181a666cc5b975968070e3dc5059a352` (short `85391ae`)
 - **Execution Date:** 2026-11-10
 - **QA Tester:** Bhuvi (`@stacktrace-bhuvi`)
 - **Status:** **NOT EXECUTED** (Manual interactive physical Firefox browser validation pending)
@@ -9,16 +9,16 @@
 ---
 
 ## 1. Scope & Objective
-This manual test sheet provides exact, step-by-step test instructions for human exploratory and visual verification on desktop Mozilla Firefox (version 120+ / 130+) against the Burndown Chart Generator at commit `e901ecf17232f97a307ab6c723ba13bdc26aa744`.
+This manual test sheet provides exact, step-by-step test instructions for human exploratory and visual verification on desktop Mozilla Firefox (version 120+ / 130+) against the Burndown Chart Generator at commit `85391ae9181a666cc5b975968070e3dc5059a352`.
 
-*Note:* Headless automated Playwright validation on Firefox (`159.0`) has executed with **62 PASS / 0 FAIL / 1 BLOCKED** in `sv-results-firefox-2026-11-10-e901ecf.json`. This manual checklist covers human visual perception, interactive browser font rendering, and physical OS windowing behavior.
+*Note:* Headless automated Playwright validation on Firefox (`159.0 (Playwright build)`) has executed with **62 PASS / 0 FAIL / 1 BLOCKED** in `sv-results-firefox-2026-11-10-85391ae.json`. This manual checklist covers human visual perception, interactive browser font rendering, and physical OS windowing behavior.
 
 ---
 
 ## 2. Test Environment Setup
 1. Clone the repository and checkout the tested commit:
    ```bash
-   git checkout e901ecf17232f97a307ab6c723ba13bdc26aa744
+   git checkout 85391ae9181a666cc5b975968070e3dc5059a352
    ```
 2. Start a local HTTP server from the `src` directory:
    ```bash
@@ -110,6 +110,6 @@ This manual test sheet provides exact, step-by-step test instructions for human 
 ---
 
 ## 4. Sign-Off
-- **Automated Execution:** Completed in Playwright Firefox 159 (`sv-results-firefox-2026-11-10-e901ecf.json`).
+- **Automated Execution:** Completed in Playwright Firefox 159 (`sv-results-firefox-2026-11-10-85391ae.json`).
 - **Manual Sheet Status:** **NOT EXECUTED** (Pending manual tester sign-off).
 - **QA Tester:** Bhuvi (`@stacktrace-bhuvi`)

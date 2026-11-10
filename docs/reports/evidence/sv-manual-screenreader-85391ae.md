@@ -1,7 +1,7 @@
-# System Validation: Screen Reader & Assistive Technology Manual Sheet (SHA e901ecf)
+# System Validation: Screen Reader & Assistive Technology Manual Sheet (SHA 85391ae)
 
 - **Document ID:** SV-SHEET-A11Y-SR-02
-- **Tested Commit:** `e901ecf17232f97a307ab6c723ba13bdc26aa744` (short `e901ecf`)
+- **Tested Commit:** `85391ae9181a666cc5b975968070e3dc5059a352` (short `85391ae`)
 - **Execution Date:** 2026-11-10
 - **QA Tester:** Bhuvi (`@stacktrace-bhuvi`)
 - **Status:** **NOT EXECUTED** (Physical assistive technology speech synthesizer audio verification pending)
