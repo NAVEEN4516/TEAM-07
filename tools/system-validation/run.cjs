@@ -1473,6 +1473,176 @@ async function runSuite() {
       browserVersion
     }));
 
+    // 4. TC-NF-02.3-STATUS: Status indicators contrast & color distinction (BDC-NF-002)
+    async function extractBadgeColors(theme) {
+      return await page.evaluate((th) => {
+        function parseRgb(colorStr) {
+          const m = colorStr.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/);
+          if (!m) return [0, 0, 0, 1];
+          return [parseInt(m[1], 10), parseInt(m[2], 10), parseInt(m[3], 10), m[4] !== undefined ? parseFloat(m[4]) : 1];
+        }
+        function composite(fgRgba, bgRgb) {
+          const a = fgRgba[3];
+          return [
+            Math.round(fgRgba[0] * a + bgRgb[0] * (1 - a)),
+            Math.round(fgRgba[1] * a + bgRgb[1] * (1 - a)),
+            Math.round(fgRgba[2] * a + bgRgb[2] * (1 - a))
+          ];
+        }
+        function relativeLuminance([r, g, b]) {
+          const [rs, gs, bs] = [r, g, b].map(c => {
+            const s = c / 255;
+            return s <= 0.04045 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4);
+          });
+          return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
+        }
+        function contrastRatio(rgb1, rgb2) {
+          const l1 = relativeLuminance(rgb1);
+          const l2 = relativeLuminance(rgb2);
+          return (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
+        }
+
+        const cardBg = th === 'dark' ? [30, 41, 59] : [255, 255, 255];
+
+        const schedBadge = document.querySelector('[data-testid="kpi-schedule-status"] [data-testid="status-badge"]');
+        const csSched = window.getComputedStyle(schedBadge);
+        const fgSched = parseRgb(csSched.color);
+        const bgSched = parseRgb(csSched.backgroundColor);
+        const compBgSched = composite(bgSched, cardBg);
+        const schedInfo = {
+          text: schedBadge.textContent.trim(),
+          hasText: schedBadge.textContent.trim().length > 0,
+          color: csSched.color,
+          bg: csSched.backgroundColor,
+          border: csSched.borderColor,
+          compBg: compBgSched,
+          contrast: parseFloat(contrastRatio(fgSched, compBgSched).toFixed(2))
+        };
+
+        const issueBadges = {};
+        document.querySelectorAll('#backlog-table tbody tr').forEach(tr => {
+          const b = tr.querySelector('.status-badge');
+          if (b && !issueBadges[b.textContent.trim()]) {
+            const cs = window.getComputedStyle(b);
+            const fg = parseRgb(cs.color);
+            const bg = parseRgb(cs.backgroundColor);
+            const compBg = composite(bg, cardBg);
+            issueBadges[b.textContent.trim()] = {
+              text: b.textContent.trim(),
+              hasText: b.textContent.trim().length > 0,
+              color: cs.color,
+              bg: cs.backgroundColor,
+              border: cs.borderColor,
+              compBg: compBg,
+              contrast: parseFloat(contrastRatio(fg, compBg).toFixed(2))
+            };
+          }
+        });
+
+        return { schedInfo, issueBadges };
+      }, theme);
+    }
+
+    // Capture Schedule Status across reachable states (Day 4: Ahead, Day 6: On Track, Day 7: Behind)
+    const ssAhead = `docs/reports/evidence/sv-status-ahead-${launchRes.channel}-${TODAY}-${SHA7}.png`;
+    await page.screenshot({ path: ssAhead });
+    const aheadLight = await extractBadgeColors('light');
+
+    await loc.nextBtn.click();
+    await loc.nextBtn.click();
+    await page.waitForTimeout(50);
+    const ssOnTrack = `docs/reports/evidence/sv-status-ontrack-${launchRes.channel}-${TODAY}-${SHA7}.png`;
+    await page.screenshot({ path: ssOnTrack });
+    const ontrackLight = await extractBadgeColors('light');
+
+    await loc.nextBtn.click();
+    await page.waitForTimeout(50);
+    const ssBehind = `docs/reports/evidence/sv-status-behind-${launchRes.channel}-${TODAY}-${SHA7}.png`;
+    await page.screenshot({ path: ssBehind });
+    const behindLight = await extractBadgeColors('light');
+
+    // Dark Theme checks
+    await loc.themeToggleBtn.click();
+    await page.waitForTimeout(100);
+    const behindDark = await extractBadgeColors('dark');
+
+    // Move back to Day 4 in Dark
+    await loc.prevBtn.click();
+    await loc.prevBtn.click();
+    await loc.prevBtn.click();
+    await page.waitForTimeout(50);
+    const aheadDark = await extractBadgeColors('dark');
+
+    // Move to Day 6 in Dark
+    await loc.nextBtn.click();
+    await loc.nextBtn.click();
+    await page.waitForTimeout(50);
+    const ontrackDark = await extractBadgeColors('dark');
+
+    // Restore Light Theme and Day 4
+    await loc.prevBtn.click();
+    await loc.prevBtn.click();
+    await loc.themeToggleBtn.click();
+    await page.waitForTimeout(100);
+
+    // Delta-E 76 helper in Node
+    function rgbToLab([r, g, b]) {
+      const [rl, gl, bl] = [r, g, b].map(v => {
+        const s = v / 255;
+        return s <= 0.04045 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4);
+      });
+      let x = (rl * 0.4124564 + gl * 0.3575761 + bl * 0.1804375) / 0.95047;
+      let y = (rl * 0.2126729 + gl * 0.7151522 + bl * 0.0721750) / 1.00000;
+      let z = (rl * 0.0193339 + gl * 0.1191920 + bl * 0.9503041) / 1.08883;
+      const f = t => t > 0.008856 ? Math.cbrt(t) : (7.787 * t) + (16 / 116);
+      const fx = f(x);
+      const fy = f(y);
+      const fz = f(z);
+      return [(116 * fy) - 16, 500 * (fx - fy), 200 * (fy - fz)];
+    }
+    function deltaE76(rgb1, rgb2) {
+      const lab1 = rgbToLab(rgb1);
+      const lab2 = rgbToLab(rgb2);
+      return Math.sqrt(Math.pow(lab1[0] - lab2[0], 2) + Math.pow(lab1[1] - lab2[1], 2) + Math.pow(lab1[2] - lab2[2], 2));
+    }
+
+    const dE_Ahead_OnTrack_Light = deltaE76(aheadLight.schedInfo.compBg, ontrackLight.schedInfo.compBg);
+    const dE_Ahead_Behind_Light = deltaE76(aheadLight.schedInfo.compBg, behindLight.schedInfo.compBg);
+    const dE_OnTrack_Behind_Light = deltaE76(ontrackLight.schedInfo.compBg, behindLight.schedInfo.compBg);
+
+    const dE_Ahead_OnTrack_Dark = deltaE76(aheadDark.schedInfo.compBg, ontrackDark.schedInfo.compBg);
+    const dE_Ahead_Behind_Dark = deltaE76(aheadDark.schedInfo.compBg, behindDark.schedInfo.compBg);
+    const dE_OnTrack_Behind_Dark = deltaE76(ontrackDark.schedInfo.compBg, behindDark.schedInfo.compBg);
+
+    const allContrastsValid = [
+      aheadLight.schedInfo.contrast, ontrackLight.schedInfo.contrast, behindLight.schedInfo.contrast,
+      aheadDark.schedInfo.contrast, ontrackDark.schedInfo.contrast, behindDark.schedInfo.contrast,
+      ...Object.values(aheadLight.issueBadges).map(b => b.contrast),
+      ...Object.values(aheadDark.issueBadges).map(b => b.contrast)
+    ].every(c => c >= 4.5);
+
+    const allLabelsPresent = aheadLight.schedInfo.hasText && ontrackLight.schedInfo.hasText && behindLight.schedInfo.hasText &&
+      Object.values(aheadLight.issueBadges).every(b => b.hasText);
+
+    // Chosen pass threshold: CIE76 delta-E >= 5.0 (substantially exceeds the human Just Noticeable Difference JND = 2.3)
+    const allDistancesDistinct = [
+      dE_Ahead_OnTrack_Light, dE_Ahead_Behind_Light, dE_OnTrack_Behind_Light,
+      dE_Ahead_OnTrack_Dark, dE_Ahead_Behind_Dark, dE_OnTrack_Behind_Dark
+    ].every(d => d >= 5.0);
+
+    results.push(makeRecord({
+      tcId: 'TC-NF-02.3',
+      reqId: 'BDC-NF-002',
+      group: 'ACCESSIBILITY',
+      inputs: 'Inspect Schedule Status (Ahead, On Track, Behind) and Issue badges (Done, In Progress, To Do) in Light and Dark themes',
+      expected: 'Text-to-background contrast >= 4.5:1 (WCAG 2.1 AA); visible text label present (not color alone); pairwise background CIE76 delta-E >= 5.0 (perceptually distinct, > 2.3 JND threshold)',
+      actual: `WCAG Contrast (>=4.5:1): Light Ahead=${aheadLight.schedInfo.contrast}:1, OnTrack=${ontrackLight.schedInfo.contrast}:1, Behind=${behindLight.schedInfo.contrast}:1; Dark Ahead=${aheadDark.schedInfo.contrast}:1, OnTrack=${ontrackDark.schedInfo.contrast}:1, Behind=${behindDark.schedInfo.contrast}:1. Delta-E: Light Ahead-OnTrack=${dE_Ahead_OnTrack_Light.toFixed(1)}, Ahead-Behind=${dE_Ahead_Behind_Light.toFixed(1)}, OnTrack-Behind=${dE_OnTrack_Behind_Light.toFixed(1)}; Dark Ahead-OnTrack=${dE_Ahead_OnTrack_Dark.toFixed(1)}, Ahead-Behind=${dE_Ahead_Behind_Dark.toFixed(1)}, OnTrack-Behind=${dE_OnTrack_Behind_Dark.toFixed(1)}. Text labels verified.`,
+      status: (allContrastsValid && allLabelsPresent && allDistancesDistinct) ? 'PASS' : 'FAIL',
+      browserName: launchRes.channel,
+      browserVersion,
+      evidencePath: ssAhead
+    }));
+
     await context.close();
   }
 

@@ -109,4 +109,14 @@ describe('UI: KPICards (BDC-F-015, BDC-NF-002)', () => {
       assert.ok(html.includes('On Track'));
     });
   });
+
+  describe('BDC-NF-002: Status Badge Stylesheet Rules', () => {
+    test('defines CSS selectors for status--ahead, status--on-track, and status--behind', async () => {
+      const fs = await import('node:fs/promises');
+      const css = await fs.readFile(new URL('../../src/css/styles.css', import.meta.url), 'utf8');
+      assert.ok(css.includes('.status--ahead'));
+      assert.ok(css.includes('.status--on-track'));
+      assert.ok(css.includes('.status--behind'));
+    });
+  });
 });
