@@ -1,0 +1,24 @@
+[2026-11-10T07:49:39.053Z] Target Tested Commit: e901ecf17232f97a307ab6c723ba13bdc26aa744
+[2026-11-10T07:49:39.053Z] Tester: stacktrace-bhuvi
+[2026-11-10T07:49:39.763Z] Browser launched successfully: firefox version 159.0
+[2026-11-10T07:49:39.763Z] --- Executing Group G1: Default State ---
+[2026-11-10T07:49:44.118Z] --- Executing Group G2: Sprint Configuration ---
+[2026-11-10T07:49:49.121Z] --- Executing Group G3: Current Day and Marker ---
+[2026-11-10T07:49:57.186Z] --- Executing Group G4: Add Issue ---
+[2026-11-10T07:50:01.377Z] --- Executing Group G5: Edit / Reopen ---
+[2026-11-10T07:50:08.068Z] --- Executing Group G6: Delete / Empty ---
+[2026-11-10T07:50:13.603Z] --- Executing Group G7: Reset Data ---
+[2026-11-10T07:50:17.692Z] --- Executing Group G8: Status Classification and Chart ---
+[2026-11-10T07:50:22.319Z] --- Executing Group G9: Edge Cases ---
+[2026-11-10T07:50:25.474Z] --- Executing Step 3: Viewports, Themes & Responsiveness ---
+[2026-11-10T07:50:45.148Z] --- Executing Step 4: Accessibility & Keyboard Navigation ---
+[2026-11-10T07:50:51.962Z] --- Executing Group G-KB: Keyboard-Only Navigation ---
+[2026-11-10T07:51:05.328Z] --- Executing Step 5: Security & Resilience ---
+[2026-11-10T07:51:11.953Z] --- Executing Step 6: Performance Measurements (Method A) ---
+[2026-11-10T07:51:45.082Z] Perf [Add Issue]: min=53.00ms, med=84.00ms, max=138.00ms
+[2026-11-10T07:51:45.082Z] Perf [Change Day]: min=61.00ms, med=74.00ms, max=81.00ms
+[2026-11-10T07:51:45.082Z] Perf [Edit Done]: min=42.00ms, med=72.00ms, max=88.00ms
+[2026-11-10T07:51:45.082Z] Perf [Delete]: min=64.00ms, med=76.00ms, max=84.00ms
+[2026-11-10T07:51:45.082Z] Perf [Reset]: min=69.00ms, med=75.00ms, max=185.00ms
+[2026-11-10T07:51:45.130Z] --- Recording Inspection & Automated Unit-Level Test Cases ---
+[2026-11-10T07:51:45.137Z] [SV-RUNNER] Results saved to C:\Users\Bhuvi\Desktop\sem5\se\TEAM-07\docs\reports\evidence\sv-results-firefox-2026-11-10-e901ecf.json (63 records)
