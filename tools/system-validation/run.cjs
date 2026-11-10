@@ -1092,7 +1092,7 @@ async function runSuite() {
 
     const f072Pass = errDay5.length > 0 &&
       errDay11.length > 0 &&
-      errDay0.includes('Day 0') &&
+      errDay0.includes('Current Day is 0') &&
       currentDayAt0 === '0' &&
       restoredDay === '4' &&
       stateBefore72 === stateAfterDay5And11 &&
