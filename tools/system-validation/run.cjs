@@ -21,9 +21,10 @@ const mime = {
   '.png': 'image/png'
 };
 
-const TESTED_SHA = '222089658f26badaf5c9f6d3c60e75986ebd6320';
+const TESTED_SHA = 'e901ecf17232f97a307ab6c723ba13bdc26aa744';
+const SHA7 = 'e901ecf';
 const TESTER = 'stacktrace-bhuvi';
-const TODAY = '2026-11-07';
+const TODAY = '2026-11-10';
 
 // Ensure evidence directory exists
 if (!fsSync.existsSync(evidenceDir)) {
@@ -167,7 +168,7 @@ async function runSuite() {
     const browserVersion = launchRes.version;
     log(`Browser launched successfully: ${channel} version ${browserVersion}`);
 
-  // Create isolated context with CSP tracking
+  // Create isolated context with CSP tracking and canvas marker label interceptor
   async function createCleanContext(options = {}) {
     const context = await browser.newContext({
       viewport: options.viewport || { width: 1440, height: 900 },
@@ -182,8 +183,71 @@ async function runSuite() {
           violatedDirective: e.violatedDirective
         });
       });
+      window.__markerLabels = [];
+      const origFillText = CanvasRenderingContext2D.prototype.fillText;
+      CanvasRenderingContext2D.prototype.fillText = function(text, x, y) {
+        if (typeof text === 'string' && /^Day \d+$/.test(text)) {
+          window.__markerLabels.push(text);
+        }
+        return origFillText.apply(this, arguments);
+      };
     });
     return context;
+  }
+
+  // Helper to measure canvas marker position and verify alignment
+  async function measureMarker(page, targetDay) {
+    return await page.evaluate((day) => {
+      const canvas = document.getElementById('burndown-chart');
+      if (!canvas) return null;
+      const chart = Chart.getChart(canvas);
+      if (!chart || !chart.scales?.x || !chart.chartArea) return null;
+      const expectedX = chart.scales.x.getPixelForValue(day);
+      const dpr = window.devicePixelRatio || 1;
+      const ctx = canvas.getContext('2d');
+      const chartArea = chart.chartArea;
+
+      const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const data = imgData.data;
+
+      const startX = Math.floor(chartArea.left * dpr);
+      const endX = Math.ceil(chartArea.right * dpr);
+      const yTop = Math.floor((chartArea.top + 30) * dpr);
+      const yBottom = Math.floor((chartArea.bottom - 10) * dpr);
+
+      let bestX = -1;
+      let maxRedCount = 0;
+
+      for (let x = startX; x <= endX; x++) {
+        let redCount = 0;
+        for (let y = yTop; y <= yBottom; y += 2) {
+          const idx = (y * canvas.width + x) * 4;
+          const r = data[idx];
+          const g = data[idx + 1];
+          const b = data[idx + 2];
+          const a = data[idx + 3];
+          if (a > 150 && r > 180 && g < 85 && b < 85) {
+            redCount++;
+          }
+        }
+        if (redCount > maxRedCount) {
+          maxRedCount = redCount;
+          bestX = x;
+        }
+      }
+
+      const drawnX = bestX / dpr;
+      const labels = window.__markerLabels || [];
+      const lastLabel = labels.length > 0 ? labels[labels.length - 1] : null;
+      return {
+        day,
+        expectedX,
+        drawnX,
+        diff: Math.abs(drawnX - expectedX),
+        label: lastLabel,
+        maxRedCount
+      };
+    }, targetDay);
   }
 
   // Common UI getters
@@ -617,26 +681,94 @@ async function runSuite() {
       browserVersion
     }));
 
-    // TC-F-14.1: Current-day marker
-    const markerInfo = await page.evaluate(async () => {
-      const chartMod = await import('/js/ui/chart.js');
-      const ci = chartMod.getChartInstance();
-      const plugins = ci.config.plugins || [];
+    // TC-F-14.1: Current-day marker real movement test (Days 0, 4, 6, 10, dark theme, and window resize)
+    // 1. Initial Day 4 check
+    const m4 = await measureMarker(page, 4);
+    const ssMarker4 = `docs/reports/evidence/sv-marker-day4-${channel}-${TODAY}-${SHA7}.png`;
+    await page.screenshot({ path: ssMarker4, fullPage: true });
+
+    // 2. Day 0 via Home key on slider
+    await loc.slider.focus();
+    await page.keyboard.press('Home');
+    await page.waitForTimeout(100);
+    const m0 = await measureMarker(page, 0);
+    const ssMarker0 = `docs/reports/evidence/sv-marker-day0-${channel}-${TODAY}-${SHA7}.png`;
+    await page.screenshot({ path: ssMarker0, fullPage: true });
+
+    // 3. Day 6 via Next Day button steps (0 -> 6)
+    for (let d = 0; d < 6; d++) {
+      await loc.nextBtn.click();
+    }
+    await page.waitForTimeout(100);
+    const m6 = await measureMarker(page, 6);
+    const ssMarker6 = `docs/reports/evidence/sv-marker-day6-${channel}-${TODAY}-${SHA7}.png`;
+    await page.screenshot({ path: ssMarker6, fullPage: true });
+
+    // Assert Day 6 updates actual series endpoint and KPIs without reload:
+    // Completed 29, Remaining 21, Days Elapsed 6, Days Left 4, Variance -1, status On Track (Ideal(6)=20, -1 is inclusive On Track)
+    const kpiComp6 = (await loc.kpi('completed-points').textContent()).trim();
+    const kpiRem6 = (await loc.kpi('remaining-points').textContent()).trim();
+    const kpiElapsed6 = (await loc.kpi('days-elapsed').textContent()).trim();
+    const kpiLeft6 = (await loc.kpi('days-left').textContent()).trim();
+    const kpiVar6 = (await loc.kpiVariance.textContent()).trim();
+    const kpiStatus6 = (await loc.kpiStatusBadge.textContent()).trim();
+    const seriesInfo6 = await page.evaluate(() => {
+      const chart = Chart.getChart(document.getElementById('burndown-chart'));
+      const actualDataset = chart.data.datasets.find(ds => ds.label === 'Actual') || chart.data.datasets[1];
+      const idealDataset = chart.data.datasets.find(ds => ds.label === 'Ideal') || chart.data.datasets[0];
       return {
-        hasPlugins: plugins.length > 0,
-        currentDay: ci._currentDayMarker || 4
+        actualDay6: actualDataset.data[6],
+        actualDay7: actualDataset.data[7],
+        idealDay6: idealDataset.data[6]
       };
     });
+
+    const day6KpiOk = kpiComp6 === '29' && kpiRem6 === '21' && kpiElapsed6 === '6' &&
+      kpiLeft6 === '4' && (kpiVar6 === '-1' || kpiVar6 === '-1 pts') &&
+      kpiStatus6 === 'On Track' && seriesInfo6.actualDay6 === 21 && seriesInfo6.actualDay7 === null;
+
+    // 4. Day 10 via End key on slider
+    await loc.slider.focus();
+    await page.keyboard.press('End');
+    await page.waitForTimeout(100);
+    const m10 = await measureMarker(page, 10);
+    const ssMarker10 = `docs/reports/evidence/sv-marker-day10-${channel}-${TODAY}-${SHA7}.png`;
+    await page.screenshot({ path: ssMarker10, fullPage: true });
+
+    // 5. Dark theme marker test (move to Day 4 and toggle theme)
+    await loc.slider.focus();
+    await page.keyboard.press('Home');
+    for (let i = 0; i < 4; i++) {
+      await page.keyboard.press('ArrowRight');
+    }
+    await loc.themeToggleBtn.click();
+    await page.waitForTimeout(100);
+    const mDark4 = await measureMarker(page, 4);
+
+    // 6. Window resize marker test (resize to 1024x768)
+    await page.setViewportSize({ width: 1024, height: 768 });
+    await page.waitForTimeout(200);
+    const mResize4 = await measureMarker(page, 4);
+
+    // Restore viewport and theme
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await loc.themeToggleBtn.click(); // restore to light
+    await page.waitForTimeout(100);
+
+    const markerAllValid = [m0, m4, m6, m10, mDark4, mResize4].every(m => m && m.diff <= 2);
+    const markerLabelsValid = m0.label === 'Day 0' && m4.label === 'Day 4' && m6.label === 'Day 6' && m10.label === 'Day 10';
+
     results.push(makeRecord({
       tcId: 'TC-F-14.1',
       reqId: 'BDC-F-014',
       group: 'G3',
-      inputs: 'Verify current-day vertical marker configuration on chart',
-      expected: 'Marker rendered at current day position',
-      actual: `Chart configured with marker plugin; current day marker=${markerInfo.currentDay}`,
-      status: markerInfo.hasPlugins ? 'PASS' : 'FAIL',
+      inputs: 'Verify vertical marker pixel movement at Day 0, 4, 6, 10 (via keyboard slider & buttons), dark theme, and window resize',
+      expected: '|drawn - expected| <= 2px across all states; badge displays "Day N"; Day 6 KPIs (Completed 29, Remaining 21, Elapsed 6, Left 4, Variance -1, On Track) update without reload',
+      actual: `Diffs: Day0=${m0.diff.toFixed(2)}px, Day4=${m4.diff.toFixed(2)}px, Day6=${m6.diff.toFixed(2)}px, Day10=${m10.diff.toFixed(2)}px, Dark4=${mDark4.diff.toFixed(2)}px, Resize1024=${mResize4.diff.toFixed(2)}px. Labels verified: Day 0/4/6/10. Day 6 KPIs: Comp=${kpiComp6}, Rem=${kpiRem6}, Elapsed=${kpiElapsed6}, Left=${kpiLeft6}, Var=${kpiVar6}, Status=${kpiStatus6}`,
+      status: (markerAllValid && markerLabelsValid && day6KpiOk) ? 'PASS' : 'FAIL',
       browserName: launchRes.channel,
-      browserVersion
+      browserVersion,
+      evidencePath: ssMarker6
     }));
 
     await context.close();
