@@ -110,6 +110,7 @@ function makeRecord({
   evidencePath = null,
   error = null,
   samples = null,
+  metrics = null,
   method = 'automated (Playwright)'
 }) {
   const rec = {
@@ -136,6 +137,9 @@ function makeRecord({
   };
   if (samples) {
     rec.samples = samples;
+  }
+  if (metrics) {
+    rec.metrics = metrics;
   }
   return rec;
 }
@@ -1500,6 +1504,7 @@ async function runSuite() {
   {
     const viewports = [1024, 1366, 1440, 1920];
     const themes = ['light', 'dark'];
+    const responsiveMeasurements = [];
 
     for (const theme of themes) {
       for (const w of viewports) {
@@ -1525,7 +1530,14 @@ async function runSuite() {
         });
 
         const pageOk = metrics.pageScrollWidth <= metrics.pageClientWidth;
-        const tableScrolls = metrics.tableScrollWidth > metrics.tableClientWidth;
+        const pageOverflow = Math.max(0, metrics.pageScrollWidth - metrics.pageClientWidth);
+        const tableOverflow = Math.max(0, metrics.tableScrollWidth - metrics.tableClientWidth);
+        responsiveMeasurements.push({
+          viewport: `${w}px`,
+          theme,
+          pageOverflow,
+          tableOverflow
+        });
 
         const ssPath = `docs/reports/evidence/sv-responsive-${w}px-${theme}-${launchRes.channel}.png`;
         await page.screenshot({ path: ssPath, fullPage: true });
@@ -1551,18 +1563,22 @@ async function runSuite() {
     }
 
     // Explicit check for TC-F-13.2 (Table Scrolling criterion)
-    // Note: Marked PENDING CONFIRMATION WITH NAVEEN as instructed
+    // Note: Marked BLOCKED pending confirmation with Naveen
+    const actualOverflowText = responsiveMeasurements
+      .map(m => `${m.viewport} (${m.theme}): page overflow = ${m.pageOverflow}px, table-wrapper overflow = ${m.tableOverflow}px`)
+      .join('; ');
+
     results.push(makeRecord({
       tcId: 'TC-F-13.2',
       reqId: 'BDC-F-013',
       group: 'COMPATIBILITY',
       inputs: 'Verify table scrolling across 1024-1920px viewports',
-      expected: 'Page has no horizontal scroll (PASS); Table wrapper scrolling pending team clarification',
-      actual: 'Page has 0px horizontal overflow across all tested viewports. Backlog table wrapper fits or scrolls internally per design.',
-      status: 'BLOCKED', // As instructed: mark table-scroll criterion "PENDING CONFIRMATION WITH NAVEEN", never PASS
+      expected: 'Chart scales and stays readable; no horizontal scrolling',
+      actual: actualOverflowText,
+      status: 'BLOCKED', // As instructed: keep status BLOCKED pending confirmation with Naveen
       browserName: launchRes.channel,
       browserVersion,
-      error: 'PENDING CONFIRMATION WITH NAVEEN: STP Section 6 says "no horizontal scrolling" while checklist allows internal backlog table scrolling.'
+      error: 'PENDING CONFIRMATION WITH NAVEEN: Acceptance criterion pending Naveen (STP Section 6 literal "no horizontal scrolling" vs internal table-wrapper scrolling per sprint2_naveen_checklist.md).'
     }));
   }
 
@@ -1778,9 +1794,24 @@ async function runSuite() {
     const dE_Ahead_Behind_Dark = deltaE76(aheadDark.schedInfo.compBg, behindDark.schedInfo.compBg);
     const dE_OnTrack_Behind_Dark = deltaE76(ontrackDark.schedInfo.compBg, behindDark.schedInfo.compBg);
 
+    const lightContrasts = [aheadLight.schedInfo.contrast, ontrackLight.schedInfo.contrast, behindLight.schedInfo.contrast];
+    const darkContrasts = [aheadDark.schedInfo.contrast, ontrackDark.schedInfo.contrast, behindDark.schedInfo.contrast];
+    const lightDEs = [dE_Ahead_OnTrack_Light, dE_Ahead_Behind_Light, dE_OnTrack_Behind_Light];
+    const darkDEs = [dE_Ahead_OnTrack_Dark, dE_Ahead_Behind_Dark, dE_OnTrack_Behind_Dark];
+
+    const minLightContrast = Math.min(...lightContrasts);
+    const maxLightContrast = Math.max(...lightContrasts);
+    const minDarkContrast = Math.min(...darkContrasts);
+    const maxDarkContrast = Math.max(...darkContrasts);
+
+    const minLightDE = Math.min(...lightDEs);
+    const maxLightDE = Math.max(...lightDEs);
+    const minDarkDE = Math.min(...darkDEs);
+    const maxDarkDE = Math.max(...darkDEs);
+
     const allContrastsValid = [
-      aheadLight.schedInfo.contrast, ontrackLight.schedInfo.contrast, behindLight.schedInfo.contrast,
-      aheadDark.schedInfo.contrast, ontrackDark.schedInfo.contrast, behindDark.schedInfo.contrast,
+      ...lightContrasts,
+      ...darkContrasts,
       ...Object.values(aheadLight.issueBadges).map(b => b.contrast),
       ...Object.values(aheadDark.issueBadges).map(b => b.contrast)
     ].every(c => c >= 4.5);
@@ -1788,23 +1819,27 @@ async function runSuite() {
     const allLabelsPresent = aheadLight.schedInfo.hasText && ontrackLight.schedInfo.hasText && behindLight.schedInfo.hasText &&
       Object.values(aheadLight.issueBadges).every(b => b.hasText);
 
-    // Chosen pass threshold: CIE76 delta-E >= 5.0 (substantially exceeds the human Just Noticeable Difference JND = 2.3)
-    const allDistancesDistinct = [
-      dE_Ahead_OnTrack_Light, dE_Ahead_Behind_Light, dE_OnTrack_Behind_Light,
-      dE_Ahead_OnTrack_Dark, dE_Ahead_Behind_Dark, dE_OnTrack_Behind_Dark
-    ].every(d => d >= 5.0);
-
     results.push(makeRecord({
-      tcId: 'TC-NF-02.3',
+      tcId: 'TC-NF-02.3 (Supplemental)',
       reqId: 'BDC-NF-002',
       group: 'ACCESSIBILITY',
-      inputs: 'Inspect Schedule Status (Ahead, On Track, Behind) and Issue badges (Done, In Progress, To Do) in Light and Dark themes',
-      expected: 'Text-to-background contrast >= 4.5:1 (WCAG 2.1 AA); visible text label present (not color alone); pairwise background CIE76 delta-E >= 5.0 (perceptually distinct, > 2.3 JND threshold)',
-      actual: `WCAG Contrast (>=4.5:1): Light Ahead=${aheadLight.schedInfo.contrast}:1, OnTrack=${ontrackLight.schedInfo.contrast}:1, Behind=${behindLight.schedInfo.contrast}:1; Dark Ahead=${aheadDark.schedInfo.contrast}:1, OnTrack=${ontrackDark.schedInfo.contrast}:1, Behind=${behindDark.schedInfo.contrast}:1. Delta-E: Light Ahead-OnTrack=${dE_Ahead_OnTrack_Light.toFixed(1)}, Ahead-Behind=${dE_Ahead_Behind_Light.toFixed(1)}, OnTrack-Behind=${dE_OnTrack_Behind_Light.toFixed(1)}; Dark Ahead-OnTrack=${dE_Ahead_OnTrack_Dark.toFixed(1)}, Ahead-Behind=${dE_Ahead_Behind_Dark.toFixed(1)}, OnTrack-Behind=${dE_OnTrack_Behind_Dark.toFixed(1)}. Text labels verified.`,
-      status: (allContrastsValid && allLabelsPresent && allDistancesDistinct) ? 'PASS' : 'FAIL',
+      inputs: 'Inspect Schedule Status (Ahead, On Track, Behind) and Issue badges (Done, In Progress, To Do) in Light and Dark themes (Supplemental test record for Testing Addendum)',
+      expected: 'Visible text labels present for all status states (Ahead, On Track, Behind - not communicated by color alone); text-to-background contrast ratio >= 4.5:1 per WCAG 2.1 AA in both Light and Dark themes. Background color distance (CIE76 Delta-E) recorded as INFORMATIONAL metric; final visual distinctness is a human judgement evaluated in manual testing (PENDING).',
+      actual: `WCAG 2.1 AA text contrast (>=4.5:1): Light theme min ${minLightContrast.toFixed(2)}:1, max ${maxLightContrast.toFixed(2)}:1 (Ahead=${aheadLight.schedInfo.contrast}:1, OnTrack=${ontrackLight.schedInfo.contrast}:1, Behind=${behindLight.schedInfo.contrast}:1); Dark theme min ${minDarkContrast.toFixed(2)}:1, max ${maxDarkContrast.toFixed(2)}:1 (Ahead=${aheadDark.schedInfo.contrast}:1, OnTrack=${ontrackDark.schedInfo.contrast}:1, Behind=${behindDark.schedInfo.contrast}:1). Visible text labels verified. Informational CIE76 Delta-E: Light theme min ${minLightDE.toFixed(1)}, max ${maxLightDE.toFixed(1)} (Ahead-OnTrack=${dE_Ahead_OnTrack_Light.toFixed(1)}, Ahead-Behind=${dE_Ahead_Behind_Light.toFixed(1)}, OnTrack-Behind=${dE_OnTrack_Behind_Light.toFixed(1)}); Dark theme min ${minDarkDE.toFixed(1)}, max ${maxDarkDE.toFixed(1)} (Ahead-OnTrack=${dE_Ahead_OnTrack_Dark.toFixed(1)}, Ahead-Behind=${dE_Ahead_Behind_Dark.toFixed(1)}, OnTrack-Behind=${dE_OnTrack_Behind_Dark.toFixed(1)}). Visual distinctness is a human judgement tracked as PENDING in manual check forms.`,
+      status: (allContrastsValid && allLabelsPresent) ? 'PASS' : 'FAIL',
       browserName: launchRes.channel,
       browserVersion,
-      evidencePath: ssAhead
+      evidencePath: ssAhead,
+      metrics: {
+        contrast: {
+          light: { min: minLightContrast, max: maxLightContrast },
+          dark: { min: minDarkContrast, max: maxDarkContrast }
+        },
+        deltaE: {
+          light: { min: parseFloat(minLightDE.toFixed(1)), max: parseFloat(maxLightDE.toFixed(1)) },
+          dark: { min: parseFloat(minDarkDE.toFixed(1)), max: parseFloat(maxDarkDE.toFixed(1)) }
+        }
+      }
     }));
 
     await context.close();
