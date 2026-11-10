@@ -1,0 +1,68 @@
+{
+  "day4": {
+    "light": {
+      "text": "▲\n          Ahead of Schedule",
+      "className": "status-badge status--ahead",
+      "backgroundColor": "rgb(236, 253, 245)",
+      "color": "rgb(6, 95, 70)",
+      "border": "1px solid rgb(167, 243, 208)",
+      "borderColor": "rgb(167, 243, 208)",
+      "borderWidth": "1px",
+      "borderStyle": "solid"
+    },
+    "dark": {
+      "text": "▲\n          Ahead of Schedule",
+      "className": "status-badge status--ahead",
+      "backgroundColor": "rgba(16, 185, 129, 0.15)",
+      "color": "rgb(52, 211, 153)",
+      "border": "1px solid rgba(16, 185, 129, 0.35)",
+      "borderColor": "rgba(16, 185, 129, 0.35)",
+      "borderWidth": "1px",
+      "borderStyle": "solid"
+    }
+  },
+  "day6": {
+    "light": {
+      "text": "▬\n          On Track",
+      "className": "status-badge status--on-track",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "color": "rgb(30, 64, 175)",
+      "border": "1px solid rgb(191, 219, 254)",
+      "borderColor": "rgb(191, 219, 254)",
+      "borderWidth": "1px",
+      "borderStyle": "solid"
+    },
+    "dark": {
+      "text": "▬\n          On Track",
+      "className": "status-badge status--on-track",
+      "backgroundColor": "rgba(59, 130, 246, 0.15)",
+      "color": "rgb(96, 165, 250)",
+      "border": "1px solid rgba(59, 130, 246, 0.35)",
+      "borderColor": "rgba(59, 130, 246, 0.35)",
+      "borderWidth": "1px",
+      "borderStyle": "solid"
+    }
+  },
+  "day7": {
+    "light": {
+      "text": "▼\n          Behind Schedule",
+      "className": "status-badge status--behind",
+      "backgroundColor": "rgb(254, 242, 242)",
+      "color": "rgb(185, 28, 28)",
+      "border": "1px solid rgb(254, 202, 202)",
+      "borderColor": "rgb(254, 202, 202)",
+      "borderWidth": "1px",
+      "borderStyle": "solid"
+    },
+    "dark": {
+      "text": "▼\n          Behind Schedule",
+      "className": "status-badge status--behind",
+      "backgroundColor": "rgba(239, 68, 68, 0.15)",
+      "color": "rgb(248, 113, 113)",
+      "border": "1px solid rgba(239, 68, 68, 0.35)",
+      "borderColor": "rgba(239, 68, 68, 0.35)",
+      "borderWidth": "1px",
+      "borderStyle": "solid"
+    }
+  }
+}
