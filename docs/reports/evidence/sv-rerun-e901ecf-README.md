@@ -26,12 +26,13 @@ The one BLOCKED record in each browser is `TC-F-13.2`, the table-scroll criterio
 - Same 53 record IDs in both browsers, and **no status differs** in any of the 106 record pairs.
 - The result text of 52 of the 53 records in each browser is identical. The one that differs is `TC-NF-01.1`, which holds timings. Medians were lower in this run (Chrome 16.5 to 19.3 ms, Edge 17.3 to 19.1 ms) than in Run 2 (Chrome 23.7 to 26.5 ms, Edge 24.1 to 27.5 ms). Both are far under the 2000 ms limit. The difference reflects load on the machine, not a change in the application.
 
-## Two labels in these files are wrong for this run
+## Three labels in these files are wrong for this run
 
-The runner has two constants written into the code. They appear in every record and log line, and I did not change the runner.
+The runner has three constants written into the code. They appear in the records or log headers, and I did not change the runner.
 
 - `commitSha` and the log line "Target Tested Commit" say `222089658f26…` (the baseline). The code actually served was `e901ecf`.
 - `tester` and the log line "Tester" say `stacktrace-bhuvi`. This run was executed by Hemanth Reddy.
+- `executionDate` says `2026-11-07`. The actual re-run was on `2026-11-09`, as shown by this README and the timestamped execution logs. The original raw files are preserved; use this provenance note when interpreting their inherited labels.
 
 ## What this does and does not show
 
