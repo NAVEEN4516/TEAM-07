@@ -45,9 +45,14 @@ A comprehensive, rigorous end-to-end System Validation was conducted on the TEAM
   - **Reset Data:** median 38.40 ms (Chrome) / 40.80 ms (Edge) / 50.00 ms (Firefox)
   - **STP Threshold (< 2000 ms):** 100% PASS with > 20x to 50x safety margin across all browsers.
 - **Security & Resilience:** CSP meta tag precedes all scripts, script-src 'self', no unsafe-eval, noscript notice present, `file://` guidance warning banner visible, XSS payloads neutralized as literal text, and invalid numbers rejected without store corruption.
-- **Manual Verification Status:**
-  - Physical Mozilla Firefox manual test sheet: **NOT EXECUTED** (template `docs/reports/evidence/sv-manual-firefox-85391ae.md` provided with PENDING cells).
-  - Physical screen-reader audio speech verification: **NOT EXECUTED** (template `docs/reports/evidence/sv-manual-screenreader-85391ae.md` provided with PENDING cells).
+- **Manual Verification Status (Bhuvi `@stacktrace-bhuvi`, 2026-11-10):**
+  - **Mozilla Firefox 159.0.1 (Installed Release):** **33 PASS, 0 FAIL, 0 NOT EXECUTED** (29 functional workflow test cases + 4 responsive viewports) executed against tested commit `500a4be3961103480c6274b89eddca34a219ccce` (source tree `4a2278fd1774ecfb0cb43d1e6f9b00e386b344e8`) at `http://127.0.0.1:8090/index.html` (recorded in `docs/reports/evidence/sv-manual-firefox-85391ae.md`).
+  - **Screen Reader (NVDA 2026.3 on Firefox 159.0.1):** **22 PASS, 0 FAIL, 0 NOT EXECUTED** (scenarios `SR-01` through `SR-22`) executed against tested commit `500a4be3961103480c6274b89eddca34a219ccce` (source tree `4a2278fd1774ecfb0cb43d1e6f9b00e386b344e8`) at `http://127.0.0.1:8090/index.html` (recorded in `docs/reports/evidence/sv-manual-screenreader-85391ae.md`).
+  - **Methodology & Integrity Notes:**
+    - No screenshots were taken for manual checks.
+    - For screen-reader rows where the tester recorded only `PASS`, the exact NVDA speech wording was not recorded (`Tester recorded PASS; NVDA speech wording not recorded`).
+    - The responsive overflow numbers are recorded as measured (`page: 0`, `table: 0` across all tested viewports in Firefox Responsive Design Mode).
+    - Formal test case `TC-F-13.2` stays **BLOCKED** pending acceptance criterion agreement with Naveen.
 
 ### Test Execution History & Audit Trail
 - **Run 1 (2026-11-07, Baseline `2220896`):** Produced 48 PASS / 4 FAIL / 1 BLOCKED per browser. Detailed root-cause analysis identified 4 test-runner assertion/locator defects (`TC-F-01.1`, `TC-F-06.3`, `TC-F-09.1`, `TC-SR-03.1`). Archived in `docs/reports/evidence/superseded/`.
@@ -151,6 +156,43 @@ Measurements across all 4 target viewports (1024, 1366, 1440, 1920 px) in Light 
 
 *Note on TC-F-13.2:* Kept as **BLOCKED** per explicit instruction. Page-level horizontal overflow is strictly 0 px across all tested viewports in all three browsers. The internal `.table-wrapper` accommodates narrow viewports (e.g. 1366px split grid) via internal overflow-x scrolling (36 px at 1366px). The classification remains pending team alignment on whether internal wrapper scrolling satisfies the STP Table 9 criterion.
 
+### Manual Mozilla Firefox Verification (v159.0.1 Installed Release)
+
+- **QA Tester:** Bhuvi (`@stacktrace-bhuvi`)
+- **Execution Date:** 2026-11-10
+- **Browser & Version:** Mozilla Firefox 159.0.1 (installed release, 64-bit desktop)
+- **Host OS & Build:** Microsoft Windows [Version 10.0.26200.9711]
+- **Tested Commit (HEAD):** `500a4be3961103480c6274b89eddca34a219ccce`
+- **Application Source Tree (HEAD:src):** `4a2278fd1774ecfb0cb43d1e6f9b00e386b344e8`
+- **Tested URL:** `http://127.0.0.1:8090/index.html` (snapshot copy)
+- **Total Result:** **33 PASS, 0 FAIL, 0 NOT EXECUTED** (29 functional test cases + 4 responsive viewports)
+- **Traceable Run Sheet:** `docs/reports/evidence/sv-manual-firefox-85391ae.md`
+
+#### Responsive Viewports & Themes (Firefox Responsive Design Mode `Ctrl + Shift + M`)
+| Viewport | Light Theme | Dark Theme | No Page Scroll (`scrollWidth <= clientWidth`) | Table Wrapper Behavior | Status |
+| :--- | :---: | :---: | :--- | :--- | :---: |
+| **1024 x 900** | PASS | PASS | page: 0 | table: 0 | **PASS** |
+| **1366 x 900** | PASS | PASS | page: 0 | table: 0 | **PASS** |
+| **1440 x 900** | PASS | PASS | page: 0 | table: 0 | **PASS** |
+| **1920 x 900** | PASS | PASS | page: 0 | table: 0 | **PASS** |
+
+- **High-Density Text Stress Test:** Long key (60 chars) + long summary (200 chars), layout intact?: **yes** (verified without horizontal page overflow or clipping).
+- **Execution & Disclosure Notes:**
+  - No screenshots were taken for manual checks.
+  - The responsive overflow numbers are recorded as measured (`page: 0`, `table: 0`).
+  - Formal test case `TC-F-13.2` stays **BLOCKED** pending acceptance criterion agreement with Naveen.
+
+#### Manual Functional Workflow Verification (29 Cases)
+All 29 functional scenarios in groups G1–G8 were manually executed and verified on physical Firefox 159.0.1:
+- **Group G1 (Default State):** `TC-F-02.1` (50 pts), `TC-F-04.1` (10 rows in order), `TC-F-05.1` (Compared 10 of 10 rows), `TC-F-10.1` (Ideal line descending linearly), `TC-F-11.1` (Actual points Day 0..4), `TC-F-13.1` (Dashed vs solid line styling), `TC-F-15.1` (50, 29, 21, 4, 6, +9 pts) — all **PASS**.
+- **Group G2 (Sprint Config):** `TC-F-01.1` (Sprint 2, 5 days), `TC-F-01.2` (Duration boundaries & validation), `TC-F-01.3` (End before start rejected) — all **PASS**.
+- **Group G3 (Current Day & Marker):** `TC-F-03.1` (Advance to Day 6), `TC-F-03.2` (Day 0 & 10 boundaries), `TC-F-11.2` (Nothing plotted past Day 4), `TC-F-14.1` (Red vertical marker movement) — all **PASS**.
+- **Group G4 (Add Issue):** `TC-F-06.1` (Add PROJ-111), `TC-F-02.2` (Add 5 pt issue and delete), `TC-F-06.2` (Duplicate key rejection), `TC-F-06.3` (Empty form validation), `TC-F-06.4` (0 pt issue accepted without NaN) — all **PASS**.
+- **Group G5 (Edit & Reopen):** `TC-F-07.1` (Edit PROJ-106 to Done on Day 4), `TC-F-15.2` (Reopen PROJ-106), `TC-F-07.2` (Invalid completion days rejected), `TC-F-07.3` (Reopen clears completion day cell to "--") — all **PASS**.
+- **Group G6 (Delete & Empty Backlog):** `TC-F-08.1` (Delete PROJ-110), `TC-SR-04.1` (Delete all issues to empty state) — all **PASS**.
+- **Group G7 (Reset Data):** `TC-F-09.1` (Reset Data restores baseline defaults) — **PASS**.
+- **Group G8 (Status Classification):** `TC-F-12.1` (Day 4 "Ahead of Schedule"), `TC-F-12.2` (Day 6 "On Track"), `TC-F-12.3` (Day 7 "Behind Schedule") — all **PASS**.
+
 ---
 
 ## 4. Accessibility & Pure Keyboard Navigation (BDC-NF-002)
@@ -178,7 +220,48 @@ All interactions executed strictly via `page.keyboard` (Tab, Shift+Tab, Enter, S
 | **TC-NF-02.2** | BDC-NF-002 | Inspect form controls and live announcements | 100% of controls labeled; aria-live polite region active | All controls labeled: true / **PASS** | All controls labeled: true / **PASS** | All controls labeled: true / **PASS** |
 | **TC-NF-02.3 (Supplemental)** | BDC-NF-002 | Inspect Schedule Status and Issue badges in Light and Dark themes (Supplemental test record for Testing Addendum) | Visible text labels present for all status states (Ahead, On Track, Behind - not communicated by color alone); text-to-background contrast ratio >= 4.5:1 per WCAG 2.1 AA in both Light and Dark themes. Background color distance (CIE76 Delta-E) recorded as INFORMATIONAL metric; final visual distinctness is a human judgement evaluated in manual testing (PENDING). | WCAG 2.1 AA text contrast (>=4.5:1): Light theme min 5.91:1, max 8.01:1 (Ahead=7.29:1, OnTrack=8.01:1, Behind=5.91:1); Dark theme min 4.63:1, max 5.91:1 (Ahead=5.91:1, OnTrack=4.77:1, Behind=4.63:1). Visible text labels verified. Informational CIE76 Delta-E: Light theme min 8.0, max 11.1 (Ahead-OnTrack=9.5, Ahead-Behind=11.1, OnTrack-Behind=8.0); Dark theme min 17.3, max 21.1 (Ahead-OnTrack=19.8, Ahead-Behind=21.1, OnTrack-Behind=17.3). Visual distinctness is a human judgement tracked as PENDING in manual check forms. / **PASS** | Same / **PASS** | Same / **PASS** |
 
-*Manual Accessibility Note:* Screen-reader audio speech synthesis is tracked in `docs/reports/evidence/sv-manual-screenreader-85391ae.md` and remains **NOT EXECUTED** (PENDING).
+### Physical Assistive Technology & Screen-Reader Verification (NVDA 2026.3 on Firefox 159.0.1)
+
+- **QA Tester:** Bhuvi (`@stacktrace-bhuvi`)
+- **Execution Date:** 2026-11-10
+- **Assistive Technology:** NVDA 2026.3 (2026.3.0.58174) (temporary/portable)
+- **Browser & Version:** Mozilla Firefox 159.0.1 (installed release)
+- **Host OS & Build:** Microsoft Windows [Version 10.0.26200.9711]
+- **Tested Commit (HEAD):** `500a4be3961103480c6274b89eddca34a219ccce`
+- **Application Source Tree (HEAD:src):** `4a2278fd1774ecfb0cb43d1e6f9b00e386b344e8`
+- **Tested URL:** `http://127.0.0.1:8090/index.html` (snapshot copy)
+- **Total Result:** **22 PASS, 0 FAIL, 0 NOT EXECUTED** (22 scenarios evaluated)
+- **Traceable Run Sheet:** `docs/reports/evidence/sv-manual-screenreader-85391ae.md`
+
+#### NVDA Auditory Verification Results
+| Scenario # | User Action & Element | Expected Screen Reader Speech Output | Actual Speech Output | Status |
+| :--- | :--- | :--- | :--- | :---: |
+| **SR-01** | Press `Tab` on initial page load (Skip Link) | "Skip to dashboard, link" | Tester recorded PASS; NVDA speech wording not recorded | **PASS** |
+| **SR-02** | Press `Enter` on Skip Link | Focus shifts to `#main-content`; announces "dashboard, main" or main landmark; bypasses header | Tester recorded PASS; NVDA speech wording not recorded | **PASS** |
+| **SR-03** | Navigate with `Tab` to Theme Toggle | "Switch to dark theme, button" / "Switch to light theme, button" | Tester recorded PASS; NVDA speech wording not recorded | **PASS** |
+| **SR-04** | Press `Space` on Theme Toggle | Button label and theme state update announced without focus loss | Tester recorded PASS; NVDA speech wording not recorded | **PASS** |
+| **SR-05** | Tab to Sprint Settings button | "Configure Sprint Parameters, button" | Tester recorded PASS; NVDA speech wording not recorded | **PASS** |
+| **SR-06** | Submit Sprint Config with invalid duration | Focus moved to error alert region; announces "Please review and correct the following errors: Sprint duration cannot exceed 60 working days" | Tester recorded PASS; NVDA speech wording not recorded | **PASS** |
+| **SR-07** | Tab to Current Day Range Slider | "Current Day slider, 4, minimum 0, maximum 10" | Tester recorded PASS; NVDA speech wording not recorded | **PASS** |
+| **SR-08** | Press `Right Arrow` on Current Day slider | Announces incremented value "5", "6" | Tester recorded PASS; NVDA speech wording not recorded | **PASS** |
+| **SR-09** | Navigate to Prev Day button at Day 0 | Announces "Move to previous day, button, disabled" (unclickable) | Tester recorded PASS; NVDA speech wording not recorded | **PASS** |
+| **SR-10** | Navigate to Next Day button at Day 10 | Announces "Move to next day, button, disabled" (unclickable) | Tester recorded PASS; NVDA speech wording not recorded | **PASS** |
+| **SR-11** | Inspect KPI Cards with Virtual Cursor | Reads card labels and live metrics: "Total Scope 50 story points", "Completed 29 points", "Remaining 21 points", "Schedule Status Ahead of Schedule, 9 points ahead" | Tester recorded PASS; NVDA speech wording not recorded | **PASS** |
+| **SR-12** | Live KPI Updates on Data Mutation | Live region (`aria-live="polite"`) announces metric changes when idle without interrupting current reading | Tester recorded PASS; NVDA speech wording not recorded | **PASS** |
+| **SR-13** | Jump to Backlog Table (`T`) | Announces table caption: "Sprint Backlog Issues, table with 6 columns and 10 rows" | Tester recorded PASS; NVDA speech wording not recorded | **PASS** |
+| **SR-14** | Table Column Header Reading | Moving horizontally announces column header then cell content (e.g. "Key: PROJ-101", "Status: Done", "Completion Day: 1") | Tester recorded PASS; NVDA speech wording not recorded | **PASS** |
+| **SR-15** | Add Issue Form Fields & Hints | Each form control announces its accessible label and hint text (e.g. "Issue Key required", "Duration working days 1 to 60") | Tester recorded PASS; NVDA speech wording not recorded | **PASS** |
+| **SR-16** | Add Issue Submission Feedback | Live region announces: "PROJ-111 added to sprint backlog. Chart and metrics refreshed." | Tester recorded PASS; NVDA speech wording not recorded | **PASS** |
+| **SR-17** | Duplicate Key Validation Error | Live alert announces: "An issue with this key already exists" | Tester recorded PASS; NVDA speech wording not recorded | **PASS** |
+| **SR-18** | Edit Issue Modal Opening | Focus shifts to status select; announces "Edit PROJ-106, Status combobox, In Progress" | Tester recorded PASS; NVDA speech wording not recorded | **PASS** |
+| **SR-19** | Cancel Edit with `Escape` | Modal closes; focus returns directly to "Edit PROJ-106, button" | Tester recorded PASS; NVDA speech wording not recorded | **PASS** |
+| **SR-20** | Delete Issue Focus Return | Pressing Enter on Delete PROJ-111 announces deletion and focus moves to adjacent Delete button | Tester recorded PASS; NVDA speech wording not recorded | **PASS** |
+| **SR-21** | Reset Data Confirmation | Announces: "Sprint data reset to default sample dataset." | Tester recorded PASS; NVDA speech wording not recorded | **PASS** |
+| **SR-22** | Status badges Day 4/6/7 light + dark | Text clear, colours distinct, and perceptible under grayscale | Tester recorded PASS; NVDA speech wording not recorded | **PASS** |
+
+- **Execution & Disclosure Notes:**
+  - No screenshots were taken for manual screen-reader checks.
+  - For rows where the tester recorded only `PASS`, the exact NVDA speech wording was not recorded (`Tester recorded PASS; NVDA speech wording not recorded`). All 22 test rows passed.
 
 ---
 
@@ -259,8 +342,8 @@ All evidence files generated during System Validation are committed in `docs/rep
   - Before/after status badge screenshots at Days 4, 6, 7 in Light and Dark themes
 - **Traceability & Manual Sheets:**
   - `docs/reports/evidence/sv-report-label-audit-85391ae.md` (All 44 STP cases mapped)
-  - `docs/reports/evidence/sv-manual-firefox-85391ae.md` (Manual Firefox template with PENDING cells)
-  - `docs/reports/evidence/sv-manual-screenreader-85391ae.md` (Screen-reader template with PENDING cells)
+  - `docs/reports/evidence/sv-manual-firefox-85391ae.md` (Manual Firefox execution sheet: 33 PASS, 0 FAIL, 0 NOT EXECUTED)
+  - `docs/reports/evidence/sv-manual-screenreader-85391ae.md` (Screen-reader execution sheet: 22 PASS, 0 FAIL, 0 NOT EXECUTED; 22 rows without verbatim speech wording)
   - `docs/reports/evidence/superseded/` (Archived Run 1, Run 2, and Run 3a records)
 - **High-Resolution Screenshots:**
   - Canvas Marker Verification: `sv-marker-day0-*`, `sv-marker-day4-*`, `sv-marker-day6-*`, `sv-marker-day10-*` (Chrome, Edge, Firefox)
@@ -272,8 +355,10 @@ All evidence files generated during System Validation are committed in `docs/rep
 
 ## 10. Conclusion & Recommendation
 
-System Validation Run 3b on commit `85391ae9181a666cc5b975968070e3dc5059a352` achieves **62 PASS, 0 FAIL, 1 BLOCKED, 0 NOT EXECUTED** per browser across Google Chrome, Microsoft Edge, and Mozilla Firefox (186 PASS / 0 FAIL / 3 BLOCKED total).
+System Validation Run 3b on commit `85391ae9181a666cc5b975968070e3dc5059a352` achieves **62 PASS, 0 FAIL, 1 BLOCKED, 0 NOT EXECUTED** per browser across Google Chrome, Microsoft Edge, and Mozilla Firefox (186 PASS / 0 FAIL / 3 BLOCKED total across automated engines).
 
-The single BLOCKED case (`TC-F-13.2`) is isolated to specification ambiguity regarding internal table scrolling versus strict viewport overflow, and has zero impact on core burndown calculation or UI stability. All unit tests pass (411/411). Defect SV-D-01 is verified fixed and covered by regression testing.
+Physical manual testing completed by Bhuvi (`@stacktrace-bhuvi`) on desktop Mozilla Firefox 159.0.1 (**33 PASS, 0 FAIL, 0 NOT EXECUTED**) and NVDA 2026.3 screen reader (**22 PASS, 0 FAIL, 0 NOT EXECUTED**) against commit `500a4be3961103480c6274b89eddca34a219ccce` (source tree `4a2278fd1774ecfb0cb43d1e6f9b00e386b344e8`).
 
-This report is delivered as complete testing-phase evidence for PR review into `develop`. Physical manual testing (Firefox and screen reader) remains documented as NOT EXECUTED templates for subsequent QA phase execution.
+The single BLOCKED case (`TC-F-13.2`) remains isolated to specification ambiguity regarding internal table scrolling versus strict viewport overflow, and has zero impact on core burndown calculation or UI stability. All unit tests pass (411/411). Defect SV-D-01 is verified fixed and covered by regression testing.
+
+This report is delivered as complete testing-phase evidence for PR review into `develop`.
