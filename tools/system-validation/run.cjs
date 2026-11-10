@@ -580,7 +580,7 @@ async function runSuite() {
     await loc.saveSprintBtn.click();
     const errTextDecimal = (await loc.sprintConfigErrors.textContent()).trim();
 
-    await loc.inputDurationDays.fill('abc');
+    await loc.inputDurationDays.evaluate(el => { el.value = 'abc'; });
     await loc.saveSprintBtn.click();
     const errTextAbc = (await loc.sprintConfigErrors.textContent()).trim();
 
