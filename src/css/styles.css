@@ -1144,7 +1144,8 @@ input[type="number"].form-input {
 }
 
 /* KPI Status Badges */
-.badge-ahead {
+.badge-ahead,
+.status--ahead {
   background-color: var(--status-done-bg);
   color: var(--status-done-text);
   border: 1px solid var(--status-done-border);
@@ -1154,7 +1155,8 @@ input[type="number"].form-input {
   font-size: 0.75rem;
 }
 
-.badge-ontrack {
+.badge-ontrack,
+.status--on-track {
   background-color: var(--status-progress-bg);
   color: var(--status-progress-text);
   border: 1px solid var(--status-progress-border);
@@ -1164,10 +1166,11 @@ input[type="number"].form-input {
   font-size: 0.75rem;
 }
 
-.badge-behind {
-  background-color: rgba(239, 68, 68, 0.15);
-  color: #ef4444;
-  border: 1px solid rgba(239, 68, 68, 0.35);
+.badge-behind,
+.status--behind {
+  background-color: var(--status-behind-bg, rgba(239, 68, 68, 0.15));
+  color: var(--status-behind-text, #ef4444);
+  border: 1px solid var(--status-behind-border, rgba(239, 68, 68, 0.35));
   border-radius: 9999px;
   padding: 0.2rem 0.6rem;
   font-weight: 600;

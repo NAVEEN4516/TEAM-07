@@ -1,17 +1,22 @@
 # System Validation: Defects & Discrepancies Log
 
 - **Document ID:** SV-DEFECTS-LOG-01
-- **Tested Commit (Baseline SHA):** `222089658f26badaf5c9f6d3c60e75986ebd6320`
-- **Execution Date:** 2026-11-07
+- **Tested Commits:**
+  - Initial Baseline SHA: `222089658f26badaf5c9f6d3c60e75986ebd6320`
+  - Defect Discovery SHA: `e901ecf17232f97a307ab6c723ba13bdc26aa744`
+  - Defect Fix SHA: `a8be0d2` (verified in subsequent test commits)
+- **Execution Dates:** 2026-11-07 (Baseline & Run 2), 2026-11-10 (Run 3 & Retest)
 - **QA Tester:** Bhuvi (`@stacktrace-bhuvi`)
-- **Status:** **0 Fatal Defects, 3 Architectural / Specification Observations**
+- **Status:** **1 Fixed UI Defect (SV-D-01), 4 Architectural / Specification Observations (OBS-01 to OBS-04)**
 
 ---
 
 ## 1. Executive Summary
-During System Validation testing of the baseline commit `222089658f26badaf5c9f6d3c60e75986ebd6320`, zero blocking software defects, data integrity failures, or security vulnerabilities were identified in the codebase. All 255 automated unit tests pass, and 52 of 53 automated browser system validation test records passed across Chromium engines (Google Chrome `156.0.8078.80` and Microsoft Edge `157.0.4341.42`), with 1 test case (TC-F-13.2) marked BLOCKED pending team alignment on the table-scroll criterion.
+During System Validation testing of the baseline commit `222089658f26badaf5c9f6d3c60e75986ebd6320`, zero blocking data integrity failures or security vulnerabilities were identified in the codebase. All automated unit tests passed, and browser system validation test records passed across Chromium engines with 1 test case (TC-F-13.2) marked BLOCKED pending team alignment on the table-scroll criterion.
 
-Three specification ambiguities and behavioral observations were identified and documented below for coordination with Naveen and the team.
+During multi-browser and accessibility execution on branch commit `e901ecf17232f97a307ab6c723ba13bdc26aa744`, automated status indicator contrast and visual verification revealed a UI styling defect (**SV-D-01**): schedule status badges rendered without their intended CSS class rules, appearing with transparent backgrounds and identical text color across all three schedule states. The defect was isolated, fixed in `a8be0d2`, backed by a strengthened automated regression test in `tests/ui/kpiCards.test.js`, and retested across Google Chrome, Microsoft Edge, and Mozilla Firefox.
+
+Four specification ambiguities and behavioral observations (OBS-01 through OBS-04) are also documented below.
 
 ---
 
@@ -19,6 +24,7 @@ Three specification ambiguities and behavioral observations were identified and 
 
 | Item ID | Category | Severity | Test Case Reference | Title | Status |
 | :--- | :--- | :--- | :--- | :--- | :--- |
+| **SV-D-01** | UI Styling Defect | Medium | TC-NF-02.2, TC-NF-02.3, BDC-NF-002 | Schedule status badge unstyled due to CSS class selector mismatch | **FIXED & VERIFIED** |
 | **OBS-01** | Ambiguity | Medium | TC-F-13.2, TC-NF-04.2 | Table Scrolling Criterion Ambiguity | **PENDING CONFIRMATION WITH NAVEEN** |
 | **OBS-02** | Spec Divergence | Low | TC-F-01.3 | Sprint End Date Equality (`endDate === startDate`) | **PROPOSED CORRECTION** |
 | **OBS-03** | Edge Behavior | Low | TC-F-01.1, TC-F-07.1 | Duration Shortening Impact on Completed Issues | **DOCUMENTED AS DESIGN INTENT** |
@@ -27,6 +33,44 @@ Three specification ambiguities and behavioral observations were identified and 
 ---
 
 ## 3. Detailed Item Analysis
+
+### Item SV-D-01: Schedule Status Badge Unstyled Due to CSS Selector Mismatch
+- **Reference:** SRS Section 5 (BDC-NF-002: Accessible Status Indicators), Software Test Plan Section 13.2 (TC-NF-02.2), Testing Phase Addendum (clear text and visibly distinct colors).
+- **Severity:** **Medium** (Visual accessibility defect; does not crash runtime or corrupt data, but prevents visual schedule state distinction by color, requiring users to rely solely on text reading).
+- **Discovery SHA:** `e901ecf17232f97a307ab6c723ba13bdc26aa744` (Discovered by automated status-indicator group on 2026-11-10).
+- **Reproduction:**
+  1. Extract application source at commit `e901ecf`:
+     ```bash
+     git archive --format=tar e901ecf src -o /tmp/e901.tar && tar -xf /tmp/e901.tar -C /tmp/e901
+     ```
+  2. Serve `/tmp/e901/src` on a local HTTP port.
+  3. Navigate to `http://127.0.0.1:<port>/index.html?dev`.
+  4. Advance to Day 4 (Ahead), Day 6 (On Track), and Day 7 (Behind) under light and dark themes.
+  5. Inspect computed styles (`backgroundColor`, `color`, `border`) of `[data-testid="status-badge"]`.
+- **Expected vs. Actual:**
+  - **Expected:** Each schedule status renders distinctive background, border, and text styling with WCAG AA contrast $\ge 4.5:1$ against the badge background and visible pairwise color distance between states.
+  - **Actual (Before Fix at `e901ecf`):**
+    `src/js/ui/kpiCards.js` renders HTML classes `.status-badge.status--ahead`, `.status-badge.status--on-track`, and `.status-badge.status--behind`. However, `src/css/styles.css` only defined rules for `.badge-ahead`, `.badge-ontrack`, and `.badge-behind`. Because of this selector naming mismatch, no badge styling rules matched:
+    - `backgroundColor`: `rgba(0, 0, 0, 0)` (fully transparent) across all states and themes.
+    - `color`: `rgb(15, 23, 42)` in light theme and `rgb(249, 250, 251)` in dark theme for **all three states** (Ahead, On Track, Behind).
+    - `borderColor`: `rgba(0, 0, 0, 0)`.
+    - Zero color differentiation existed between Ahead, On Track, and Behind.
+  - **Actual (After Fix):**
+    - Light Theme:
+      - Ahead: text `rgb(6, 95, 70)` on background `rgb(236, 253, 245)`, border `rgb(167, 243, 208)`. Contrast 8.01:1.
+      - On Track: text `rgb(30, 64, 175)` on background `rgb(239, 246, 255)`, border `rgb(191, 219, 254)`. Contrast 7.64:1.
+      - Behind: text `rgb(185, 28, 28)` on background `rgb(254, 242, 242)`, border `rgb(254, 202, 202)`. Contrast 4.63:1.
+    - Dark Theme:
+      - Ahead: text `rgb(52, 211, 153)` on background `rgba(16, 185, 129, 0.15)`. Contrast 6.42:1.
+      - On Track: text `rgb(96, 165, 250)` on background `rgba(59, 130, 246, 0.15)`. Contrast 4.86:1.
+      - Behind: text `rgb(248, 113, 113)` on background `rgba(239, 68, 68, 0.15)`. Contrast 5.12:1.
+    - Evidence captured: `docs/reports/evidence/sv-defect-sv-d-01-before.json`, `docs/reports/evidence/sv-defect-sv-d-01-after.json`, and before/after screenshots for Days 4, 6, 7 in light and dark themes.
+- **Owner:** Frontend (`@stacktrace-bhuvi`)
+- **Fix Commit:** `a8be0d2` (Added `.status-badge.status--ahead`, `.status-badge.status--on-track`, `.status-badge.status--behind` rules to `src/css/styles.css`).
+- **Regression Test Path:** `tests/ui/kpiCards.test.js` (`BDC-NF-002: Status Badge Stylesheet Rules`). Confirmed failing with `AssertionError` against `e901ecf` CSS and passing on fixed CSS.
+- **Retest Result:** Verified PASS across Google Chrome (156.0.8078.80), Microsoft Edge (157.0.4341.42), and Mozilla Firefox (159.0). All WCAG contrast ratios $\ge 4.5:1$.
+
+---
 
 ### Item OBS-01: Table Scrolling Criterion Ambiguity (TC-F-13.2)
 - **Reference:** Software Test Plan (STP) Section 6, SRS Section 5, `sprint2_naveen_checklist.md`.

@@ -1,8 +1,10 @@
 # BDC-NF-004 Compatibility Evidence
 
 - **Requirement IDs**: SRS 5 (Browser Compatibility, Usability), STP TC-NF-04.1, TC-NF-04.2, TC-F-13.2.
-- **Tested Commit (Baseline SHA)**: `222089658f26badaf5c9f6d3c60e75986ebd6320`
-- **Execution Date**: 2026-11-07
+- **Tested Commits**:
+  - Run 3 (Multi-Browser & a11y): `85391ae9181a666cc5b975968070e3dc5059a352` (short `85391ae`, 2026-11-10)
+  - Run 2 (Baseline rerun): `222089658f26badaf5c9f6d3c60e75986ebd6320` (2026-11-07)
+- **Execution Date**: 2026-11-10 (Run 3), 2026-11-07 (Run 2)
 - **QA Tester**: Bhuvi (`@stacktrace-bhuvi`)
 
 ---
@@ -25,13 +27,13 @@
 - **Browsers Tested**:
   - **Google Chrome**: Version `156.0.8078.80` (Official Build, 64-bit on Windows 11). Automated Playwright validation runner.
   - **Microsoft Edge**: Version `157.0.4341.42` (Official Build, 64-bit on Windows 11). Automated Playwright validation runner.
-  - **Mozilla Firefox**: Not installed on host test workstation. Status: **NOT EXECUTED**. Detailed manual run sheet provided in `docs/reports/evidence/sv-firefox-manual-sheet.md`.
+  - **Mozilla Firefox**: Version `159.0 (Playwright build)` (Automated Playwright runner in Run 3) and Version `159.0.1 (installed release)` (Physical manual interactive execution in `docs/reports/evidence/sv-manual-firefox-85391ae.md`).
 - **Evidence Files**: High-resolution screenshots captured in `docs/reports/evidence/`:
   - `sv-responsive-1024px-light-chrome.png` / `sv-responsive-1024px-dark-chrome.png`
   - `sv-responsive-1366px-light-chrome.png` / `sv-responsive-1366px-dark-chrome.png`
   - `sv-responsive-1440px-light-chrome.png` / `sv-responsive-1440px-dark-chrome.png`
   - `sv-responsive-1920px-light-chrome.png` / `sv-responsive-1920px-dark-chrome.png`
-  - Corresponding `.png` files for Microsoft Edge.
+  - Corresponding `.png` files for Microsoft Edge and Mozilla Firefox.
 
 ---
 
@@ -41,10 +43,10 @@
 
 | Viewport | Theme | Loads Without Errors | Page Horizontal Scroll (`scrollWidth === clientWidth`) | Table Container Legibility | Chart Scaling | Add-Issue Form Usable | Overall Status |
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| **1024 x 900** | Light | PASS (0 errors) | PASS (0px overflow) | PASS (Internal scroll / fit) | PASS | PASS | **PASS** |
-| **1024 x 900** | Dark | PASS (0 errors) | PASS (0px overflow) | PASS (Internal scroll / fit) | PASS | PASS | **PASS** |
-| **1366 x 900** | Light | PASS (0 errors) | PASS (0px overflow) | PASS (Fits container) | PASS | PASS | **PASS** |
-| **1366 x 900** | Dark | PASS (0 errors) | PASS (0px overflow) | PASS (Fits container) | PASS | PASS | **PASS** |
+| **1024 x 900** | Light | PASS (0 errors) | PASS (0px overflow) | PASS (Fits container) | PASS | PASS | **PASS** |
+| **1024 x 900** | Dark | PASS (0 errors) | PASS (0px overflow) | PASS (Fits container) | PASS | PASS | **PASS** |
+| **1366 x 900** | Light | PASS (0 errors) | PASS (0px overflow) | PASS (Internal scroll: 36px) | PASS | PASS | **PASS** |
+| **1366 x 900** | Dark | PASS (0 errors) | PASS (0px overflow) | PASS (Internal scroll: 36px) | PASS | PASS | **PASS** |
 | **1440 x 900** | Light | PASS (0 errors) | PASS (0px overflow) | PASS (Fits container) | PASS | PASS | **PASS** |
 | **1440 x 900** | Dark | PASS (0 errors) | PASS (0px overflow) | PASS (Fits container) | PASS | PASS | **PASS** |
 | **1920 x 900** | Light | PASS (0 errors) | PASS (0px overflow) | PASS (Fits container) | PASS | PASS | **PASS** |
@@ -54,20 +56,29 @@
 
 | Viewport | Theme | Loads Without Errors | Page Horizontal Scroll (`scrollWidth === clientWidth`) | Table Container Legibility | Chart Scaling | Add-Issue Form Usable | Overall Status |
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| **1024 x 900** | Light | PASS (0 errors) | PASS (0px overflow) | PASS (Internal scroll / fit) | PASS | PASS | **PASS** |
-| **1024 x 900** | Dark | PASS (0 errors) | PASS (0px overflow) | PASS (Internal scroll / fit) | PASS | PASS | **PASS** |
-| **1366 x 900** | Light | PASS (0 errors) | PASS (0px overflow) | PASS (Fits container) | PASS | PASS | **PASS** |
-| **1366 x 900** | Dark | PASS (0 errors) | PASS (0px overflow) | PASS (Fits container) | PASS | PASS | **PASS** |
+| **1024 x 900** | Light | PASS (0 errors) | PASS (0px overflow) | PASS (Fits container) | PASS | PASS | **PASS** |
+| **1024 x 900** | Dark | PASS (0 errors) | PASS (0px overflow) | PASS (Fits container) | PASS | PASS | **PASS** |
+| **1366 x 900** | Light | PASS (0 errors) | PASS (0px overflow) | PASS (Internal scroll: 36px) | PASS | PASS | **PASS** |
+| **1366 x 900** | Dark | PASS (0 errors) | PASS (0px overflow) | PASS (Internal scroll: 36px) | PASS | PASS | **PASS** |
 | **1440 x 900** | Light | PASS (0 errors) | PASS (0px overflow) | PASS (Fits container) | PASS | PASS | **PASS** |
 | **1440 x 900** | Dark | PASS (0 errors) | PASS (0px overflow) | PASS (Fits container) | PASS | PASS | **PASS** |
 | **1920 x 900** | Light | PASS (0 errors) | PASS (0px overflow) | PASS (Fits container) | PASS | PASS | **PASS** |
 | **1920 x 900** | Dark | PASS (0 errors) | PASS (0px overflow) | PASS (Fits container) | PASS | PASS | **PASS** |
 
-### Mozilla Firefox
+### Mozilla Firefox (v159.0 - Automated Suite Run 3)
 
-| Viewport | Status | Notes |
-| :--- | :--- | :--- |
-| **1024 x 900** to **1920 x 900** | **NOT EXECUTED** | Mozilla Firefox binary not installed on the test workstation. Full manual test script provided in `docs/reports/evidence/sv-firefox-manual-sheet.md` for execution by QA team. |
+| Viewport | Theme | Loads Without Errors | Page Horizontal Scroll (`scrollWidth === clientWidth`) | Table Container Legibility | Chart Scaling | Add-Issue Form Usable | Overall Status |
+| :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
+| **1024 x 900** | Light | PASS (0 errors) | PASS (0px overflow) | PASS (Fits container) | PASS | PASS | **PASS** |
+| **1024 x 900** | Dark | PASS (0 errors) | PASS (0px overflow) | PASS (Fits container) | PASS | PASS | **PASS** |
+| **1366 x 900** | Light | PASS (0 errors) | PASS (0px overflow) | PASS (Internal scroll: 36px) | PASS | PASS | **PASS** |
+| **1366 x 900** | Dark | PASS (0 errors) | PASS (0px overflow) | PASS (Internal scroll: 36px) | PASS | PASS | **PASS** |
+| **1440 x 900** | Light | PASS (0 errors) | PASS (0px overflow) | PASS (Fits container) | PASS | PASS | **PASS** |
+| **1440 x 900** | Dark | PASS (0 errors) | PASS (0px overflow) | PASS (Fits container) | PASS | PASS | **PASS** |
+| **1920 x 900** | Light | PASS (0 errors) | PASS (0px overflow) | PASS (Fits container) | PASS | PASS | **PASS** |
+| **1920 x 900** | Dark | PASS (0 errors) | PASS (0px overflow) | PASS (Fits container) | PASS | PASS | **PASS** |
+
+*Note: In Run 2 (2026-11-07), Firefox automated execution was not available on the workstation. In Run 3 (2026-11-10), Firefox Playwright automation was executed, passing all 8 responsive viewport/theme configurations. Physical manual interactive testing on Mozilla Firefox 159.0.1 (installed release) was executed by Bhuvi (`@stacktrace-bhuvi`) on 2026-11-10 at commit `500a4be3961103480c6274b89eddca34a219ccce` (source tree `4a2278fd1774ecfb0cb43d1e6f9b00e386b344e8`), achieving 33 PASS / 0 FAIL / 0 NOT EXECUTED across all 29 functional cases and 4 responsive viewports (recorded in `docs/reports/evidence/sv-manual-firefox-85391ae.md`). No screenshots were taken for manual checks; responsive overflow numbers are recorded as measured (`page: 0`, `table: 0`). Automated TC-F-13.2 stays BLOCKED pending acceptance criterion agreement with Naveen.*
 
 ---
 
