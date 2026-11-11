@@ -146,6 +146,21 @@ function makeRecord({
   return rec;
 }
 
+// Capture the final chart geometry, not an intermediate animation frame.
+async function captureEvidence(page, options) {
+  await page.waitForFunction(async () => {
+    const { getChartInstance } = await import('/js/ui/chart.js');
+    const chart = getChartInstance();
+    if (!chart?.scales?.y) return false;
+    return chart.data.datasets.every((dataset, index) => dataset.data.every((value, point) => {
+      if (!Number.isFinite(value)) return true;
+      const element = chart.getDatasetMeta(index).data[point];
+      return element && Math.abs(element.y - chart.scales.y.getPixelForValue(value)) < 0.1;
+    }));
+  }, null, { timeout: 10000 });
+  return page.screenshot(options);
+}
+
 // Main execution suite
 async function runSuite() {
   const browserTypeStr = (process.argv[2] || process.env.BROWSER || 'chrome').toLowerCase();
@@ -344,7 +359,7 @@ async function runSuite() {
 
     // Screenshot initial state
     const ssPath = `${evidenceRelative}/sv-g1-default-state-${launchRes.channel}.png`;
-    await page.screenshot({ path: ssPath, fullPage: true });
+    await captureEvidence(page, { path: ssPath, fullPage: true });
 
     // TC-F-02.1: Total committed points = 50
     const totalScopeText = (await loc.kpi('total-scope').textContent()).trim();
@@ -561,7 +576,7 @@ async function runSuite() {
     const currentDayNum = (await loc.currentDayValue.textContent()).trim();
     const sliderMax = await loc.slider.getAttribute('max');
     const ssConfigValid = `${evidenceRelative}/sv-g2-config-valid-${channel}.png`;
-    await page.screenshot({ path: ssConfigValid, fullPage: true });
+    await captureEvidence(page, { path: ssConfigValid, fullPage: true });
 
     const configPass = bannerName === 'Sprint 2' &&
       durationPillText.includes('5') &&
@@ -619,7 +634,7 @@ async function runSuite() {
     await loc.saveSprintBtn.click();
     const errText61 = (await loc.sprintConfigErrors.textContent()).trim();
     const ssConfigErr = `${evidenceRelative}/sv-g2-config-error-${launchRes.channel}.png`;
-    await page.screenshot({ path: ssConfigErr, fullPage: true });
+    await captureEvidence(page, { path: ssConfigErr, fullPage: true });
 
     await loc.cancelSprintBtn.click();
     const retainedDuration = (await loc.sprintDurationPill.textContent()).trim();
@@ -702,7 +717,7 @@ async function runSuite() {
     await loc.nextBtn.click(); // Day 6
     const day6Text = (await loc.currentDayValue.textContent()).trim();
     const ssDay6 = `${evidenceRelative}/sv-g3-day6-${launchRes.channel}.png`;
-    await page.screenshot({ path: ssDay6, fullPage: true });
+    await captureEvidence(page, { path: ssDay6, fullPage: true });
 
     const chartDay6 = await page.evaluate(async () => {
       const chartMod = await import('/js/ui/chart.js');
@@ -793,7 +808,7 @@ async function runSuite() {
     // 1. Initial Day 4 check
     const m4 = await measureMarker(page, 4);
     const ssMarker4 = `${evidenceRelative}/sv-marker-day4-${channel}-${TODAY}-${SHA7}.png`;
-    await page.screenshot({ path: ssMarker4, fullPage: true });
+    await captureEvidence(page, { path: ssMarker4, fullPage: true });
 
     // 2. Day 0 via Home key on slider
     await loc.slider.focus();
@@ -801,7 +816,7 @@ async function runSuite() {
     await page.waitForTimeout(100);
     const m0 = await measureMarker(page, 0);
     const ssMarker0 = `${evidenceRelative}/sv-marker-day0-${channel}-${TODAY}-${SHA7}.png`;
-    await page.screenshot({ path: ssMarker0, fullPage: true });
+    await captureEvidence(page, { path: ssMarker0, fullPage: true });
 
     // 3. Day 6 via Next Day button steps (0 -> 6)
     for (let d = 0; d < 6; d++) {
@@ -810,7 +825,7 @@ async function runSuite() {
     await page.waitForTimeout(100);
     const m6 = await measureMarker(page, 6);
     const ssMarker6 = `${evidenceRelative}/sv-marker-day6-${channel}-${TODAY}-${SHA7}.png`;
-    await page.screenshot({ path: ssMarker6, fullPage: true });
+    await captureEvidence(page, { path: ssMarker6, fullPage: true });
 
     // Assert Day 6 updates actual series endpoint and KPIs without reload:
     // Completed 29, Remaining 21, Days Elapsed 6, Days Left 4, Variance -1, status On Track (Ideal(6)=20, -1 is inclusive On Track)
@@ -841,7 +856,7 @@ async function runSuite() {
     await page.waitForTimeout(100);
     const m10 = await measureMarker(page, 10);
     const ssMarker10 = `${evidenceRelative}/sv-marker-day10-${channel}-${TODAY}-${SHA7}.png`;
-    await page.screenshot({ path: ssMarker10, fullPage: true });
+    await captureEvidence(page, { path: ssMarker10, fullPage: true });
 
     // 5. Dark theme marker test (move to Day 4 and toggle theme)
     await loc.slider.focus();
@@ -904,7 +919,7 @@ async function runSuite() {
     const remainingAfterAdd = (await loc.kpi('remaining-points').textContent()).trim();
     const rowCountAfterAdd = await loc.tableRows.count();
     const ssAddIssue = `${evidenceRelative}/sv-g4-add-issue-${launchRes.channel}.png`;
-    await page.screenshot({ path: ssAddIssue, fullPage: true });
+    await captureEvidence(page, { path: ssAddIssue, fullPage: true });
 
     results.push(makeRecord({
       tcId: 'TC-F-06.1',
@@ -1029,7 +1044,7 @@ async function runSuite() {
     const remAfterDone = (await loc.kpi('remaining-points').textContent()).trim();
     const varAfterDone = (await loc.kpiVariance.textContent()).trim();
     const ssEditDone = `${evidenceRelative}/sv-g5-edit-done-${launchRes.channel}.png`;
-    await page.screenshot({ path: ssEditDone, fullPage: true });
+    await captureEvidence(page, { path: ssEditDone, fullPage: true });
 
     results.push(makeRecord({
       tcId: 'TC-F-07.1',
@@ -1183,7 +1198,7 @@ async function runSuite() {
     });
 
     const ssDelete = `${evidenceRelative}/sv-g6-delete-${launchRes.channel}.png`;
-    await page.screenshot({ path: ssDelete, fullPage: true });
+    await captureEvidence(page, { path: ssDelete, fullPage: true });
 
     const f081Pass = totalScope8 === '45' &&
       comp8 === '29' &&
@@ -1216,7 +1231,7 @@ async function runSuite() {
     const emptyRem = (await loc.kpi('remaining-points').textContent()).trim();
     const emptyMsg = (await loc.emptyState.textContent()).trim();
     const ssEmpty = `${evidenceRelative}/sv-g6-empty-backlog-${launchRes.channel}.png`;
-    await page.screenshot({ path: ssEmpty, fullPage: true });
+    await captureEvidence(page, { path: ssEmpty, fullPage: true });
 
     results.push(makeRecord({
       tcId: 'TC-SR-04.1',
@@ -1295,7 +1310,7 @@ async function runSuite() {
     const resetDayNum = (await loc.currentDayValue.textContent()).trim();
     const resetRows = await loc.tableRows.count();
     const ssReset = `${evidenceRelative}/sv-g7-reset-${channel}.png`;
-    await page.screenshot({ path: ssReset, fullPage: true });
+    await captureEvidence(page, { path: ssReset, fullPage: true });
 
     const resetPass = resetTotal === '50' &&
       resetComp === '29' &&
@@ -1368,7 +1383,7 @@ async function runSuite() {
     const var0 = (await loc.kpiVariance.textContent()).trim();
     const status0 = (await loc.kpiStatusBadge.textContent()).trim();
     const ssOnTrack = `${evidenceRelative}/sv-g8-ontrack-${launchRes.channel}.png`;
-    await page.screenshot({ path: ssOnTrack, fullPage: true });
+    await captureEvidence(page, { path: ssOnTrack, fullPage: true });
 
     results.push(makeRecord({
       tcId: 'TC-F-12.2',
@@ -1395,7 +1410,7 @@ async function runSuite() {
     const varBehind = (await loc.kpiVariance.textContent()).trim();
     const statusBehind = (await loc.kpiStatusBadge.textContent()).trim();
     const ssBehind = `${evidenceRelative}/sv-g8-behind-${launchRes.channel}.png`;
-    await page.screenshot({ path: ssBehind, fullPage: true });
+    await captureEvidence(page, { path: ssBehind, fullPage: true });
 
     results.push(makeRecord({
       tcId: 'TC-F-12.3',
@@ -1542,7 +1557,7 @@ async function runSuite() {
         });
 
         const ssPath = `${evidenceRelative}/sv-responsive-${w}px-${theme}-${launchRes.channel}.png`;
-        await page.screenshot({ path: ssPath, fullPage: true });
+        await captureEvidence(page, { path: ssPath, fullPage: true });
 
         // Record TC-NF-04.2
         results.push(makeRecord({
@@ -1727,20 +1742,20 @@ async function runSuite() {
 
     // Capture Schedule Status across reachable states (Day 4: Ahead, Day 6: On Track, Day 7: Behind)
     const ssAhead = `${evidenceRelative}/sv-status-ahead-${launchRes.channel}-${TODAY}-${SHA7}.png`;
-    await page.screenshot({ path: ssAhead });
+    await captureEvidence(page, { path: ssAhead });
     const aheadLight = await extractBadgeColors('light');
 
     await loc.nextBtn.click();
     await loc.nextBtn.click();
     await page.waitForTimeout(50);
     const ssOnTrack = `${evidenceRelative}/sv-status-ontrack-${launchRes.channel}-${TODAY}-${SHA7}.png`;
-    await page.screenshot({ path: ssOnTrack });
+    await captureEvidence(page, { path: ssOnTrack });
     const ontrackLight = await extractBadgeColors('light');
 
     await loc.nextBtn.click();
     await page.waitForTimeout(50);
     const ssBehind = `${evidenceRelative}/sv-status-behind-${launchRes.channel}-${TODAY}-${SHA7}.png`;
-    await page.screenshot({ path: ssBehind });
+    await captureEvidence(page, { path: ssBehind });
     const behindLight = await extractBadgeColors('light');
 
     // Dark Theme checks
@@ -2199,7 +2214,7 @@ async function runSuite() {
     const renderedText = (await loc.tableRows.last().locator('.cell-summary').textContent()).trim();
     const injectedElements = await page.evaluate(() => document.querySelectorAll('.cell-summary img, .cell-summary script').length);
     const ssXss = `${evidenceRelative}/sv-sec-xss-${launchRes.channel}.png`;
-    await page.screenshot({ path: ssXss });
+    await captureEvidence(page, { path: ssXss });
 
     results.push(makeRecord({
       tcId: 'TC-SR-01.1',
