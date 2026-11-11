@@ -2,7 +2,7 @@
 
 Date: 2026-11-11. QA coordination: Naveen Prasad M. Automated execution: Codex for Naveen. Scope: existing single-sprint Burndown Chart Generator; no multi-sprint extension.
 
-**Technical test execution: complete. Human acceptance: pending.** This report is a reviewable technical recommendation, not a fabricated human sign-off or a statement that every possible defect is absent.
+**Technical test execution: complete. Human acceptance: accepted by owner authorization.** On 2026-11-11 Naveen authorized final QA acceptance with the instruction "GO AHEAD" in this project chat. This records that authorization, not a claim that he personally performed or witnessed additional tests, a signature, or a statement that every possible defect is absent.
 
 ## Version and environment
 
@@ -56,7 +56,7 @@ All recorded samples are positive and below the 2000ms threshold. Method A measu
 
 Bhuvi reported 22 PASS NVDA observations and 29 functional PASS installed-Firefox observations (with the older responsive criterion BLOCKED) at the source identified in the [manual NVDA sheet](evidence/sv-manual-screenreader-85391ae.md) and [manual Firefox sheet](evidence/sv-manual-firefox-85391ae.md). These are preserved as that tester's reports. No new human listening session or verbatim speech/audio recording was produced by Codex. The old manual geometry wording has been clarified; its criterion was BLOCKED on the older CSS. All current geometry outcomes come from the fresh strict measurements. The current changes affect CSS layout and test tooling, not ARIA/live-region JavaScript. Keyboard, label, contrast and marker behavior were retested on the current source.
 
-No known failing planned automated case or open technical test blocker remains. Recommendation: accept the technical testing package for review. Human acceptance: pending — Naveen must review these limitations and decide whether a witnessed screen-reader repeat is needed before applying his own acceptance/signature. Repository review/CI approval is a separate gate, recorded on the PR; this document does not invent it. The Word Test Plan remains intact and is interpreted using the linked execution addendum.
+No known failing planned automated case or open technical test blocker remains. Human acceptance: accepted by owner authorization — Naveen instructed "GO AHEAD" on 2026-11-11 after final QA acceptance and the documented manual-test limitations were explained in the project chat. The scope is acceptance of this technical testing package with those stated limitations. This does not add a physical screen-reader execution, claim that the owner personally read or witnessed every result, or create a signature. The authorization record is in the manifest. Repository review/CI approval remains a separate gate recorded on the PR. The Word Test Plan remains intact and is interpreted using the linked execution addendum.
 
 ## Contributions and release
 
