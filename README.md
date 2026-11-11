@@ -39,6 +39,9 @@ workflow checks pass. The [Sprint 2 screen recording](demo_sprint2.mp4) is
 available. Firefox and manual screen-reader verification and submission freeze
 remain separate completion tasks.
 
+Those figures describe the Sprint 2 release snapshot. The current testing-phase
+results and human acceptance gate are in the [Test Summary](docs/reports/test-summary-report.md).
+
 ## 🧱 Tech Stack
 
 | Layer | Tech |
@@ -65,6 +68,7 @@ demo_sprint2.mp4      Sprint 2 screen recording
 ## Documentation and Evidence
 
 - [Testing phase start and current QA responsibilities](docs/reports/qa-phase-start.md)
+- [Current Test Summary and acceptance status](docs/reports/test-summary-report.md)
 - [Test execution addendum](docs/test-plan/testing-phase-addendum.md)
 
 - [Sprint 2 screen recording](demo_sprint2.mp4)
@@ -108,7 +112,7 @@ Run automated tests (Node.js 20+):
 npm test
 ```
 
-The release contains **255 tests across 63 suites**, using the native runner with
+The current QA version contains **411 tests across 92 suites**, using the native runner with
 no external test dependencies. GitHub Actions runs the suite on pushes and PRs
 to `develop` and `main`, and supports manual dispatch.
 

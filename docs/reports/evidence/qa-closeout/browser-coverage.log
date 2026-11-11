@@ -1,0 +1,58 @@
+{
+  "browser": "157.0.8103.50",
+  "result": "PASS",
+  "checks": [
+    "workflow and KPIs/chart",
+    "validation without mutation",
+    "keyboard focus",
+    "delete all and reset",
+    "DOM XSS",
+    "single-day zero scope",
+    "CSP enforcement",
+    "unavailable storage",
+    "future-completion rejection and Day 0 bounds",
+    "styled noscript warning with JS disabled"
+  ],
+  "pageErrors": []
+}
+
+Browser execution coverage of src/js while running tools/verify-sprint2.cjs (Chromium 157.0.8103.50)
+
+file                              |        code lines |          branches |         functions
+---------------------------------------------------------------------------------------------
+src/js/data/dataManager.js        |    179/226 79.20% |      27/44 61.36% |      21/23 91.30%
+src/js/data/defaultDataset.js     |    129/160 80.63% |       8/25 32.00% |        3/6 50.00%
+src/js/logic/burndownEngine.js    |    125/145 86.21% |      32/52 61.54% |     19/19 100.00%
+src/js/logic/validationManager.js |    179/264 67.80% |      30/76 39.47% |      12/14 85.71%
+src/js/ui/addIssueForm.js         |    201/292 68.84% |       7/43 16.28% |       7/18 38.89%
+src/js/ui/backlogActions.js       |   138/138 100.00% |      35/40 87.50% |     17/17 100.00%
+src/js/ui/backlogTable.js         |    121/125 96.80% |      19/28 67.86% |       7/7 100.00%
+src/js/ui/chart.js                |     88/114 77.19% |       7/18 38.89% |        3/5 60.00%
+src/js/ui/chartConfig.js          |    144/152 94.74% |      12/31 38.71% |        7/8 87.50%
+src/js/ui/currentDayControl.js    |    105/112 93.75% |      14/20 70.00% |        5/8 62.50%
+src/js/ui/dashboard.js            |    109/144 75.69% |       6/26 23.08% |        3/6 50.00%
+src/js/ui/fileProtocolNotice.js   |       3/26 11.54% |        1/3 33.33% |        1/2 50.00%
+src/js/ui/kpiCards.js             |    147/154 95.45% |      11/24 45.83% |        5/7 71.43%
+src/js/ui/sprintBanner.js         |    188/197 95.43% |      12/30 40.00% |      10/12 83.33%
+src/js/ui/themeBootstrap.js       |       8/10 80.00% |        1/4 25.00% |       1/1 100.00%
+src/js/ui/themeManager.js         |      49/69 71.01% |       4/17 23.53% |        4/6 66.67%
+---------------------------------------------------------------------------------------------
+  code lines  1913/2328 82.17%
+  branches      226/481 46.99%
+  functions     125/159 78.62%
+
+Not measured (third-party): src/vendor/chart.umd.js
+Never ran in the browser, src/js/data/dataManager.js: restoreFromJSON (line 149), (anonymous) (line 386)
+Never ran in the browser, src/js/data/defaultDataset.js: (anonymous) (line 37), getDefaultSprint (line 240), getDefaultIssues (line 249)
+Never ran in the browser, src/js/logic/validationManager.js: validateStoredState (line 410), parseStoredState (line 424)
+Never ran in the browser, src/js/ui/addIssueForm.js: (anonymous) (line 81), unmount (line 217), unmount (line 224), (anonymous) (line 297), (anonymous) (line 309), (anonymous) (line 310), (anonymous) (line 311), (anonymous) (line 312), (anonymous) (line 313), (anonymous) (line 314), unmount (line 363)
+Never ran in the browser, src/js/ui/chart.js: updateMarker (line 169), updateChartTheme (line 183)
+Never ran in the browser, src/js/ui/chartConfig.js: (anonymous) (line 45)
+Never ran in the browser, src/js/ui/currentDayControl.js: unmount (line 99), (anonymous) (line 120), unmount (line 143)
+Never ran in the browser, src/js/ui/dashboard.js: (anonymous) (line 101), window.__setDay (line 125), (anonymous) (line 172)
+Never ran in the browser, src/js/ui/fileProtocolNotice.js: displayFileProtocolWarning (line 9)
+Never ran in the browser, src/js/ui/kpiCards.js: unmount (line 194), unmount (line 206)
+Never ran in the browser, src/js/ui/sprintBanner.js: unmount (line 203), unmount (line 261)
+Never ran in the browser, src/js/ui/themeManager.js: toggleTheme (line 89), (anonymous) (line 110)
+
+Wrote docs/reports/evidence/qa-closeout/browser-coverage.json

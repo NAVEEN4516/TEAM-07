@@ -1,5 +1,8 @@
 # Branch Coverage Report
 
+> Historical report and figures retained. Current independent execution, coverage
+> and acceptance status are in the [Test Summary](test-summary-report.md).
+
 Branch coverage of `src/js`, what was uncovered at the baseline, what was done about it, and what the number can and cannot tell you. Line and function coverage are in the [code coverage report](code-coverage-report.md).
 
 | | |

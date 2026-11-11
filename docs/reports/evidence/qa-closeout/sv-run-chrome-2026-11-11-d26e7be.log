@@ -1,0 +1,25 @@
+[2026-11-11T04:42:27.541Z] Target Tested Commit: d26e7be1df35b3b67ab7754891bc730429185ff3
+[2026-11-11T04:42:27.541Z] Target App Source Tree: b8551212e3d76197cbe7db9fd4cde6d5f0b27193
+[2026-11-11T04:42:27.542Z] Worktree Clean (src, tests, tools): true
+[2026-11-11T04:42:27.542Z] Tester: Codex automated execution for Naveen Prasad M
+[2026-11-11T04:42:29.008Z] Browser launched successfully: chrome version 157.0.8103.50
+[2026-11-11T04:42:29.008Z] --- Executing Group G1: Default State ---
+[2026-11-11T04:42:31.234Z] --- Executing Group G2: Sprint Configuration ---
+[2026-11-11T04:42:34.833Z] --- Executing Group G3: Current Day and Marker ---
+[2026-11-11T04:42:39.386Z] --- Executing Group G4: Add Issue ---
+[2026-11-11T04:42:42.017Z] --- Executing Group G5: Edit / Reopen ---
+[2026-11-11T04:42:45.686Z] --- Executing Group G6: Delete / Empty ---
+[2026-11-11T04:42:48.423Z] --- Executing Group G7: Reset Data ---
+[2026-11-11T04:42:50.564Z] --- Executing Group G8: Status Classification and Chart ---
+[2026-11-11T04:42:53.033Z] --- Executing Group G9: Edge Cases ---
+[2026-11-11T04:42:54.657Z] --- Executing Step 3: Viewports, Themes & Responsiveness ---
+[2026-11-11T04:43:05.975Z] --- Executing Step 4: Accessibility & Keyboard Navigation ---
+[2026-11-11T04:43:08.977Z] --- Executing Group G-KB: Keyboard-Only Navigation ---
+[2026-11-11T04:43:14.776Z] --- Executing Step 5: Security & Resilience ---
+[2026-11-11T04:43:16.307Z] --- Executing Step 6: Performance Measurements (Method A) ---
+[2026-11-11T04:43:31.765Z] Perf [Add Issue]: min=18.60ms, med=30.00ms, max=36.40ms
+[2026-11-11T04:43:31.765Z] Perf [Change Day]: min=21.80ms, med=25.90ms, max=37.10ms
+[2026-11-11T04:43:31.766Z] Perf [Edit Done]: min=19.60ms, med=23.30ms, max=34.80ms
+[2026-11-11T04:43:31.766Z] Perf [Delete]: min=21.20ms, med=23.90ms, max=40.10ms
+[2026-11-11T04:43:31.766Z] Perf [Reset]: min=21.80ms, med=23.30ms, max=30.90ms
+[2026-11-11T04:43:31.811Z] [SV-RUNNER] Results saved to C:\Users\LENOVO\teamwork_projects\TEAM-07-sprint2\docs\reports\evidence\qa-closeout\sv-results-chrome-2026-11-11-d26e7be.json (61 records)

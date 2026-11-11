@@ -1,5 +1,8 @@
 # Code Coverage Report
 
+> Historical report and figures retained. Current independent execution, coverage
+> and acceptance status are in the [Test Summary](test-summary-report.md).
+
 Line and function coverage of the application code in `src/js`, measured two ways and kept apart: **unit tests** (headless Node) and a **browser run** (Chrome). Branch figures are in the [branch coverage report](branch-coverage-report.md).
 
 | | |

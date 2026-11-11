@@ -35,3 +35,6 @@ jobs:
 
       - name: Run test suite
         run: npm test
+
+      - name: Check recorded QA evidence and traceability
+        run: npm run test:qa-report

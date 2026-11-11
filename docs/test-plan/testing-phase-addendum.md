@@ -49,3 +49,13 @@ Use the [baseline/evidence instructions](../reports/qa-phase-start.md). Hemanth
 links actual results in the RTM; Bhuvi supplies system evidence; Naveen reviews
 contradictions and consolidates document revisions. No teammate approval or
 human signature is recorded in this addendum.
+
+## QA closeout clarification — 2026-11-11
+
+The literal no-horizontal-scroll expectation is retained at the four required
+desktop widths (1024, 1366, 1440, 1920 CSS pixels), in both themes, for both the
+page and the backlog table. The responsive layout now gives each panel enough
+width; this is a fix, not a relaxed acceptance criterion. Historical measurements
+remain unchanged. Current results, methods and any acceptance limitation are in
+the [Test Summary](../reports/test-summary-report.md) and
+[current RTM](../reports/requirements-traceability.md).

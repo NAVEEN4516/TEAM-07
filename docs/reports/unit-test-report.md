@@ -1,5 +1,8 @@
 # Unit Test Report
 
+> Historical report and figures retained. Current independent execution, coverage
+> and acceptance status are in the [Test Summary](test-summary-report.md).
+
 Unit, integration and regression testing of the Burndown Chart Generator, testing phase. Scope is the existing single-sprint simulator; the reverted project-backlog and multi-sprint extension is out of scope.
 
 | | |
