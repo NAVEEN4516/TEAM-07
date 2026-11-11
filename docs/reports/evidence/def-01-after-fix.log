@@ -1,0 +1,72 @@
+# Raw output: DEF-01 retest AFTER the fix
+# Executed: 2026-11-08T12:41:23Z (UTC) / 2026-11-08T18:11:23+0530 (IST)
+# Fix commit under test: e1b41e8f0ca987ae6bab3df53bc8247644725ecc
+# Node: v24.11.1
+# ------------------------------------------------------------------
+## node --test tests/data/storedState.test.js
+▶ DataManager validation & saved state (BDC-NF-003, BDC-SR-002, BDC-SR-003)
+  ▶ TC-NF-03.1 - every SRS Section 5.2 invalid case is rejected and nothing is stored
+    ✔ rejects negative story points with a visible message and leaves state unchanged (2.0696ms)
+    ✔ rejects non-numeric story points with a visible message and leaves state unchanged (0.303ms)
+    ✔ rejects infinite story points with a visible message and leaves state unchanged (0.1939ms)
+    ✔ rejects completion day after the Current Day with a visible message and leaves state unchanged (0.1964ms)
+    ✔ rejects completion day after the duration with a visible message and leaves state unchanged (0.1888ms)
+    ✔ rejects empty issue key with a visible message and leaves state unchanged (0.1953ms)
+    ✔ rejects duplicate issue key with a visible message and leaves state unchanged (0.3601ms)
+    ✔ rejects empty summary with a visible message and leaves state unchanged (0.2623ms)
+    ✔ rejects zero duration with a visible message and leaves state unchanged (0.4867ms)
+    ✔ rejects negative duration with a visible message and leaves state unchanged (0.2581ms)
+    ✔ rejects non-numeric duration with a visible message and leaves state unchanged (0.1746ms)
+    ✔ rejects duration beyond 60 days with a visible message and leaves state unchanged (0.1696ms)
+    ✔ rejects impossible calendar date with a visible message and leaves state unchanged (0.1506ms)
+    ✔ rejects Current Day beyond the duration with a visible message and leaves state unchanged (0.1984ms)
+    ✔ rejects negative Current Day with a visible message and leaves state unchanged (0.0971ms)
+    ✔ rejects non-numeric Current Day with a visible message and leaves state unchanged (0.0916ms)
+    ✔ zero story points are allowed, as SRS Section 5.2 requires (0.2471ms)
+    ✔ state still passes validation after every invalid attempt (1.1418ms)
+  ✔ TC-NF-03.1 - every SRS Section 5.2 invalid case is rejected and nothing is stored (7.9523ms)
+  ▶ Sprint duration range (BDC-SR-002)
+    ✔ validateSprintConfig keeps its export and enforces the 60-day ceiling (0.1246ms)
+    ✔ an oversized duration never reaches the burndown calculation (0.5274ms)
+    ✔ the full 1 to 60 range is accepted (0.2623ms)
+  ✔ Sprint duration range (BDC-SR-002) (1.0252ms)
+  ▶ init() validates a supplied dataset (BDC-SR-003)
+    ✔ a valid dataset is loaded as given (0.238ms)
+    ✔ an invalid dataset is replaced by the default dataset (0.275ms)
+    ✔ a missing part falls back to the default for that part (0.2167ms)
+    ✔ no argument and reset() still load the defaults with no errors (0.2551ms)
+  ✔ init() validates a supplied dataset (BDC-SR-003) (1.1158ms)
+  ▶ restoreFromJSON() - TC-SR-03.1 safe recovery from corrupted storage
+    ✔ malformed JSON restores the default dataset without throwing (0.4583ms)
+    ✔ valid JSON with schema violations restores the default dataset (0.2962ms)
+    ✔ empty storage restores the default dataset (0.2362ms)
+    ✔ valid saved state is loaded and subscribers are notified (0.2585ms)
+  ✔ restoreFromJSON() - TC-SR-03.1 safe recovery from corrupted storage (1.3655ms)
+  ▶ DEF-01 - subscribers can read why defaults were restored (BDC-SR-003)
+    ✔ a failed restore publishes the reasons together with the restored defaults (0.2766ms)
+    ✔ schema violations are also visible to the listener at notification time (0.2609ms)
+    ✔ a later successful restore clears the reasons before it publishes (0.2746ms)
+    ✔ init() with an invalid dataset also publishes the reasons (0.1814ms)
+  ✔ DEF-01 - subscribers can read why defaults were restored (BDC-SR-003) (1.1019ms)
+  ▶ serialize() round-trips every state the app can reach
+    ✔ a realistic session survives save and reload unchanged (0.3783ms)
+    ✔ moving the Current Day back keeps later completion days through a reload (0.3151ms)
+    ✔ shortening the sprint keeps completion history through a reload (0.7941ms)
+    ✔ an empty backlog survives a reload (0.2049ms)
+  ✔ serialize() round-trips every state the app can reach (1.8341ms)
+✔ DataManager validation & saved state (BDC-NF-003, BDC-SR-002, BDC-SR-003) (14.9663ms)
+ℹ tests 37
+ℹ suites 7
+ℹ pass 37
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 197.5924
+# exit code: 0
+
+## node --test   (full suite at the fix commit)
+ℹ tests 360
+ℹ suites 78
+ℹ pass 360
+ℹ fail 0

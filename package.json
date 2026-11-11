@@ -4,7 +4,8 @@
   "description": "Client-side Agile Burndown Chart Generator",
   "type": "module",
   "scripts": {
-    "test": "node --test"
+    "test": "node --test",
+    "test:coverage": "node tools/coverage.mjs"
   },
   "engines": {
     "node": ">=20.0.0"
