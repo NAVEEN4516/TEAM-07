@@ -1,0 +1,26 @@
+[2026-11-10T11:12:54.953Z] Target Tested Commit: 85391ae9181a666cc5b975968070e3dc5059a352
+[2026-11-10T11:12:54.953Z] Target App Source Tree: 4a2278fd1774ecfb0cb43d1e6f9b00e386b344e8
+[2026-11-10T11:12:54.953Z] Worktree Clean (src, tests, tools): true
+[2026-11-10T11:12:54.953Z] Tester: stacktrace-bhuvi
+[2026-11-10T11:12:56.185Z] Browser launched successfully: firefox version 159.0 (Playwright build)
+[2026-11-10T11:12:56.185Z] --- Executing Group G1: Default State ---
+[2026-11-10T11:13:05.332Z] --- Executing Group G2: Sprint Configuration ---
+[2026-11-10T11:13:13.655Z] --- Executing Group G3: Current Day and Marker ---
+[2026-11-10T11:13:23.787Z] --- Executing Group G4: Add Issue ---
+[2026-11-10T11:13:30.441Z] --- Executing Group G5: Edit / Reopen ---
+[2026-11-10T11:13:38.594Z] --- Executing Group G6: Delete / Empty ---
+[2026-11-10T11:13:44.440Z] --- Executing Group G7: Reset Data ---
+[2026-11-10T11:13:48.777Z] --- Executing Group G8: Status Classification and Chart ---
+[2026-11-10T11:13:54.171Z] --- Executing Group G9: Edge Cases ---
+[2026-11-10T11:13:57.319Z] --- Executing Step 3: Viewports, Themes & Responsiveness ---
+[2026-11-10T11:14:19.994Z] --- Executing Step 4: Accessibility & Keyboard Navigation ---
+[2026-11-10T11:14:27.774Z] --- Executing Group G-KB: Keyboard-Only Navigation ---
+[2026-11-10T11:14:47.026Z] --- Executing Step 5: Security & Resilience ---
+[2026-11-10T11:14:51.030Z] --- Executing Step 6: Performance Measurements (Method A) ---
+[2026-11-10T11:15:14.483Z] Perf [Add Issue]: min=29.00ms, med=53.00ms, max=74.00ms
+[2026-11-10T11:15:14.483Z] Perf [Change Day]: min=35.00ms, med=48.00ms, max=105.00ms
+[2026-11-10T11:15:14.483Z] Perf [Edit Done]: min=27.00ms, med=39.00ms, max=78.00ms
+[2026-11-10T11:15:14.483Z] Perf [Delete]: min=26.00ms, med=36.00ms, max=78.00ms
+[2026-11-10T11:15:14.483Z] Perf [Reset]: min=31.00ms, med=50.00ms, max=96.00ms
+[2026-11-10T11:15:14.541Z] --- Recording Inspection & Automated Unit-Level Test Cases ---
+[2026-11-10T11:15:14.550Z] [SV-RUNNER] Results saved to C:\Users\Bhuvi\Desktop\sem5\se\TEAM-07\docs\reports\evidence\sv-results-firefox-2026-11-10-85391ae.json (63 records)

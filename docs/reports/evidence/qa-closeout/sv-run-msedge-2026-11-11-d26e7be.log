@@ -1,0 +1,25 @@
+[2026-11-11T04:42:27.546Z] Target Tested Commit: d26e7be1df35b3b67ab7754891bc730429185ff3
+[2026-11-11T04:42:27.546Z] Target App Source Tree: b8551212e3d76197cbe7db9fd4cde6d5f0b27193
+[2026-11-11T04:42:27.547Z] Worktree Clean (src, tests, tools): true
+[2026-11-11T04:42:27.547Z] Tester: Codex automated execution for Naveen Prasad M
+[2026-11-11T04:42:28.154Z] Browser launched successfully: msedge version 157.0.4341.46
+[2026-11-11T04:42:28.154Z] --- Executing Group G1: Default State ---
+[2026-11-11T04:42:31.175Z] --- Executing Group G2: Sprint Configuration ---
+[2026-11-11T04:42:35.644Z] --- Executing Group G3: Current Day and Marker ---
+[2026-11-11T04:42:40.768Z] --- Executing Group G4: Add Issue ---
+[2026-11-11T04:42:43.851Z] --- Executing Group G5: Edit / Reopen ---
+[2026-11-11T04:42:47.657Z] --- Executing Group G6: Delete / Empty ---
+[2026-11-11T04:42:50.717Z] --- Executing Group G7: Reset Data ---
+[2026-11-11T04:42:53.074Z] --- Executing Group G8: Status Classification and Chart ---
+[2026-11-11T04:42:55.843Z] --- Executing Group G9: Edge Cases ---
+[2026-11-11T04:42:58.130Z] --- Executing Step 3: Viewports, Themes & Responsiveness ---
+[2026-11-11T04:43:09.190Z] --- Executing Step 4: Accessibility & Keyboard Navigation ---
+[2026-11-11T04:43:12.544Z] --- Executing Group G-KB: Keyboard-Only Navigation ---
+[2026-11-11T04:43:18.966Z] --- Executing Step 5: Security & Resilience ---
+[2026-11-11T04:43:20.504Z] --- Executing Step 6: Performance Measurements (Method A) ---
+[2026-11-11T04:43:37.372Z] Perf [Add Issue]: min=34.50ms, med=52.40ms, max=55.80ms
+[2026-11-11T04:43:37.372Z] Perf [Change Day]: min=39.50ms, med=53.20ms, max=57.10ms
+[2026-11-11T04:43:37.372Z] Perf [Edit Done]: min=49.20ms, med=52.80ms, max=64.90ms
+[2026-11-11T04:43:37.372Z] Perf [Delete]: min=52.40ms, med=56.60ms, max=58.90ms
+[2026-11-11T04:43:37.372Z] Perf [Reset]: min=44.20ms, med=54.80ms, max=56.80ms
+[2026-11-11T04:43:37.404Z] [SV-RUNNER] Results saved to C:\Users\LENOVO\teamwork_projects\TEAM-07-sprint2\docs\reports\evidence\qa-closeout\sv-results-msedge-2026-11-11-d26e7be.json (61 records)

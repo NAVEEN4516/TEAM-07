@@ -109,4 +109,18 @@ describe('UI: KPICards (BDC-F-015, BDC-NF-002)', () => {
       assert.ok(html.includes('On Track'));
     });
   });
+
+  describe('BDC-NF-002: Status Badge Stylesheet Rules', () => {
+    test('defines CSS selectors for all schedule status badge modifiers', async () => {
+      const fs = await import('node:fs/promises');
+      const css = await fs.readFile(new URL('../../src/css/styles.css', import.meta.url), 'utf8');
+      for (const status of Object.values(SCHEDULE_STATUS)) {
+        const meta = getStatusBadgeMetadata(status);
+        assert.ok(
+          css.includes(`.${meta.cssModifier}`),
+          `Expected src/css/styles.css to contain selector .${meta.cssModifier} for status ${status}`
+        );
+      }
+    });
+  });
 });

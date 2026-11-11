@@ -1,5 +1,8 @@
 # Testing phase start
 
+> Historical preparation snapshot. Its pending-deliverable table is not the current
+> project status; see the [Test Summary](test-summary-report.md).
+
 Prepared for Naveen Prasad M, QA Lead, on 6 November 2026. This pack establishes
 the test version, current responsibilities and execution expectations for the
 Burndown Chart Generator. It is not final acceptance or a signed summary report.

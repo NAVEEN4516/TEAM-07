@@ -1,0 +1,26 @@
+[2026-11-10T11:10:58.670Z] Target Tested Commit: 85391ae9181a666cc5b975968070e3dc5059a352
+[2026-11-10T11:10:58.670Z] Target App Source Tree: 4a2278fd1774ecfb0cb43d1e6f9b00e386b344e8
+[2026-11-10T11:10:58.670Z] Worktree Clean (src, tests, tools): true
+[2026-11-10T11:10:58.670Z] Tester: stacktrace-bhuvi
+[2026-11-10T11:10:59.321Z] Browser launched successfully: msedge version 157.0.4341.42
+[2026-11-10T11:10:59.322Z] --- Executing Group G1: Default State ---
+[2026-11-10T11:11:01.045Z] --- Executing Group G2: Sprint Configuration ---
+[2026-11-10T11:11:05.299Z] --- Executing Group G3: Current Day and Marker ---
+[2026-11-10T11:11:11.210Z] --- Executing Group G4: Add Issue ---
+[2026-11-10T11:11:14.190Z] --- Executing Group G5: Edit / Reopen ---
+[2026-11-10T11:11:17.796Z] --- Executing Group G6: Delete / Empty ---
+[2026-11-10T11:11:25.556Z] --- Executing Group G7: Reset Data ---
+[2026-11-10T11:11:27.939Z] --- Executing Group G8: Status Classification and Chart ---
+[2026-11-10T11:11:30.642Z] --- Executing Group G9: Edge Cases ---
+[2026-11-10T11:11:32.281Z] --- Executing Step 3: Viewports, Themes & Responsiveness ---
+[2026-11-10T11:11:44.249Z] --- Executing Step 4: Accessibility & Keyboard Navigation ---
+[2026-11-10T11:11:48.432Z] --- Executing Group G-KB: Keyboard-Only Navigation ---
+[2026-11-10T11:11:56.420Z] --- Executing Step 5: Security & Resilience ---
+[2026-11-10T11:11:58.647Z] --- Executing Step 6: Performance Measurements (Method A) ---
+[2026-11-10T11:12:18.148Z] Perf [Add Issue]: min=26.20ms, med=40.60ms, max=46.90ms
+[2026-11-10T11:12:18.148Z] Perf [Change Day]: min=29.00ms, med=36.60ms, max=51.40ms
+[2026-11-10T11:12:18.148Z] Perf [Edit Done]: min=24.40ms, med=42.40ms, max=51.90ms
+[2026-11-10T11:12:18.149Z] Perf [Delete]: min=22.40ms, med=42.80ms, max=51.80ms
+[2026-11-10T11:12:18.149Z] Perf [Reset]: min=24.00ms, med=40.80ms, max=46.90ms
+[2026-11-10T11:12:18.195Z] --- Recording Inspection & Automated Unit-Level Test Cases ---
+[2026-11-10T11:12:18.203Z] [SV-RUNNER] Results saved to C:\Users\Bhuvi\Desktop\sem5\se\TEAM-07\docs\reports\evidence\sv-results-msedge-2026-11-10-85391ae.json (63 records)

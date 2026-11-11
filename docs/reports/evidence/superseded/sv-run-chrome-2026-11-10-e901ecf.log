@@ -1,0 +1,24 @@
+[2026-11-10T07:32:02.443Z] Target Tested Commit: e901ecf17232f97a307ab6c723ba13bdc26aa744
+[2026-11-10T07:32:02.443Z] Tester: stacktrace-bhuvi
+[2026-11-10T07:32:02.864Z] Browser launched successfully: chrome version 156.0.8078.80
+[2026-11-10T07:32:02.864Z] --- Executing Group G1: Default State ---
+[2026-11-10T07:32:04.297Z] --- Executing Group G2: Sprint Configuration ---
+[2026-11-10T07:32:08.052Z] --- Executing Group G3: Current Day and Marker ---
+[2026-11-10T07:32:13.393Z] --- Executing Group G4: Add Issue ---
+[2026-11-10T07:32:16.190Z] --- Executing Group G5: Edit / Reopen ---
+[2026-11-10T07:32:19.524Z] --- Executing Group G6: Delete / Empty ---
+[2026-11-10T07:32:26.677Z] --- Executing Group G7: Reset Data ---
+[2026-11-10T07:32:28.950Z] --- Executing Group G8: Status Classification and Chart ---
+[2026-11-10T07:32:31.718Z] --- Executing Group G9: Edge Cases ---
+[2026-11-10T07:32:33.487Z] --- Executing Step 3: Viewports, Themes & Responsiveness ---
+[2026-11-10T07:32:46.003Z] --- Executing Step 4: Accessibility & Keyboard Navigation ---
+[2026-11-10T07:32:50.166Z] --- Executing Group G-KB: Keyboard-Only Navigation ---
+[2026-11-10T07:32:58.139Z] --- Executing Step 5: Security & Resilience ---
+[2026-11-10T07:33:00.248Z] --- Executing Step 6: Performance Measurements (Method A) ---
+[2026-11-10T07:33:19.664Z] Perf [Add Issue]: min=30.90ms, med=41.50ms, max=52.90ms
+[2026-11-10T07:33:19.664Z] Perf [Change Day]: min=27.80ms, med=46.70ms, max=54.90ms
+[2026-11-10T07:33:19.665Z] Perf [Edit Done]: min=28.10ms, med=43.20ms, max=53.50ms
+[2026-11-10T07:33:19.665Z] Perf [Delete]: min=25.30ms, med=42.10ms, max=48.50ms
+[2026-11-10T07:33:19.665Z] Perf [Reset]: min=20.40ms, med=36.80ms, max=49.90ms
+[2026-11-10T07:33:19.702Z] --- Recording Inspection & Automated Unit-Level Test Cases ---
+[2026-11-10T07:33:19.708Z] [SV-RUNNER] Results saved to C:\Users\Bhuvi\Desktop\sem5\se\TEAM-07\docs\reports\evidence\sv-results-chrome-2026-11-10-e901ecf.json (63 records)
