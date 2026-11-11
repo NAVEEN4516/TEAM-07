@@ -33,7 +33,7 @@
   ],
   "nativeTests": 411,
   "nativeSuites": 92,
-  "humanAcceptance": "pending",
+  "humanAcceptance": "accepted",
   "coverageDefinitions": "Native measured-file coverage and all-application code-line coverage are distinct; V8 blocks are not source-level decision coverage.",
   "limitations": [
     "No new physical NVDA listening session by Codex. The existing 22 manual PASS results are attributed to Bhuvi; no verbatim speech/audio recording exists.",
@@ -135,5 +135,13 @@
     "docs/reports/evidence/qa-closeout/sv-status-ontrack-msedge-2026-11-11-d26e7be.png": "7bc195d49a07d2d2bbf88b2970a94e0b3c1715fedf11de5c3cf573e8deb88970",
     "docs/reports/evidence/qa-closeout/unit-coverage.json": "fd800df660efe61ffc9489f0f3bbefec69b6be2196c8b7e0decf86b1d6122d4e",
     "docs/reports/evidence/qa-closeout/unit-coverage.log": "ee3a24be9c734c310719f083830ef4b15109c6399b45f0d7985e295dc9479303"
+  },
+  "acceptanceRecord": {
+    "authorizedBy": "Naveen Prasad M",
+    "date": "2026-11-11",
+    "method": "Explicit owner authorization in the project chat",
+    "instruction": "GO AHEAD",
+    "scope": "Final QA acceptance of the documented technical testing package and stated evidence limitations.",
+    "qualification": "This records the owner instruction only. It does not claim the owner personally performed or witnessed any additional test, or create a handwritten/digital signature."
   }
 }

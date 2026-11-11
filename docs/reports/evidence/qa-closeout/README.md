@@ -1,6 +1,6 @@
 # QA closeout evidence
 
-Automated execution on 2026-11-11 by Codex for Naveen. Human acceptance remains pending. See [Test Summary](../../test-summary-report.md) and [manifest](manifest.json).
+Automated execution on 2026-11-11 by Codex for Naveen. Owner-authorized QA acceptance is recorded in the summary and manifest. See [Test Summary](../../test-summary-report.md) and [manifest](manifest.json).
 
 Reproduce from the recorded tested commit (or a tree-equivalent reviewed version):
 

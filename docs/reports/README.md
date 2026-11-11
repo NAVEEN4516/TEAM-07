@@ -1,6 +1,6 @@
 # Testing reports
 
-Start with the [Test Summary](test-summary-report.md) and [current RTM](requirements-traceability.md). Technical execution is complete; human acceptance remains pending.
+Start with the [Test Summary](test-summary-report.md) and [current RTM](requirements-traceability.md). Technical execution is complete; owner-authorized QA acceptance is recorded in the summary and manifest.
 
 | Deliverable | Status |
 | --- | --- |
