@@ -146,20 +146,19 @@ function makeRecord({
   return rec;
 }
 
-// Capture the final chart geometry, not an intermediate animation frame.
+// Snapshots depict the canonical data state, independently of animation timing.
+// This explicit draw is only for screenshot capture; input/performance assertions
+// continue to exercise the normal application behavior in their own contexts.
 async function captureEvidence(page, options) {
-  await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
-  await page.waitForFunction(async () => {
+  await page.evaluate(async () => {
+    await document.fonts.ready;
     const { getChartInstance } = await import('/js/ui/chart.js');
     const chart = getChartInstance();
-    if (!chart?.scales?.y) return false;
-    return chart.data.datasets.every((dataset, index) => dataset.data.every((value, point) => {
-      if (!Number.isFinite(value)) return true;
-      const element = chart.getDatasetMeta(index).data[point];
-      const animating = element && Object.values(element.$animations || {}).some(animation => animation._active);
-      return element && !animating && Math.abs(element.y - chart.scales.y.getPixelForValue(value)) < 0.1;
-    }));
-  }, null, { timeout: 10000 });
+    if (chart) {
+      chart.stop();
+      chart.update('none');
+    }
+  });
   await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
   return page.screenshot(options);
 }
