@@ -12,6 +12,7 @@ const manifest = JSON.parse(read('docs/reports/evidence/qa-closeout/manifest.jso
 const git = (...args) => execFileSync('git', args, { cwd: root, encoding: 'utf8' }).trim();
 assert.equal(git('rev-parse', 'HEAD:src'), manifest.sourceTree, 'QA evidence must match the application tree');
 assert.equal(git('rev-parse', 'HEAD:tests'), manifest.testTree, 'QA evidence must match the native tests');
+assert.equal(git('rev-parse', 'HEAD:src/js'), manifest.manualSemanticSourceTree, 'Reassess manual evidence if application/ARIA JavaScript changes');
 
 for (const [file, hash] of Object.entries(manifest.sha256)) {
   const actual = crypto.createHash('sha256').update(fs.readFileSync(path.join(root, file))).digest('hex');

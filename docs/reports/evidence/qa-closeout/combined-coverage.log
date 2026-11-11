@@ -1,0 +1,52 @@
+
+Unit-test coverage of src/js (Node v24.18.0, source coverage/lcov.info)
+
+file                              |       lines (all) |        code lines |          branches |         functions
+-----------------------------------------------------------------------------------------------------------------
+src/js/data/dataManager.js        |   414/414 100.00% |   226/226 100.00% |     66/66 100.00% |     23/23 100.00%
+src/js/data/defaultDataset.js     |    251/253 99.21% |    158/160 98.75% |      41/43 95.35% |       6/6 100.00%
+src/js/logic/burndownEngine.js    |   335/335 100.00% |   145/145 100.00% |     90/90 100.00% |     19/19 100.00%
+src/js/logic/validationManager.js |   437/437 100.00% |   264/264 100.00% |   153/153 100.00% |     14/14 100.00%
+src/js/ui/addIssueForm.js         |    276/373 73.99% |    208/292 71.23% |     54/54 100.00% |        6/8 75.00%
+src/js/ui/backlogTable.js         |     51/179 28.49% |     22/125 17.60% |     19/19 100.00% |        2/4 50.00%
+src/js/ui/chartConfig.js          |   187/187 100.00% |   152/152 100.00% |     54/54 100.00% |       8/8 100.00%
+src/js/ui/currentDayControl.js    |     99/150 66.00% |     68/112 60.71% |     12/12 100.00% |        1/2 50.00%
+src/js/ui/kpiCards.js             |    194/213 91.08% |    138/154 89.61% |     22/22 100.00% |        3/4 75.00%
+src/js/ui/sprintBanner.js         |    203/268 75.75% |    140/197 71.07% |     19/19 100.00% |        4/5 80.00%
+src/js/ui/themeManager.js         |   119/119 100.00% |     69/69 100.00% |     33/33 100.00% |       6/6 100.00%
+-----------------------------------------------------------------------------------------------------------------
+measured files                    |  2566/2928 87.64% |  1590/1896 83.86% |    563/565 99.65% |      92/99 92.93%
+
+NOT LOADED by any unit test (5 files, 594 physical lines, absent from the totals above):
+  src/js/ui/backlogActions.js (151 lines)
+  src/js/ui/chart.js (199 lines)
+  src/js/ui/dashboard.js (196 lines)
+  src/js/ui/fileProtocolNotice.js (37 lines)
+  src/js/ui/themeBootstrap.js (11 lines)
+
+Left out of the table because they are not application code: tests/integration/pipelineHelpers.js
+
+All 16 application files, code lines executed (browser: Chromium 157.0.8103.50, tools/verify-sprint2.cjs)
+
+file                              | code lines |        unit tests |       browser run |            either
+----------------------------------------------------------------------------------------------------------
+src/js/data/dataManager.js        |        226 |   226/226 100.00% |    179/226 79.20% |   226/226 100.00%
+src/js/data/defaultDataset.js     |        160 |    158/160 98.75% |    129/160 80.63% |    158/160 98.75%
+src/js/logic/burndownEngine.js    |        145 |   145/145 100.00% |    125/145 86.21% |   145/145 100.00%
+src/js/logic/validationManager.js |        264 |   264/264 100.00% |    179/264 67.80% |   264/264 100.00%
+src/js/ui/addIssueForm.js         |        292 |    208/292 71.23% |    201/292 68.84% |    236/292 80.82%
+src/js/ui/backlogActions.js       |        138 |       0/138 0.00% |   138/138 100.00% |   138/138 100.00%
+src/js/ui/backlogTable.js         |        125 |     22/125 17.60% |    121/125 96.80% |    123/125 98.40%
+src/js/ui/chart.js                |        114 |       0/114 0.00% |     88/114 77.19% |     88/114 77.19%
+src/js/ui/chartConfig.js          |        152 |   152/152 100.00% |    144/152 94.74% |   152/152 100.00%
+src/js/ui/currentDayControl.js    |        112 |     68/112 60.71% |    105/112 93.75% |    105/112 93.75%
+src/js/ui/dashboard.js            |        144 |       0/144 0.00% |    109/144 75.69% |    109/144 75.69%
+src/js/ui/fileProtocolNotice.js   |         26 |        0/26 0.00% |       3/26 11.54% |       3/26 11.54%
+src/js/ui/kpiCards.js             |        154 |    138/154 89.61% |    147/154 95.45% |    149/154 96.75%
+src/js/ui/sprintBanner.js         |        197 |    140/197 71.07% |    188/197 95.43% |    189/197 95.94%
+src/js/ui/themeBootstrap.js       |         10 |        0/10 0.00% |       8/10 80.00% |       8/10 80.00%
+src/js/ui/themeManager.js         |         69 |     69/69 100.00% |      49/69 71.01% |     69/69 100.00%
+----------------------------------------------------------------------------------------------------------
+all application files             |       2328 |  1590/2328 68.30% |  1913/2328 82.17% |  2162/2328 92.87%
+
+Wrote docs/reports/evidence/qa-closeout/combined-coverage.json

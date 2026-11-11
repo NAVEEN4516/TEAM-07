@@ -1,0 +1,25 @@
+[2026-11-11T04:42:27.645Z] Target Tested Commit: d26e7be1df35b3b67ab7754891bc730429185ff3
+[2026-11-11T04:42:27.646Z] Target App Source Tree: b8551212e3d76197cbe7db9fd4cde6d5f0b27193
+[2026-11-11T04:42:27.646Z] Worktree Clean (src, tests, tools): true
+[2026-11-11T04:42:27.646Z] Tester: Codex automated execution for Naveen Prasad M
+[2026-11-11T04:42:30.800Z] Browser launched successfully: firefox version 153.0 (Playwright build)
+[2026-11-11T04:42:30.800Z] --- Executing Group G1: Default State ---
+[2026-11-11T04:42:36.941Z] --- Executing Group G2: Sprint Configuration ---
+[2026-11-11T04:42:41.851Z] --- Executing Group G3: Current Day and Marker ---
+[2026-11-11T04:42:49.303Z] --- Executing Group G4: Add Issue ---
+[2026-11-11T04:42:52.844Z] --- Executing Group G5: Edit / Reopen ---
+[2026-11-11T04:42:57.881Z] --- Executing Group G6: Delete / Empty ---
+[2026-11-11T04:43:01.757Z] --- Executing Group G7: Reset Data ---
+[2026-11-11T04:43:05.262Z] --- Executing Group G8: Status Classification and Chart ---
+[2026-11-11T04:43:09.121Z] --- Executing Group G9: Edge Cases ---
+[2026-11-11T04:43:11.418Z] --- Executing Step 3: Viewports, Themes & Responsiveness ---
+[2026-11-11T04:43:24.576Z] --- Executing Step 4: Accessibility & Keyboard Navigation ---
+[2026-11-11T04:43:28.321Z] --- Executing Group G-KB: Keyboard-Only Navigation ---
+[2026-11-11T04:43:38.864Z] --- Executing Step 5: Security & Resilience ---
+[2026-11-11T04:43:42.779Z] --- Executing Step 6: Performance Measurements (Method A) ---
+[2026-11-11T04:44:00.399Z] Perf [Add Issue]: min=29.00ms, med=44.00ms, max=57.00ms
+[2026-11-11T04:44:00.399Z] Perf [Change Day]: min=35.00ms, med=37.00ms, max=48.00ms
+[2026-11-11T04:44:00.399Z] Perf [Edit Done]: min=26.00ms, med=35.00ms, max=43.00ms
+[2026-11-11T04:44:00.399Z] Perf [Delete]: min=25.00ms, med=28.00ms, max=48.00ms
+[2026-11-11T04:44:00.399Z] Perf [Reset]: min=36.00ms, med=42.00ms, max=58.00ms
+[2026-11-11T04:44:00.422Z] [SV-RUNNER] Results saved to C:\Users\LENOVO\teamwork_projects\TEAM-07-sprint2\docs\reports\evidence\qa-closeout\sv-results-firefox-2026-11-11-d26e7be.json (61 records)
