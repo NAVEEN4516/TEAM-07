@@ -1,6 +1,6 @@
 # Requirements Traceability Matrix — QA closeout
 
-Current execution assessment, 2026-11-11. All 44 planned cases and 25 requirements have passing evidence for the single-sprint simulator. **Execution complete; human acceptance pending.** This is not a signature or an assertion that all application code paths were executed.
+Current execution assessment, 2026-11-11. All 44 planned cases and 25 requirements have passing evidence for the single-sprint simulator. **Execution complete; QA acceptance authorized by the owner on 2026-11-11.** This is not a signature or an assertion that all application code paths were executed.
 
 The earlier 37 Pass / 7 Partial matrix is preserved in Git at commit `8b516da`. This update reassesses the seven gaps using fresh evidence; it does not rewrite old results. Current source tree and exact run commits are in the [manifest](evidence/qa-closeout/manifest.json).
 
@@ -67,6 +67,6 @@ The earlier 37 Pass / 7 Partial matrix is preserved in Git at commit `8b516da`. 
 - Day 0 is valid; equal start/end dates support one-day sprints; native `node --test` replaces the obsolete Jest wording. These are explicit execution-addendum clarifications, not new application features.
 - Automatic sprint persistence is disabled. Storage resilience is exercised through the recovery API and unavailable storage, not a claim that edits survive reload.
 - Historical Sprint 1 ticks and sign-offs are not used for current results. The older manual zero-overflow wording was clarified by Bhuvi as page-level rather than table-level overflow. The older table criterion remained BLOCKED and is superseded by fresh strict geometry measurements.
-- A passing manual screen-reader assessment is Bhuvi's reported observation, not Codex's personal observation. No exact speech or audio was recorded. The final human reviewer may require a witnessed repeat before acceptance.
+- A passing manual screen-reader assessment is Bhuvi's reported observation, not Codex's personal observation. No exact speech or audio was recorded. The owner-authorized acceptance retains this limitation; no witnessed repeat is claimed.
 - Pass means the planned case's expected behavior is supported by the linked evidence, including explicitly attributed manual evidence where needed. Coverage remains below 100%; no exhaustive correctness or new compliance certification is claimed.
-- No human acceptance signature has been applied. See the [Test Summary](test-summary-report.md) for the final gate.
+- The owner authorized QA acceptance in the project chat; no physical or digital signature has been generated. See the [Test Summary](test-summary-report.md) for the decision record and scope.

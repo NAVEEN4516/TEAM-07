@@ -65,7 +65,18 @@ assert.equal(new Set(cases.map(row => row[1])).size, 44);
 assert.equal(new Set(cases.map(row => row[2].trim())).size, 25);
 const manual = read('docs/reports/evidence/sv-manual-screenreader-85391ae.md');
 assert.equal((manual.match(/^\| \*\*SR-\d+\*\*[^\n]*\| PASS \|/gm) || []).length, 22);
-assert.ok(read('docs/reports/test-summary-report.md').includes('Human acceptance: pending'));
+assert.ok(['pending', 'accepted'].includes(manifest.humanAcceptance));
+const summary = read('docs/reports/test-summary-report.md');
+if (manifest.humanAcceptance === 'accepted') {
+  assert.ok(manifest.acceptanceRecord?.authorizedBy);
+  assert.match(manifest.acceptanceRecord.date, /^\d{4}-\d{2}-\d{2}$/);
+  assert.equal(manifest.acceptanceRecord.method, 'Explicit owner authorization in the project chat');
+  assert.ok(manifest.acceptanceRecord.instruction);
+  assert.ok(manifest.acceptanceRecord.qualification);
+  assert.ok(summary.includes('Human acceptance: accepted by owner authorization'));
+} else {
+  assert.ok(summary.includes('Human acceptance: pending'));
+}
 
 let linkCount = 0;
 function walk(folder) {
@@ -85,4 +96,4 @@ function walk(folder) {
   }
 }
 walk(path.join(root, 'docs/reports'));
-console.log(`QA audit PASS: 183 browser assertions, 411 native tests, 44 cases, 25 requirements, ${linkCount} links. Human acceptance remains pending.`);
+console.log(`QA audit PASS: 183 browser assertions, 411 native tests, 44 cases, 25 requirements, ${linkCount} links. Recorded acceptance: ${manifest.humanAcceptance}.`);
