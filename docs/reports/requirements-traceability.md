@@ -66,7 +66,7 @@ The earlier 37 Pass / 7 Partial matrix is preserved in Git at commit `8b516da`. 
 
 - Day 0 is valid; equal start/end dates support one-day sprints; native `node --test` replaces the obsolete Jest wording. These are explicit execution-addendum clarifications, not new application features.
 - Automatic sprint persistence is disabled. Storage resilience is exercised through the recovery API and unavailable storage, not a claim that edits survive reload.
-- Historical Sprint 1 ticks and sign-offs are not used for current results. Original manual Firefox zero-overflow observations conflict with old automation; they are retained as reported history and excluded from final geometry evidence.
+- Historical Sprint 1 ticks and sign-offs are not used for current results. The older manual zero-overflow wording was clarified by Bhuvi as page-level rather than table-level overflow. The older table criterion remained BLOCKED and is superseded by fresh strict geometry measurements.
 - A passing manual screen-reader assessment is Bhuvi's reported observation, not Codex's personal observation. No exact speech or audio was recorded. The final human reviewer may require a witnessed repeat before acceptance.
 - Pass means the planned case's expected behavior is supported by the linked evidence, including explicitly attributed manual evidence where needed. Coverage remains below 100%; no exhaustive correctness or new compliance certification is claimed.
 - No human acceptance signature has been applied. See the [Test Summary](test-summary-report.md) for the final gate.
