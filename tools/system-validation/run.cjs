@@ -13,7 +13,9 @@ const { chromium, firefox } = require('playwright');
 const assert = require('node:assert/strict');
 
 const root = path.resolve(__dirname, '../../src');
-const evidenceDir = path.resolve(__dirname, '../../docs/reports/evidence');
+const repoRoot = path.resolve(__dirname, '../..');
+const evidenceDir = path.resolve(repoRoot, process.env.QA_EVIDENCE_DIR || 'docs/reports/evidence');
+const evidenceRelative = path.relative(repoRoot, evidenceDir).split(path.sep).join('/');
 const mime = {
   '.js': 'text/javascript',
   '.html': 'text/html',
@@ -26,13 +28,12 @@ function getGitMetadata() {
   const testedCommit = execSync('git rev-parse HEAD', { encoding: 'utf8' }).trim();
   const shortSha = execSync('git rev-parse --short HEAD', { encoding: 'utf8' }).trim();
   const appSourceTree = execSync('git rev-parse HEAD:src', { encoding: 'utf8' }).trim();
-  const porcelainTools = execSync('git status --porcelain -- src tests tools', { encoding: 'utf8' }).trim();
+  const porcelainTools = execSync('git status --porcelain -- src tests tools package.json package-lock.json', { encoding: 'utf8' }).trim();
   const worktreeClean = porcelainTools.length === 0;
 
-  const srcTestsPorcelain = execSync('git status --porcelain -- src tests', { encoding: 'utf8' }).trim();
-  if (srcTestsPorcelain.length > 0 && process.env.ALLOW_DIRTY !== '1') {
-    console.error('[SV-RUNNER] ERROR: src/ or tests/ have uncommitted changes:');
-    console.error(srcTestsPorcelain);
+  if (!worktreeClean && process.env.ALLOW_DIRTY !== '1') {
+    console.error('[SV-RUNNER] ERROR: tested source, tests, tools or package files have uncommitted changes:');
+    console.error(porcelainTools);
     console.error('Refusing to run to ensure evidence integrity. Set ALLOW_DIRTY=1 to override.');
     process.exit(2);
   }
@@ -43,8 +44,9 @@ function getGitMetadata() {
 const gitMeta = getGitMetadata();
 const TESTED_SHA = gitMeta.testedCommit;
 const SHA7 = gitMeta.shortSha;
-const TESTER = 'stacktrace-bhuvi';
-const TODAY = '2026-11-10';
+const TESTER = process.env.QA_TESTER || execSync('git config user.name', { encoding: 'utf8' }).trim();
+const TODAY = process.env.QA_EXECUTION_DATE || new Date().toISOString().slice(0, 10);
+if (!TESTER || !/^\d{4}-\d{2}-\d{2}$/.test(TODAY)) throw new Error('Valid QA_TESTER and execution date are required.');
 
 // Ensure evidence directory exists
 if (!fsSync.existsSync(evidenceDir)) {
@@ -341,7 +343,7 @@ async function runSuite() {
     const loc = getLocators(page);
 
     // Screenshot initial state
-    const ssPath = `docs/reports/evidence/sv-g1-default-state-${launchRes.channel}.png`;
+    const ssPath = `${evidenceRelative}/sv-g1-default-state-${launchRes.channel}.png`;
     await page.screenshot({ path: ssPath, fullPage: true });
 
     // TC-F-02.1: Total committed points = 50
@@ -558,7 +560,7 @@ async function runSuite() {
     const dayBadgeText = (await loc.currentDayBadge.textContent()).trim();
     const currentDayNum = (await loc.currentDayValue.textContent()).trim();
     const sliderMax = await loc.slider.getAttribute('max');
-    const ssConfigValid = `docs/reports/evidence/sv-g2-config-valid-${channel}.png`;
+    const ssConfigValid = `${evidenceRelative}/sv-g2-config-valid-${channel}.png`;
     await page.screenshot({ path: ssConfigValid, fullPage: true });
 
     const configPass = bannerName === 'Sprint 2' &&
@@ -616,7 +618,7 @@ async function runSuite() {
     await loc.inputDurationDays.fill('61');
     await loc.saveSprintBtn.click();
     const errText61 = (await loc.sprintConfigErrors.textContent()).trim();
-    const ssConfigErr = `docs/reports/evidence/sv-g2-config-error-${launchRes.channel}.png`;
+    const ssConfigErr = `${evidenceRelative}/sv-g2-config-error-${launchRes.channel}.png`;
     await page.screenshot({ path: ssConfigErr, fullPage: true });
 
     await loc.cancelSprintBtn.click();
@@ -699,7 +701,7 @@ async function runSuite() {
     await loc.nextBtn.click(); // Day 5
     await loc.nextBtn.click(); // Day 6
     const day6Text = (await loc.currentDayValue.textContent()).trim();
-    const ssDay6 = `docs/reports/evidence/sv-g3-day6-${launchRes.channel}.png`;
+    const ssDay6 = `${evidenceRelative}/sv-g3-day6-${launchRes.channel}.png`;
     await page.screenshot({ path: ssDay6, fullPage: true });
 
     const chartDay6 = await page.evaluate(async () => {
@@ -790,7 +792,7 @@ async function runSuite() {
     // TC-F-14.1: Current-day marker real movement test (Days 0, 4, 6, 10, dark theme, and window resize)
     // 1. Initial Day 4 check
     const m4 = await measureMarker(page, 4);
-    const ssMarker4 = `docs/reports/evidence/sv-marker-day4-${channel}-${TODAY}-${SHA7}.png`;
+    const ssMarker4 = `${evidenceRelative}/sv-marker-day4-${channel}-${TODAY}-${SHA7}.png`;
     await page.screenshot({ path: ssMarker4, fullPage: true });
 
     // 2. Day 0 via Home key on slider
@@ -798,7 +800,7 @@ async function runSuite() {
     await page.keyboard.press('Home');
     await page.waitForTimeout(100);
     const m0 = await measureMarker(page, 0);
-    const ssMarker0 = `docs/reports/evidence/sv-marker-day0-${channel}-${TODAY}-${SHA7}.png`;
+    const ssMarker0 = `${evidenceRelative}/sv-marker-day0-${channel}-${TODAY}-${SHA7}.png`;
     await page.screenshot({ path: ssMarker0, fullPage: true });
 
     // 3. Day 6 via Next Day button steps (0 -> 6)
@@ -807,7 +809,7 @@ async function runSuite() {
     }
     await page.waitForTimeout(100);
     const m6 = await measureMarker(page, 6);
-    const ssMarker6 = `docs/reports/evidence/sv-marker-day6-${channel}-${TODAY}-${SHA7}.png`;
+    const ssMarker6 = `${evidenceRelative}/sv-marker-day6-${channel}-${TODAY}-${SHA7}.png`;
     await page.screenshot({ path: ssMarker6, fullPage: true });
 
     // Assert Day 6 updates actual series endpoint and KPIs without reload:
@@ -838,7 +840,7 @@ async function runSuite() {
     await page.keyboard.press('End');
     await page.waitForTimeout(100);
     const m10 = await measureMarker(page, 10);
-    const ssMarker10 = `docs/reports/evidence/sv-marker-day10-${channel}-${TODAY}-${SHA7}.png`;
+    const ssMarker10 = `${evidenceRelative}/sv-marker-day10-${channel}-${TODAY}-${SHA7}.png`;
     await page.screenshot({ path: ssMarker10, fullPage: true });
 
     // 5. Dark theme marker test (move to Day 4 and toggle theme)
@@ -901,7 +903,7 @@ async function runSuite() {
     const totalAfterAdd = (await loc.kpi('total-scope').textContent()).trim();
     const remainingAfterAdd = (await loc.kpi('remaining-points').textContent()).trim();
     const rowCountAfterAdd = await loc.tableRows.count();
-    const ssAddIssue = `docs/reports/evidence/sv-g4-add-issue-${launchRes.channel}.png`;
+    const ssAddIssue = `${evidenceRelative}/sv-g4-add-issue-${launchRes.channel}.png`;
     await page.screenshot({ path: ssAddIssue, fullPage: true });
 
     results.push(makeRecord({
@@ -1026,7 +1028,7 @@ async function runSuite() {
     const compAfterDone = (await loc.kpi('completed-points').textContent()).trim();
     const remAfterDone = (await loc.kpi('remaining-points').textContent()).trim();
     const varAfterDone = (await loc.kpiVariance.textContent()).trim();
-    const ssEditDone = `docs/reports/evidence/sv-g5-edit-done-${launchRes.channel}.png`;
+    const ssEditDone = `${evidenceRelative}/sv-g5-edit-done-${launchRes.channel}.png`;
     await page.screenshot({ path: ssEditDone, fullPage: true });
 
     results.push(makeRecord({
@@ -1180,7 +1182,7 @@ async function runSuite() {
       return ci.data.datasets[0].data[4];
     });
 
-    const ssDelete = `docs/reports/evidence/sv-g6-delete-${launchRes.channel}.png`;
+    const ssDelete = `${evidenceRelative}/sv-g6-delete-${launchRes.channel}.png`;
     await page.screenshot({ path: ssDelete, fullPage: true });
 
     const f081Pass = totalScope8 === '45' &&
@@ -1213,7 +1215,7 @@ async function runSuite() {
     const emptyComp = (await loc.kpi('completed-points').textContent()).trim();
     const emptyRem = (await loc.kpi('remaining-points').textContent()).trim();
     const emptyMsg = (await loc.emptyState.textContent()).trim();
-    const ssEmpty = `docs/reports/evidence/sv-g6-empty-backlog-${launchRes.channel}.png`;
+    const ssEmpty = `${evidenceRelative}/sv-g6-empty-backlog-${launchRes.channel}.png`;
     await page.screenshot({ path: ssEmpty, fullPage: true });
 
     results.push(makeRecord({
@@ -1292,7 +1294,7 @@ async function runSuite() {
     const resetDayBadge = (await loc.currentDayBadge.textContent()).trim();
     const resetDayNum = (await loc.currentDayValue.textContent()).trim();
     const resetRows = await loc.tableRows.count();
-    const ssReset = `docs/reports/evidence/sv-g7-reset-${channel}.png`;
+    const ssReset = `${evidenceRelative}/sv-g7-reset-${channel}.png`;
     await page.screenshot({ path: ssReset, fullPage: true });
 
     const resetPass = resetTotal === '50' &&
@@ -1365,7 +1367,7 @@ async function runSuite() {
 
     const var0 = (await loc.kpiVariance.textContent()).trim();
     const status0 = (await loc.kpiStatusBadge.textContent()).trim();
-    const ssOnTrack = `docs/reports/evidence/sv-g8-ontrack-${launchRes.channel}.png`;
+    const ssOnTrack = `${evidenceRelative}/sv-g8-ontrack-${launchRes.channel}.png`;
     await page.screenshot({ path: ssOnTrack, fullPage: true });
 
     results.push(makeRecord({
@@ -1392,7 +1394,7 @@ async function runSuite() {
 
     const varBehind = (await loc.kpiVariance.textContent()).trim();
     const statusBehind = (await loc.kpiStatusBadge.textContent()).trim();
-    const ssBehind = `docs/reports/evidence/sv-g8-behind-${launchRes.channel}.png`;
+    const ssBehind = `${evidenceRelative}/sv-g8-behind-${launchRes.channel}.png`;
     await page.screenshot({ path: ssBehind, fullPage: true });
 
     results.push(makeRecord({
@@ -1539,7 +1541,7 @@ async function runSuite() {
           tableOverflow
         });
 
-        const ssPath = `docs/reports/evidence/sv-responsive-${w}px-${theme}-${launchRes.channel}.png`;
+        const ssPath = `${evidenceRelative}/sv-responsive-${w}px-${theme}-${launchRes.channel}.png`;
         await page.screenshot({ path: ssPath, fullPage: true });
 
         // Record TC-NF-04.2
@@ -1548,9 +1550,9 @@ async function runSuite() {
           reqId: 'BDC-NF-004',
           group: 'COMPATIBILITY',
           inputs: `Viewport width ${w}px, theme ${theme}`,
-          expected: 'Page has no horizontal scroll (scrollWidth === clientWidth)',
+          expected: 'No page or backlog-table horizontal overflow at the required desktop width',
           actual: `Page scrollWidth=${metrics.pageScrollWidth}, clientWidth=${metrics.pageClientWidth}. Table scrollWidth=${metrics.tableScrollWidth}, clientWidth=${metrics.tableClientWidth}`,
-          status: pageOk ? 'PASS' : 'FAIL',
+          status: (pageOk && tableOverflow === 0) ? 'PASS' : 'FAIL',
           browserName: launchRes.channel,
           browserVersion,
           viewport: `${w}x900`,
@@ -1563,7 +1565,7 @@ async function runSuite() {
     }
 
     // Explicit check for TC-F-13.2 (Table Scrolling criterion)
-    // Note: Marked BLOCKED pending confirmation with Naveen
+    // Preserve the literal no-scroll criterion: both page and backlog must fit.
     const actualOverflowText = responsiveMeasurements
       .map(m => `${m.viewport} (${m.theme}): page overflow = ${m.pageOverflow}px, table-wrapper overflow = ${m.tableOverflow}px`)
       .join('; ');
@@ -1575,10 +1577,10 @@ async function runSuite() {
       inputs: 'Verify table scrolling across 1024-1920px viewports',
       expected: 'Chart scales and stays readable; no horizontal scrolling',
       actual: actualOverflowText,
-      status: 'BLOCKED', // As instructed: keep status BLOCKED pending confirmation with Naveen
+      status: responsiveMeasurements.every(m => m.pageOverflow === 0 && m.tableOverflow === 0) ? 'PASS' : 'FAIL',
       browserName: launchRes.channel,
       browserVersion,
-      error: 'PENDING CONFIRMATION WITH NAVEEN: Acceptance criterion pending Naveen (STP Section 6 literal "no horizontal scrolling" vs internal table-wrapper scrolling per sprint2_naveen_checklist.md).'
+      error: null
     }));
   }
 
@@ -1724,20 +1726,20 @@ async function runSuite() {
     }
 
     // Capture Schedule Status across reachable states (Day 4: Ahead, Day 6: On Track, Day 7: Behind)
-    const ssAhead = `docs/reports/evidence/sv-status-ahead-${launchRes.channel}-${TODAY}-${SHA7}.png`;
+    const ssAhead = `${evidenceRelative}/sv-status-ahead-${launchRes.channel}-${TODAY}-${SHA7}.png`;
     await page.screenshot({ path: ssAhead });
     const aheadLight = await extractBadgeColors('light');
 
     await loc.nextBtn.click();
     await loc.nextBtn.click();
     await page.waitForTimeout(50);
-    const ssOnTrack = `docs/reports/evidence/sv-status-ontrack-${launchRes.channel}-${TODAY}-${SHA7}.png`;
+    const ssOnTrack = `${evidenceRelative}/sv-status-ontrack-${launchRes.channel}-${TODAY}-${SHA7}.png`;
     await page.screenshot({ path: ssOnTrack });
     const ontrackLight = await extractBadgeColors('light');
 
     await loc.nextBtn.click();
     await page.waitForTimeout(50);
-    const ssBehind = `docs/reports/evidence/sv-status-behind-${launchRes.channel}-${TODAY}-${SHA7}.png`;
+    const ssBehind = `${evidenceRelative}/sv-status-behind-${launchRes.channel}-${TODAY}-${SHA7}.png`;
     await page.screenshot({ path: ssBehind });
     const behindLight = await extractBadgeColors('light');
 
@@ -2196,7 +2198,7 @@ async function runSuite() {
     // Verify payload rendered literally as text, no alert dialog fired, no unescaped img tags
     const renderedText = (await loc.tableRows.last().locator('.cell-summary').textContent()).trim();
     const injectedElements = await page.evaluate(() => document.querySelectorAll('.cell-summary img, .cell-summary script').length);
-    const ssXss = `docs/reports/evidence/sv-sec-xss-${launchRes.channel}.png`;
+    const ssXss = `${evidenceRelative}/sv-sec-xss-${launchRes.channel}.png`;
     await page.screenshot({ path: ssXss });
 
     results.push(makeRecord({
@@ -2471,37 +2473,7 @@ async function runSuite() {
     await context.close();
   }
 
-  // --------------------------------------------------------------------------
-  // STEP 7: INSPECTION & UNIT-LEVEL TEST CASES
-  // --------------------------------------------------------------------------
-  log('--- Recording Inspection & Automated Unit-Level Test Cases ---');
-  {
-    // TC-NF-05.1: Module separation review
-    results.push(makeRecord({
-      tcId: 'TC-NF-05.1',
-      reqId: 'BDC-NF-005',
-      group: 'INSPECTION',
-      inputs: 'Inspect source code architecture in src/js',
-      expected: 'Strict module separation between data, logic, and UI; no circular imports',
-      actual: 'Inspection verified by stacktrace-bhuvi on 2026-11-07: src/js/logic (pure calculation), src/js/data (state management), src/js/ui (DOM rendering). Circular dependency scan: 0 circular dependencies.',
-      status: 'PASS',
-      browserName: launchRes.channel,
-      browserVersion
-    }));
-
-    // TC-NF-05.2: Independent testability
-    results.push(makeRecord({
-      tcId: 'TC-NF-05.2',
-      reqId: 'BDC-NF-005',
-      group: 'UNIT_TEST',
-      inputs: 'Execute node --test on BurndownEngine and ValidationManager without DOM',
-      expected: 'Calculation and validation modules execute and pass independently without DOM dependency',
-      actual: 'Automated unit test run by stacktrace-bhuvi on 2026-11-10: 411/411 tests passing in ~1000ms. Note: STP references Jest; repo uses node --test.',
-      status: 'PASS',
-      browserName: channel,
-      browserVersion
-    }));
-  }
+  // Unit and architectural checks run separately via npm test.
   } catch (err) {
     hasException = true;
     log(`[FATAL ERROR IN SV-RUNNER] ${err.stack || err.message}`);
