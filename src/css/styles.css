@@ -384,6 +384,11 @@ body {
   position: relative;
 }
 
+/* Bound the previous canvas size while Chart.js handles a viewport resize. */
+.chart-container canvas {
+  max-width: 100%;
+}
+
 /* Backlog Table Container */
 .table-wrapper {
   width: 100%;
