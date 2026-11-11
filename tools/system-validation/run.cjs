@@ -2512,7 +2512,7 @@ async function runSuite() {
     console.log(`[SV-RUNNER] SUMMARY pass=${passCount} fail=${failCount} blocked=${blockedCount} not_executed=${notExecCount}`);
     console.log(`[SV-RUNNER] Completed System Validation on ${channel}`);
 
-    if (failCount > 0 || hasException) {
+    if (failCount > 0 || notExecCount > 0 || results.length === 0 || hasException) {
       process.exitCode = 1;
     } else {
       process.exitCode = 0;
