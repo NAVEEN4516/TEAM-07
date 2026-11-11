@@ -10,7 +10,7 @@
 - **HEAD:** `500a4be3961103480c6274b89eddca34a219ccce`
 - **HEAD:src:** `4a2278fd1774ecfb0cb43d1e6f9b00e386b344e8`
 - **URL:** http://127.0.0.1:8090/index.html (snapshot copy)
-- **Status:** **EXECUTED (manual)** (33 PASS, 0 FAIL, 0 NOT EXECUTED [29 functional + 4 responsive])
+- **Status:** **EXECUTED (manual)** (29 functional PASS, 0 FAIL, 0 NOT EXECUTED, 1 BLOCKED [TC-F-13.2])
 
 ---
 
@@ -108,16 +108,18 @@ This manual test sheet provides exact, step-by-step test instructions for human 
 ### Responsive Viewports & Themes (Firefox Responsive Design Mode `Ctrl + Shift + M`)
 | Viewport | Light Theme | Dark Theme | No Page Scroll (`scrollWidth <= clientWidth`) | Table Wrapper Behavior | Status |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **1024 x 900** | PASS | PASS | page: 0 | table: 0 | PASS |
-| **1366 x 900** | PASS | PASS | page: 0 | table: 0 | PASS |
-| **1440 x 900** | PASS | PASS | page: 0 | table: 0 | PASS |
-| **1920 x 900** | PASS | PASS | page: 0 | table: 0 | PASS |
+| **1024 x 900** | PASS | PASS | page: 0 | table: 0 (fits container: 924px) | BLOCKED |
+| **1366 x 900** | PASS | PASS | page: 0 | table: 36px (scrollWidth=631, clientWidth=595) | BLOCKED |
+| **1440 x 900** | PASS | PASS | page: 0 | table: 0 (fits container) | BLOCKED |
+| **1920 x 900** | PASS | PASS | page: 0 | table: 0 (fits container) | BLOCKED |
 
 - **Long key (60 chars) + long summary (200 chars), layout intact?:** yes
+- **Reconciliation Note on 1366px Overflow & TC-F-13.2 Status:**
+  In automated Firefox 159 (and Chrome/Edge), at 1366x900 (100% zoom), `.dashboard-grid` enters two-column layout (`min-width: 1200px`), constraining `.table-wrapper` clientWidth to 595px while the backlog table has a 631px content width. This produces 36px internal horizontal overflow (`scrollWidth=631, clientWidth=595`), accommodated cleanly by `.table-wrapper { overflow-x: auto; }`. Page-level overflow is strictly 0px across all resolutions. In initial manual notes, `table: 0` referred to zero page-level overflow caused by the table; this has been reconciled with the automated measurements to explicitly document the 36px internal wrapper scroll. Per team instruction, `TC-F-13.2` remains explicitly **BLOCKED** pending acceptance alignment with Naveen on whether internal wrapper scrolling satisfies the STP Table 9 criterion.
 
 ---
 
 ## 4. Sign-Off
 - **Automated Execution:** Completed in Playwright Firefox 159 (`sv-results-firefox-2026-11-10-85391ae.json`).
-- **Manual Sheet Status:** **EXECUTED (manual)** (33 PASS, 0 FAIL, 0 NOT EXECUTED).
+- **Manual Sheet Status:** **EXECUTED (manual)** (29 functional PASS, 0 FAIL, 0 NOT EXECUTED, 1 BLOCKED [TC-F-13.2]).
 - **QA Tester:** Bhuvi (`@stacktrace-bhuvi`)

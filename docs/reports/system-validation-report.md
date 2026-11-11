@@ -26,7 +26,7 @@ A comprehensive, rigorous end-to-end System Validation was conducted on the TEAM
   - **Mozilla Firefox (v159.0 Playwright build):** **62 PASS, 0 FAIL, 1 BLOCKED, 0 NOT EXECUTED** (`docs/reports/evidence/sv-results-firefox-2026-11-10-85391ae.json`)
   - **Combined Browser Totals:** **186 PASS, 0 FAIL, 3 BLOCKED** across 189 evaluations.
 - **Current Day Vertical Marker Movement:** Pixel-scanning verification via canvas `getImageData` confirmed marker draws within $\le 2$ px of expected coordinates across Days 0, 4, 6, 10, dark theme, and 1024px resize ($|\text{drawn} - \text{expected}| \le 1.13$ px max). Day 6 updates actual burndown series endpoint and KPI metrics without page reload.
-- **Pure Keyboard Navigation (Group G-KB):** 100% PASS (8/8 records) operating strictly via `page.keyboard` with zero `.click()`, zero `.fill()`, and zero `.focus()` calls. Covers skip link, theme toggle, sprint configuration modal, timeline buttons and slider, add issue + duplicate rejection, edit to Done + cancel with Escape + reopen, delete + adjacent focus, and reset data.
+- **Pure Keyboard Navigation (Group G-KB):** 100% PASS (9/9 records) operating strictly via `page.keyboard` with zero `.click()`, zero `.fill()`, and zero `.focus()` calls. Covers initial logical tab order (`TC-NF-02.1-KB-ORDER`), skip link, theme toggle, sprint configuration modal, timeline buttons and slider, add issue + duplicate rejection, edit to Done + cancel with Escape + reopen, delete + adjacent focus, and reset data.
 - **Status Indicators & Color Discrimination (TC-NF-02.3 Supplemental):**
   - All status indicators render clear semantic text labels ("Ahead of Schedule", "On Track", "Behind Schedule").
   - WCAG 2.1 AA text contrast ($\ge 4.5:1$):
@@ -46,12 +46,12 @@ A comprehensive, rigorous end-to-end System Validation was conducted on the TEAM
   - **STP Threshold (< 2000 ms):** 100% PASS with > 20x to 50x safety margin across all browsers.
 - **Security & Resilience:** CSP meta tag precedes all scripts, script-src 'self', no unsafe-eval, noscript notice present, `file://` guidance warning banner visible, XSS payloads neutralized as literal text, and invalid numbers rejected without store corruption.
 - **Manual Verification Status (Bhuvi `@stacktrace-bhuvi`, 2026-11-10):**
-  - **Mozilla Firefox 159.0.1 (Installed Release):** **33 PASS, 0 FAIL, 0 NOT EXECUTED** (29 functional workflow test cases + 4 responsive viewports) executed against tested commit `500a4be3961103480c6274b89eddca34a219ccce` (source tree `4a2278fd1774ecfb0cb43d1e6f9b00e386b344e8`) at `http://127.0.0.1:8090/index.html` (recorded in `docs/reports/evidence/sv-manual-firefox-85391ae.md`).
+  - **Mozilla Firefox 159.0.1 (Installed Release):** **29 functional PASS, 0 FAIL, 0 NOT EXECUTED, 1 BLOCKED (TC-F-13.2)** (29 functional workflow test cases passed + 4 responsive viewports evaluated with TC-F-13.2 BLOCKED pending criterion agreement) executed against tested commit `500a4be3961103480c6274b89eddca34a219ccce` (source tree `4a2278fd1774ecfb0cb43d1e6f9b00e386b344e8`) at `http://127.0.0.1:8090/index.html` (recorded in `docs/reports/evidence/sv-manual-firefox-85391ae.md`).
   - **Screen Reader (NVDA 2026.3 on Firefox 159.0.1):** **22 PASS, 0 FAIL, 0 NOT EXECUTED** (scenarios `SR-01` through `SR-22`) executed against tested commit `500a4be3961103480c6274b89eddca34a219ccce` (source tree `4a2278fd1774ecfb0cb43d1e6f9b00e386b344e8`) at `http://127.0.0.1:8090/index.html` (recorded in `docs/reports/evidence/sv-manual-screenreader-85391ae.md`).
   - **Methodology & Integrity Notes:**
     - No screenshots were taken for manual checks.
     - For screen-reader rows where the tester recorded only `PASS`, the exact NVDA speech wording was not recorded (`Tester recorded PASS; NVDA speech wording not recorded`).
-    - The responsive overflow numbers are recorded as measured (`page: 0`, `table: 0` across all tested viewports in Firefox Responsive Design Mode).
+    - The responsive overflow numbers are reconciled to record 0px page overflow across all viewports and 36px internal wrapper overflow at 1366px (`scrollWidth=631, clientWidth=595`).
     - Formal test case `TC-F-13.2` stays **BLOCKED** pending acceptance criterion agreement with Naveen.
 
 ### Test Execution History & Audit Trail
@@ -165,22 +165,22 @@ Measurements across all 4 target viewports (1024, 1366, 1440, 1920 px) in Light 
 - **Tested Commit (HEAD):** `500a4be3961103480c6274b89eddca34a219ccce`
 - **Application Source Tree (HEAD:src):** `4a2278fd1774ecfb0cb43d1e6f9b00e386b344e8`
 - **Tested URL:** `http://127.0.0.1:8090/index.html` (snapshot copy)
-- **Total Result:** **33 PASS, 0 FAIL, 0 NOT EXECUTED** (29 functional test cases + 4 responsive viewports)
+- **Total Result:** **29 functional PASS, 0 FAIL, 0 NOT EXECUTED, 1 BLOCKED (TC-F-13.2)** (29 functional test cases + 4 responsive viewports)
 - **Traceable Run Sheet:** `docs/reports/evidence/sv-manual-firefox-85391ae.md`
 
 #### Responsive Viewports & Themes (Firefox Responsive Design Mode `Ctrl + Shift + M`)
 | Viewport | Light Theme | Dark Theme | No Page Scroll (`scrollWidth <= clientWidth`) | Table Wrapper Behavior | Status |
 | :--- | :---: | :---: | :--- | :--- | :---: |
-| **1024 x 900** | PASS | PASS | page: 0 | table: 0 | **PASS** |
-| **1366 x 900** | PASS | PASS | page: 0 | table: 0 | **PASS** |
-| **1440 x 900** | PASS | PASS | page: 0 | table: 0 | **PASS** |
-| **1920 x 900** | PASS | PASS | page: 0 | table: 0 | **PASS** |
+| **1024 x 900** | PASS | PASS | page: 0 | table: 0 (fits container: 924px) | **BLOCKED** |
+| **1366 x 900** | PASS | PASS | page: 0 | table: 36px (scrollWidth=631, clientWidth=595) | **BLOCKED** |
+| **1440 x 900** | PASS | PASS | page: 0 | table: 0 (fits container) | **BLOCKED** |
+| **1920 x 900** | PASS | PASS | page: 0 | table: 0 (fits container) | **BLOCKED** |
 
 - **High-Density Text Stress Test:** Long key (60 chars) + long summary (200 chars), layout intact?: **yes** (verified without horizontal page overflow or clipping).
-- **Execution & Disclosure Notes:**
+- **Execution & Reconciliation Notes:**
   - No screenshots were taken for manual checks.
-  - The responsive overflow numbers are recorded as measured (`page: 0`, `table: 0`).
-  - Formal test case `TC-F-13.2` stays **BLOCKED** pending acceptance criterion agreement with Naveen.
+  - In automated Firefox 159 (and Chrome/Edge), at 1366x900 (100% zoom), `.dashboard-grid` enters two-column layout (`min-width: 1200px`), constraining `.table-wrapper` clientWidth to 595px while the backlog table has a 631px content width. This produces 36px internal horizontal overflow (`scrollWidth=631, clientWidth=595`), accommodated cleanly by `.table-wrapper { overflow-x: auto; }`. Page-level overflow is strictly 0px across all resolutions. In initial manual notes, `table: 0` referred to zero page-level overflow caused by the table; this has been reconciled with the automated measurements to explicitly document the 36px internal wrapper scroll.
+  - Formal test case `TC-F-13.2` stays **BLOCKED** pending acceptance criterion agreement with Naveen on whether internal table wrapper scrolling satisfies the STP Table 9 criterion.
 
 #### Manual Functional Workflow Verification (29 Cases)
 All 29 functional scenarios in groups G1–G8 were manually executed and verified on physical Firefox 159.0.1:
@@ -357,7 +357,7 @@ All evidence files generated during System Validation are committed in `docs/rep
 
 System Validation Run 3b on commit `85391ae9181a666cc5b975968070e3dc5059a352` achieves **62 PASS, 0 FAIL, 1 BLOCKED, 0 NOT EXECUTED** per browser across Google Chrome, Microsoft Edge, and Mozilla Firefox (186 PASS / 0 FAIL / 3 BLOCKED total across automated engines).
 
-Physical manual testing completed by Bhuvi (`@stacktrace-bhuvi`) on desktop Mozilla Firefox 159.0.1 (**33 PASS, 0 FAIL, 0 NOT EXECUTED**) and NVDA 2026.3 screen reader (**22 PASS, 0 FAIL, 0 NOT EXECUTED**) against commit `500a4be3961103480c6274b89eddca34a219ccce` (source tree `4a2278fd1774ecfb0cb43d1e6f9b00e386b344e8`).
+Physical manual testing completed by Bhuvi (`@stacktrace-bhuvi`) on desktop Mozilla Firefox 159.0.1 (**29 functional PASS, 0 FAIL, 0 NOT EXECUTED, 1 BLOCKED [TC-F-13.2]**) and NVDA 2026.3 screen reader (**22 PASS, 0 FAIL, 0 NOT EXECUTED**) against commit `500a4be3961103480c6274b89eddca34a219ccce` (source tree `4a2278fd1774ecfb0cb43d1e6f9b00e386b344e8`).
 
 The single BLOCKED case (`TC-F-13.2`) remains isolated to specification ambiguity regarding internal table scrolling versus strict viewport overflow, and has zero impact on core burndown calculation or UI stability. All unit tests pass (411/411). Defect SV-D-01 is verified fixed and covered by regression testing.
 

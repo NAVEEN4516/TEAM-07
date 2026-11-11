@@ -22,7 +22,7 @@ This manual run sheet specifies exact testing procedures for validating Section 
 3. **Windows Narrator** (built-in Windows 11 assistive tool: `Win + Ctrl + Enter`).
 4. **VoiceOver** on macOS with Safari / Chrome.
 
-*Note:* Programmatic DOM ARIA attributes, Skip link, Tab sequence, and pure keyboard-only execution passed 100% in automated Playwright validation (8/8 PASS in Group `G-KB`). This sheet verifies actual speech output, pronunciation, speech rate, and auditory perception.
+*Note:* Programmatic DOM ARIA attributes, Skip link, Tab sequence, and pure keyboard-only execution passed 100% in automated Playwright validation (9/9 PASS in Group `G-KB`). This sheet verifies actual speech output, pronunciation, speech rate, and auditory perception.
 
 ---
 
@@ -66,6 +66,6 @@ This manual run sheet specifies exact testing procedures for validating Section 
 ---
 
 ## 4. Sign-Off
-- **Automated Validation:** Completed in Playwright keyboard suite (8/8 PASS in Group `G-KB`).
+- **Automated Validation:** Completed in Playwright keyboard suite (9/9 PASS in Group `G-KB`).
 - **Physical Assistive Audio Verification:** **EXECUTED (manual)** (22 PASS, 0 FAIL, 0 NOT EXECUTED; 22 rows with no recorded speech wording).
 - **QA Tester:** Bhuvi (`@stacktrace-bhuvi`)
