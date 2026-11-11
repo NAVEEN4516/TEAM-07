@@ -12,6 +12,12 @@
 - **Repository Guidelines Files:** `AGENTS.md` is **absent**; `CODEX.md` is **absent**.
 - **Evidence Scope:** Pinned to commit `85391ae9181a666cc5b975968070e3dc5059a352`. Scope is strictly the single-sprint Burndown Chart Generator (BDC-F-001 through BDC-F-015, BDC-NF-001 through BDC-NF-005, and BDC-SR-001 through BDC-SR-005). Multi-sprint and project-backlog extensions remain strictly out of scope.
 
+> Historical Run 3b report. The current version, strict no-scroll retest and
+> final evidence assessment are in the [Test Summary](test-summary-report.md).
+> Original browser results remain unchanged; the manual Firefox geometry claim
+> below is retained as a reported observation and superseded by the fresh
+> automated measurements. It is not used for final geometry acceptance.
+
 ---
 
 ## 1. Executive Summary
@@ -26,7 +32,7 @@ A comprehensive, rigorous end-to-end System Validation was conducted on the TEAM
   - **Mozilla Firefox (v159.0 Playwright build):** **62 PASS, 0 FAIL, 1 BLOCKED, 0 NOT EXECUTED** (`docs/reports/evidence/sv-results-firefox-2026-11-10-85391ae.json`)
   - **Combined Browser Totals:** **186 PASS, 0 FAIL, 3 BLOCKED** across 189 evaluations.
 - **Current Day Vertical Marker Movement:** Pixel-scanning verification via canvas `getImageData` confirmed marker draws within $\le 2$ px of expected coordinates across Days 0, 4, 6, 10, dark theme, and 1024px resize ($|\text{drawn} - \text{expected}| \le 1.13$ px max). Day 6 updates actual burndown series endpoint and KPI metrics without page reload.
-- **Pure Keyboard Navigation (Group G-KB):** 100% PASS (8/8 records) operating strictly via `page.keyboard` with zero `.click()`, zero `.fill()`, and zero `.focus()` calls. Covers skip link, theme toggle, sprint configuration modal, timeline buttons and slider, add issue + duplicate rejection, edit to Done + cancel with Escape + reopen, delete + adjacent focus, and reset data.
+- **Pure Keyboard Navigation (Group G-KB):** 100% PASS (9/9 records) operating strictly via `page.keyboard` with zero `.click()`, zero `.fill()`, and zero `.focus()` calls. Covers skip link, theme toggle, sprint configuration modal, timeline buttons and slider, add issue + duplicate rejection, edit to Done + cancel with Escape + reopen, delete + adjacent focus, and reset data.
 - **Status Indicators & Color Discrimination (TC-NF-02.3 Supplemental):**
   - All status indicators render clear semantic text labels ("Ahead of Schedule", "On Track", "Behind Schedule").
   - WCAG 2.1 AA text contrast ($\ge 4.5:1$):

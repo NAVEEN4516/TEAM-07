@@ -1,5 +1,11 @@
 # Sprint 1 QA Test Execution Checklist
 
+> Historical document retained for traceability. Its original Passed entries and
+> approval table do not establish current test execution or a current human
+> signature. Current results and evidence are maintained in the
+> [Requirements Traceability Matrix](../reports/requirements-traceability.md)
+> and [Test Summary](../reports/test-summary-report.md).
+
 **Project:** Agile Burndown Chart Generator  
 **Document Ref:** `docs/test-plan/sprint1_checklist.md`  
 **Derived From:** `Burndown_Chart_Test_Plan.docx` (Section 13.2, Table 9)  

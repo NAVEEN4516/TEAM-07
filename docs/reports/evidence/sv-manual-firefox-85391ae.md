@@ -12,6 +12,16 @@
 - **URL:** http://127.0.0.1:8090/index.html (snapshot copy)
 - **Status:** **EXECUTED (manual)** (33 PASS, 0 FAIL, 0 NOT EXECUTED [29 functional + 4 responsive])
 
+
+> QA reconciliation, 2026-11-11: the original manual geometry rows below are
+> retained as the tester reported them. Their zero table-overflow observations
+> at 1024/1366 are not accepted as geometry evidence because they conflict with
+> the same-version automated measurements and lack viewport/zoom detail.
+> Fresh three-browser geometry checks after the desktop layout fix supersede
+> those rows; see [Test Summary](../test-summary-report.md). This correction
+> does not invent a replacement manual measurement or change other reported
+> functional observations.
+
 ---
 
 ## 1. Scope & Objective
