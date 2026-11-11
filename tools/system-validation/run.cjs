@@ -148,6 +148,7 @@ function makeRecord({
 
 // Capture the final chart geometry, not an intermediate animation frame.
 async function captureEvidence(page, options) {
+  await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
   await page.waitForFunction(async () => {
     const { getChartInstance } = await import('/js/ui/chart.js');
     const chart = getChartInstance();
@@ -155,9 +156,11 @@ async function captureEvidence(page, options) {
     return chart.data.datasets.every((dataset, index) => dataset.data.every((value, point) => {
       if (!Number.isFinite(value)) return true;
       const element = chart.getDatasetMeta(index).data[point];
-      return element && Math.abs(element.y - chart.scales.y.getPixelForValue(value)) < 0.1;
+      const animating = element && Object.values(element.$animations || {}).some(animation => animation._active);
+      return element && !animating && Math.abs(element.y - chart.scales.y.getPixelForValue(value)) < 0.1;
     }));
   }, null, { timeout: 10000 });
+  await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
   return page.screenshot(options);
 }
 
