@@ -31,7 +31,7 @@
       "version": null,
       "executablePath": null,
       "status": "NOT EXECUTED",
-      "reason": "Mozilla Firefox is not installed on the test host environment. Manual run sheet generated in docs/reports/evidence/sv-firefox-manual-sheet.md."
+      "reason": "Mozilla Firefox is not installed on the test host environment. Manual run sheet generated in docs/reports/evidence/superseded/sv-firefox-manual-sheet.md."
     }
   },
   "baselineUnitSuite": {

@@ -43,10 +43,10 @@
 
 | Viewport | Theme | Loads Without Errors | Page Horizontal Scroll (`scrollWidth === clientWidth`) | Table Container Legibility | Chart Scaling | Add-Issue Form Usable | Overall Status |
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| **1024 x 900** | Light | PASS (0 errors) | PASS (0px overflow) | PASS (Internal scroll / fit) | PASS | PASS | **PASS** |
-| **1024 x 900** | Dark | PASS (0 errors) | PASS (0px overflow) | PASS (Internal scroll / fit) | PASS | PASS | **PASS** |
-| **1366 x 900** | Light | PASS (0 errors) | PASS (0px overflow) | PASS (Fits container) | PASS | PASS | **PASS** |
-| **1366 x 900** | Dark | PASS (0 errors) | PASS (0px overflow) | PASS (Fits container) | PASS | PASS | **PASS** |
+| **1024 x 900** | Light | PASS (0 errors) | PASS (0px overflow) | PASS (Fits container) | PASS | PASS | **PASS** |
+| **1024 x 900** | Dark | PASS (0 errors) | PASS (0px overflow) | PASS (Fits container) | PASS | PASS | **PASS** |
+| **1366 x 900** | Light | PASS (0 errors) | PASS (0px overflow) | PASS (Internal scroll: 36px) | PASS | PASS | **PASS** |
+| **1366 x 900** | Dark | PASS (0 errors) | PASS (0px overflow) | PASS (Internal scroll: 36px) | PASS | PASS | **PASS** |
 | **1440 x 900** | Light | PASS (0 errors) | PASS (0px overflow) | PASS (Fits container) | PASS | PASS | **PASS** |
 | **1440 x 900** | Dark | PASS (0 errors) | PASS (0px overflow) | PASS (Fits container) | PASS | PASS | **PASS** |
 | **1920 x 900** | Light | PASS (0 errors) | PASS (0px overflow) | PASS (Fits container) | PASS | PASS | **PASS** |
@@ -56,10 +56,10 @@
 
 | Viewport | Theme | Loads Without Errors | Page Horizontal Scroll (`scrollWidth === clientWidth`) | Table Container Legibility | Chart Scaling | Add-Issue Form Usable | Overall Status |
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| **1024 x 900** | Light | PASS (0 errors) | PASS (0px overflow) | PASS (Internal scroll / fit) | PASS | PASS | **PASS** |
-| **1024 x 900** | Dark | PASS (0 errors) | PASS (0px overflow) | PASS (Internal scroll / fit) | PASS | PASS | **PASS** |
-| **1366 x 900** | Light | PASS (0 errors) | PASS (0px overflow) | PASS (Fits container) | PASS | PASS | **PASS** |
-| **1366 x 900** | Dark | PASS (0 errors) | PASS (0px overflow) | PASS (Fits container) | PASS | PASS | **PASS** |
+| **1024 x 900** | Light | PASS (0 errors) | PASS (0px overflow) | PASS (Fits container) | PASS | PASS | **PASS** |
+| **1024 x 900** | Dark | PASS (0 errors) | PASS (0px overflow) | PASS (Fits container) | PASS | PASS | **PASS** |
+| **1366 x 900** | Light | PASS (0 errors) | PASS (0px overflow) | PASS (Internal scroll: 36px) | PASS | PASS | **PASS** |
+| **1366 x 900** | Dark | PASS (0 errors) | PASS (0px overflow) | PASS (Internal scroll: 36px) | PASS | PASS | **PASS** |
 | **1440 x 900** | Light | PASS (0 errors) | PASS (0px overflow) | PASS (Fits container) | PASS | PASS | **PASS** |
 | **1440 x 900** | Dark | PASS (0 errors) | PASS (0px overflow) | PASS (Fits container) | PASS | PASS | **PASS** |
 | **1920 x 900** | Light | PASS (0 errors) | PASS (0px overflow) | PASS (Fits container) | PASS | PASS | **PASS** |
@@ -69,10 +69,10 @@
 
 | Viewport | Theme | Loads Without Errors | Page Horizontal Scroll (`scrollWidth === clientWidth`) | Table Container Legibility | Chart Scaling | Add-Issue Form Usable | Overall Status |
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| **1024 x 900** | Light | PASS (0 errors) | PASS (0px overflow) | PASS (Internal scroll / fit) | PASS | PASS | **PASS** |
-| **1024 x 900** | Dark | PASS (0 errors) | PASS (0px overflow) | PASS (Internal scroll / fit) | PASS | PASS | **PASS** |
-| **1366 x 900** | Light | PASS (0 errors) | PASS (0px overflow) | PASS (Fits container) | PASS | PASS | **PASS** |
-| **1366 x 900** | Dark | PASS (0 errors) | PASS (0px overflow) | PASS (Fits container) | PASS | PASS | **PASS** |
+| **1024 x 900** | Light | PASS (0 errors) | PASS (0px overflow) | PASS (Fits container) | PASS | PASS | **PASS** |
+| **1024 x 900** | Dark | PASS (0 errors) | PASS (0px overflow) | PASS (Fits container) | PASS | PASS | **PASS** |
+| **1366 x 900** | Light | PASS (0 errors) | PASS (0px overflow) | PASS (Internal scroll: 36px) | PASS | PASS | **PASS** |
+| **1366 x 900** | Dark | PASS (0 errors) | PASS (0px overflow) | PASS (Internal scroll: 36px) | PASS | PASS | **PASS** |
 | **1440 x 900** | Light | PASS (0 errors) | PASS (0px overflow) | PASS (Fits container) | PASS | PASS | **PASS** |
 | **1440 x 900** | Dark | PASS (0 errors) | PASS (0px overflow) | PASS (Fits container) | PASS | PASS | **PASS** |
 | **1920 x 900** | Light | PASS (0 errors) | PASS (0px overflow) | PASS (Fits container) | PASS | PASS | **PASS** |

@@ -35,7 +35,7 @@ A comprehensive, rigorous end-to-end System Validation was conducted on the TEAM
   - Pairwise background color distance (CIE76 $\Delta E$) recorded as INFORMATIONAL metric:
     - Light Theme: min 8.0, max 11.1 (Ahead-OnTrack 9.5, Ahead-Behind 11.1, OnTrack-Behind 8.0)
     - Dark Theme: min 17.3, max 21.1 (Ahead-OnTrack 19.8, Ahead-Behind 21.1, OnTrack-Behind 17.3)
-  - Visual distinctness is a human judgement tracked as PENDING in manual test check forms.
+  - Visual distinctness is a human judgement verified and recorded as PASS in manual testing (SR-22: text clear, colours distinct, and perceptible under grayscale).
   - Defect SV-D-01 (CSS class selector mismatch at `e901ecf`) was fixed in `a8be0d2`, backed by regression unit tests in `tests/ui/kpiCards.test.js`, and retested across all 3 browsers.
 - **Performance Updates (Method A: 10 iterations under `?perf` profiling):**
   - **Add Issue:** median 34.40 ms (Chrome) / 40.60 ms (Edge) / 53.00 ms (Firefox)
